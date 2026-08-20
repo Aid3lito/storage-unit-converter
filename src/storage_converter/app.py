@@ -38,6 +38,9 @@ EXPOSANTS_UNICODE = str.maketrans(
 
 TEXTE_RESULTAT_DEFAUT = "Result:"
 
+COULEUR_TEXTE = "#000000"
+COULEUR_CHAMP = "#FFFFFF"
+
 lignes_valeurs = []
 historique = []
 
@@ -521,9 +524,9 @@ def creer_entree_valeur(parent):
     entree = tk.Entry(
         parent,
         width=20,
-        bg="white",
-        fg="black",
-        insertbackground="black"
+        bg=COULEUR_CHAMP,
+        fg=COULEUR_TEXTE,
+        insertbackground=COULEUR_TEXTE
     )
 
     entree.insert(0, PLACEHOLDER)
@@ -695,7 +698,7 @@ titre = tk.Label(
     fenetre,
     text="Storage Unit Converter",
     font=("Arial", 20, "bold"),
-    fg="black"
+    fg=COULEUR_TEXTE
 )
 titre.pack(pady=20)
 
@@ -708,7 +711,7 @@ titre.pack(pady=20)
 label_operation = tk.Label(
     fenetre,
     text="Operation",
-    fg="black"
+    fg=COULEUR_TEXTE
 )
 label_operation.pack(pady=10)
 
@@ -753,7 +756,7 @@ bouton_ajouter_valeur = ttk.Button(
 label_unite_resultat = tk.Label(
     fenetre,
     text="Result unit",
-    fg="black"
+    fg=COULEUR_TEXTE
 )
 label_unite_resultat.pack(pady=(20, 5))
 
@@ -809,7 +812,7 @@ label_resultat = tk.Label(
     fenetre,
     text=TEXTE_RESULTAT_DEFAUT,
     font=("Arial", 14, "bold"),
-    fg="black"
+    fg=COULEUR_TEXTE
 )
 label_resultat.pack(pady=20)
 
@@ -818,7 +821,7 @@ titre_historique = tk.Label(
     fenetre,
     text="History",
     font=("Arial", 12, "bold"),
-    fg="black"
+    fg=COULEUR_TEXTE
 )
 titre_historique.pack(pady=(10, 5))
 
@@ -829,8 +832,8 @@ liste_historique = tk.Listbox(
     frame_historique,
     width=60,
     height=6,
-    bg="white",
-    fg="black",
+    bg=COULEUR_CHAMP,
+    fg=COULEUR_TEXTE,
     selectbackground="#0078D7",
     selectforeground="white"
 )

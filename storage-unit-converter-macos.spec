@@ -56,4 +56,7 @@ app = BUNDLE(
     name="Storage Unit Converter.app",
     icon=None,
     bundle_identifier="com.aid3lito.storageunitconverter",
+    info_plist={
+        "NSRequiresAquaSystemAppearance": True,
+    },
 )
