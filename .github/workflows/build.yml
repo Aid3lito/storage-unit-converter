@@ -1,0 +1,113 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+
+jobs:
+
+  build-macos:
+    name: macOS ${{ matrix.arch }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15-intel
+            arch: x86_64
+            python-arch: x64
+
+          - runner: macos-15
+            arch: arm64
+            python-arch: arm64
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          architecture: ${{ matrix.python-arch }}
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install project and build dependencies
+        run: python -m pip install -e ".[build]"
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build macOS application
+        run: python -m PyInstaller storage-unit-converter-macos.spec --clean --noconfirm
+
+      - name: Verify architecture
+        run: |
+          file "dist/Storage Unit Converter.app/Contents/MacOS/Storage Unit Converter"
+          lipo -info "dist/Storage Unit Converter.app/Contents/MacOS/Storage Unit Converter"
+
+      - name: Create distribution archive
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent \
+            "dist/Storage Unit Converter.app" \
+            "Storage-Unit-Converter-macOS-${{ matrix.arch }}.zip"
+
+      - name: Upload build
+        uses: actions/upload-artifact@v7
+        with:
+          name: Storage-Unit-Converter-macOS-${{ matrix.arch }}
+          path: Storage-Unit-Converter-macOS-${{ matrix.arch }}.zip
+          retention-days: 14
+
+
+  build-windows:
+    name: Windows x86_64
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          architecture: x64
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install project and build dependencies
+        run: python -m pip install -e ".[build]"
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build Windows application
+        run: python -m PyInstaller storage-unit-converter-windows.spec --clean --noconfirm
+
+      - name: Create distribution archive
+        shell: powershell
+        run: |
+          Compress-Archive `
+            -Path "dist\Storage Unit Converter.exe" `
+            -DestinationPath "Storage-Unit-Converter-Windows-x86_64.zip"
+
+      - name: Upload build
+        uses: actions/upload-artifact@v7
+        with:
+          name: Storage-Unit-Converter-Windows-x86_64
+          path: Storage-Unit-Converter-Windows-x86_64.zip
+          retention-days: 14
