@@ -48,3 +48,8 @@ storage_converter = [
     "units_decimal.json",
     "units_binary.json"
 ]
+
+[project.optional-dependencies]
+build = [
+    "pyinstaller>=6.22,<7"
+]
