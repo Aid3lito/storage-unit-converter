@@ -43,7 +43,7 @@ Built with Python and Tkinter, Storage Unit Converter provides a simple graphica
 
 ## Screenshot
 
-A screenshot of the application will be added here.
+![Storage Unit Converter](assets/screenshots/storage-unit-converter.png)
 
 ## Requirements
 
