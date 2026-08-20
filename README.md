@@ -1,5 +1,7 @@
 # Storage Unit Converter
 
+[![Tests](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml/badge.svg)](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml)
+
 A lightweight desktop application for converting and calculating decimal and binary storage units.
 
 Built with Python and Tkinter, Storage Unit Converter provides a simple graphical interface for converting, adding, and subtracting storage values across common decimal and binary units.
