@@ -1,0 +1,38 @@
+{    
+    "Byte" : {
+        "acronyme" : "B",
+        "valeur" : 1
+   },
+    "KiloByte" : {
+        "acronyme" : "KB",
+        "valeur" : 1000
+    },
+    "MegaByte" : {
+        "acronyme" : "MB",
+        "valeur" : 1000000
+   },
+    "GigaByte" : {
+        "acronyme" : "GB",
+        "valeur" : 1000000000
+    },
+    "TeraByte" : {
+        "acronyme" : "TB",
+        "valeur" : 1000000000000
+    },
+    "PetaByte" : {
+        "acronyme" : "PB",
+        "valeur" : 1000000000000000
+    },
+    "ExaByte" : {
+        "acronyme" : "EB",
+        "valeur" : 1000000000000000000
+    },
+    "ZettaByte" : {
+        "acronyme" : "ZB",
+        "valeur" : 1000000000000000000000
+    },
+    "YottaByte" : {
+        "acronyme" : "YB",
+        "valeur" : 1000000000000000000000000
+    }
+}

@@ -1,0 +1,38 @@
+{    
+    "Byte" : {
+        "acronyme" : "B",
+        "valeur" : 1
+   },
+    "KibiByte" : {
+        "acronyme" : "KiB",
+        "valeur" : 1024
+    },
+    "MebiByte" : {
+        "acronyme" : "MiB",
+        "valeur" : 1048576
+   },
+    "GibiByte" : {
+        "acronyme" : "GiB",
+        "valeur" : 1073741824
+    },
+    "TebiByte" : {
+        "acronyme" : "TiB",
+        "valeur" : 1099511627776
+    },
+    "PebiByte" : {
+        "acronyme" : "PiB",
+        "valeur" : 1125899906842624
+    },
+    "ExbiByte" : {
+        "acronyme" : "EiB",
+        "valeur" : 1152921504606846976
+    },
+    "ZebiByte" : {
+        "acronyme" : "ZiB",
+        "valeur" : 1180591620717411303424
+    },
+    "YobiByte" : {
+        "acronyme" : "YiB",
+        "valeur" : 1208925819614629174706176
+    }
+}
