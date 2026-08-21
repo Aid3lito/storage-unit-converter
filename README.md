@@ -98,7 +98,19 @@ python3 -m storage_converter.app
 
 ```text
 storage-unit-converter/
+├── .github/
+│   └── workflows/
+│       ├── build.yml
+│       └── tests.yml
 ├── assets/
+│   ├── icons/
+│   │   ├── app-icon.png
+│   │   ├── app-icon.icns
+│   │   └── app-icon.ico
+│   └── screenshots/
+│       └── storage-unit-converter.png
+├── packaging/
+│   └── launcher.py
 ├── src/
 │   └── storage_converter/
 │       ├── __init__.py
@@ -107,6 +119,7 @@ storage-unit-converter/
 │       ├── units_binary.json
 │       └── units_decimal.json
 ├── tests/
+│   └── test_converter.py
 ├── .gitattributes
 ├── .gitignore
 ├── CHANGELOG.md
@@ -114,8 +127,9 @@ storage-unit-converter/
 ├── LICENSE
 ├── README.md
 ├── SECURITY.md
-└── pyproject.toml
-```
+├── pyproject.toml
+├── storage-unit-converter-macos.spec
+└── storage-unit-converter-windows.spec
 
 ## Development
 
