@@ -2,9 +2,9 @@
 
 [![Tests](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml/badge.svg)](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml)
 
-A lightweight desktop application for converting and calculating decimal and binary storage units.
+A lightweight storage unit converter for desktop and command-line use.
 
-Built with Python and Tkinter, Storage Unit Converter provides a simple graphical interface for converting, adding, and subtracting storage values across common decimal and binary units.
+Built with Python and Tkinter, Storage Unit Converter provides both a graphical interface and a command-line interface for converting, adding, and subtracting decimal and binary storage values.
 
 ## Features
 
@@ -20,6 +20,15 @@ Built with Python and Tkinter, Storage Unit Converter provides a simple graphica
 - Reset the interface instantly
 - Keyboard support with the Enter key
 - No external runtime dependencies
+
+## Supported Platforms
+
+Storage Unit Converter supports:
+
+- macOS Intel (`x86_64`)
+- macOS Apple Silicon (`arm64`)
+- Windows 64-bit (`x86_64`)
+- Linux 64-bit (`x86_64`)
 
 ## Supported Units
 
@@ -47,23 +56,30 @@ Built with Python and Tkinter, Storage Unit Converter provides a simple graphica
 
 ![Storage Unit Converter](assets/screenshots/storage-unit-converter.png)
 
-## Requirements
+## Requirements for Source Installation
 
 - Python 3.9 or later
 - Tkinter
 
 Tkinter is included with most standard Python installations.
+On some Linux distributions, it may need to be installed separately.
 
 ## Installation
+
+### Pre-built releases
+
+Pre-built desktop applications for supported platforms are available through GitHub Releases.
+
+### From source
 
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Aid3lito/storage-unit-converter.git
 cd storage-unit-converter
 ```
 
-Install the project in editable mode:
+Install the project:
 
 ```bash
 python3 -m pip install -e .
@@ -71,7 +87,9 @@ python3 -m pip install -e .
 
 ## Usage
 
-Run the application with:
+### Desktop application
+
+For command-line usage, see the [Command-Line Interface](#command-line-interface) section below.
 
 ```bash
 python3 -m storage_converter.app
@@ -85,7 +103,7 @@ python3 -m storage_converter.app
 4. Select the desired result unit.
 5. Click **Calculate**.
 
-### Addition and subtraction
+### Addition and Subtraction
 
 1. Select **Addition** or **Subtraction**.
 2. Enter at least two values.
@@ -115,10 +133,12 @@ storage-unit-converter/
 │   └── storage_converter/
 │       ├── __init__.py
 │       ├── app.py
+│       ├── cli.py
 │       ├── converter.py
 │       ├── units_binary.json
 │       └── units_decimal.json
 ├── tests/
+│   ├── test_cli.py
 │   └── test_converter.py
 ├── .gitattributes
 ├── .gitignore
@@ -128,8 +148,53 @@ storage-unit-converter/
 ├── README.md
 ├── SECURITY.md
 ├── pyproject.toml
+├── storage-unit-converter-linux.spec
 ├── storage-unit-converter-macos.spec
 └── storage-unit-converter-windows.spec
+```
+
+## Command-Line Interface
+
+Storage Unit Converter also provides a command-line interface.
+
+The full command is:
+
+```bash
+storage-unit-converter
+```
+A shorter command is also available:
+
+```bash
+suc
+```
+### Convert
+
+```bash
+suc convert 100 GB GiB
+```
+Example output:
+
+```bash
+93.13225746 GiB
+```
+### Addition and Subtraction
+
+```bash
+suc add 1 GB 500 MB --to GB
+suc subtract 2 GB 500 MB --to GB
+```
+
+Example output:
+
+```bash
+1.5 GB
+1.5 GB
+```
+
+### Help
+
+```bash
+suc --help
 ```
 
 ## Development
@@ -146,9 +211,27 @@ Then launch the application:
 python3 -m storage_converter.app
 ```
 
+Run the CLI:
+
+```bash
+suc --help
+```
+
+Run the test suite:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+
 ## Releases
 
-Pre-built desktop releases for supported operating systems will be distributed through GitHub Releases.
+Pre-built desktop releases will be distributed through GitHub Releases for:
+
+- macOS Intel (`x86_64`)
+- macOS Apple Silicon (`arm64`)
+- Windows 64-bit (`x86_64`)
+- Linux 64-bit (`x86_64`)
 
 ## Contributing
 
