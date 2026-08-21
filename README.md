@@ -130,6 +130,7 @@ storage-unit-converter/
 ├── pyproject.toml
 ├── storage-unit-converter-macos.spec
 └── storage-unit-converter-windows.spec
+```
 
 ## Development
 
