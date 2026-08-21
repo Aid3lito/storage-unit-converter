@@ -226,7 +226,7 @@ python3 -m unittest discover -s tests -v
 
 ## Releases
 
-Pre-built desktop releases will be distributed through GitHub Releases for:
+Pre-built desktop releases are available through GitHub Releases for:
 
 - macOS Intel (`x86_64`)
 - macOS Apple Silicon (`arm64`)
