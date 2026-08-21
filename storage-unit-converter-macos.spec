@@ -54,7 +54,7 @@ coll = COLLECT(
 app = BUNDLE(
     coll,
     name="Storage Unit Converter.app",
-    icon=None,
+    icon="assets/icons/app-icon.icns",
     bundle_identifier="com.aid3lito.storageunitconverter",
     info_plist={
         "NSRequiresAquaSystemAppearance": True,
