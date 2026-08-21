@@ -1,5 +1,6 @@
 # Storage Unit Converter
 
+[![Version](https://img.shields.io/github/v/release/Aid3lito/storage-unit-converter?label=version)](https://github.com/Aid3lito/storage-unit-converter/releases/latest)
 [![Tests](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml/badge.svg)](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml)
 
 A lightweight storage unit converter for desktop and command-line use.
