@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [1.0.0] - 2026-08-20
+## [1.0.0] - 2026-08-21
 
 ### Added
 
-- Graphical desktop interface built with Tkinter
+- Cross-platform desktop application built with Python and Tkinter
+- Support for macOS Intel (`x86_64`)
+- Support for macOS Apple Silicon (`arm64`)
+- Support for Windows 64-bit (`x86_64`)
+- Support for Linux 64-bit (`x86_64`)
 - Decimal and binary storage unit conversion
 - Addition of multiple storage values
 - Subtraction of multiple storage values
@@ -26,3 +30,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Scientific notation for very small values
 - Input validation and user-facing error messages
 - JSON-based storage unit definitions
+- Command-line interface
+- Short `suc` command for CLI usage
+- CLI support for conversion, addition, and subtraction
+- Automated unit tests
+- Continuous integration across Python 3.9 through 3.13
+- Automated cross-platform builds with GitHub Actions
+- Application icons for macOS, Windows, and source assets
+
+### Notes
+
+- macOS builds are currently unsigned and not notarized.
+- On macOS, Gatekeeper may block the application on first launch.
+- If this happens, open **System Settings → Privacy & Security** and select **Open Anyway**.
