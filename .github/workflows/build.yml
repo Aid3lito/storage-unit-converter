@@ -111,3 +111,49 @@ jobs:
           name: Storage-Unit-Converter-Windows-x86_64
           path: Storage-Unit-Converter-Windows-x86_64.zip
           retention-days: 14
+
+  build-linux:
+    name: Linux x86_64
+        
+    runs-on: ubuntu-latest
+        
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+        
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-tk
+        
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+        
+      - name: Install project and build dependencies
+        run: python -m pip install -e ".[build]"
+        
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+        
+      - name: Build Linux application
+        run: python -m PyInstaller storage-unit-converter-linux.spec --clean --noconfirm
+        
+      - name: Make executable
+        run: chmod +x "dist/Storage Unit Converter"
+        
+      - name: Create distribution archive
+        run: |
+          tar -czf Storage-Unit-Converter-Linux-x86_64.tar.gz \
+            -C dist "Storage Unit Converter"
+        
+      - name: Upload build
+        uses: actions/upload-artifact@v7
+        with:
+          name: Storage-Unit-Converter-Linux-x86_64
+          path: Storage-Unit-Converter-Linux-x86_64.tar.gz
+          retention-days: 14
