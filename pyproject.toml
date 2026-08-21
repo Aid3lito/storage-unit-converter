@@ -53,3 +53,7 @@ storage_converter = [
 build = [
     "pyinstaller>=6.22,<7"
 ]
+
+[project.scripts]
+storage-unit-converter = "storage_converter.cli:main"
+suc = "storage_converter.cli:main"
