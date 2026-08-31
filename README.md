@@ -20,7 +20,7 @@ Built with Python and Tkinter, Storage Unit Converter provides both a graphical 
 - Copy results to the clipboard
 - Reset the interface instantly
 - Keyboard support with the Enter key
-- No external runtime dependencies
+- No external runtime dependencies for pre-built desktop releases
 
 ## Supported Platforms
 
@@ -67,34 +67,67 @@ On some Linux distributions, it may need to be installed separately.
 
 ## Installation
 
-### Pre-built releases
+### Desktop Application
 
-Pre-built desktop applications for supported platforms are available through GitHub Releases.
+Pre-built graphical desktop applications are available through GitHub Releases for:
 
-### From source
+- macOS Intel (`x86_64`)
+- macOS Apple Silicon (`arm64`)
+- Windows 64-bit (`x86_64`)
+- Linux 64-bit (`x86_64`)
 
-Clone the repository:
+These pre-built archives provide the graphical desktop application.
+
+### Command-Line Interface
+
+The command-line interface is currently installed separately from the source repository.
+
+For end users, `pipx` is recommended:
 
 ```bash
 git clone https://github.com/Aid3lito/storage-unit-converter.git
 cd storage-unit-converter
+pipx install .
 ```
-
-Install the project:
+After installation, the following commands are available:
 
 ```bash
-python3 -m pip install -e .
+suc --help
 ```
+
+or:
+
+```bash
+storage-unit-converter --help
+```
+
+Example:
+
+```bash
+suc convert 100 GB GiB
+```
+
+Output:
+
+```bash
+93.13225746 GiB
+```
+
+On Linux distributions using externally managed Python environments, such as Kali Linux, `pipx` avoids modifying the system Python installation.
 
 ## Usage
 
-### Desktop application
+### Desktop Application
 
-For command-line usage, see the [Command-Line Interface](#command-line-interface) section below.
+If you downloaded a pre-built release, launch the graphical application directly from the extracted archive.
+
+When running from source:
 
 ```bash
 python3 -m storage_converter.app
 ```
+
+For command-line usage, see the [Command-Line Interface](#command-line-interface) section below.
 
 ### Conversion
 
@@ -200,39 +233,38 @@ suc --help
 
 ## Development
 
-Install the project in editable mode:
+For development, use a virtual environment.
+
+macOS / Linux
 
 ```bash
+git clone https://github.com/Aid3lito/storage-unit-converter.git
+cd storage-unit-converter
+python3 -m venv .venv
+source .venv/bin/activate
 python3 -m pip install -e .
 ```
 
-Then launch the application:
+Windows PowerShell
 
 ```bash
-python3 -m storage_converter.app
+git clone https://github.com/Aid3lito/storage-unit-converter.git
+cd storage-unit-converter
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -e .
 ```
-
-Run the CLI:
-
-```bash
-suc --help
-```
-
-Run the test suite:
-
-```bash
-python3 -m unittest discover -s tests -v
-```
-
 
 ## Releases
 
-Pre-built desktop releases are available through GitHub Releases for:
+Pre-built graphical desktop applications are available through GitHub Releases for:
 
 - macOS Intel (`x86_64`)
 - macOS Apple Silicon (`arm64`)
 - Windows 64-bit (`x86_64`)
 - Linux 64-bit (`x86_64`)
+
+The downloadable release archives contain the graphical desktop application only. The command-line interface is installed separately from the source repository.
 
 ## Contributing
 
