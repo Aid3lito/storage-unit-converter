@@ -52,15 +52,28 @@ jobs:
       - name: Build macOS application
         run: python -m PyInstaller storage-unit-converter-macos.spec --clean --noconfirm
 
+      - name: Build macOS CLI
+        run: python -m PyInstaller storage-unit-converter-cli.spec --clean --noconfirm
+
       - name: Verify architecture
         run: |
           file "dist/Storage Unit Converter.app/Contents/MacOS/Storage Unit Converter"
           lipo -info "dist/Storage Unit Converter.app/Contents/MacOS/Storage Unit Converter"
+          file "dist/suc"
+          lipo -info "dist/suc"
+
+      - name: Test standalone CLI
+        run: |
+          "dist/suc" --help
+          "dist/suc" convert 100 GB GiB
 
       - name: Create distribution archive
         run: |
+          mkdir -p "release/Storage Unit Converter"
+          cp -R "dist/Storage Unit Converter.app" "release/Storage Unit Converter/"
+          cp "dist/suc" "release/Storage Unit Converter/"
           ditto -c -k --sequesterRsrc --keepParent \
-            "dist/Storage Unit Converter.app" \
+            "release/Storage Unit Converter" \
             "Storage-Unit-Converter-macOS-${{ matrix.arch }}.zip"
 
       - name: Upload build
@@ -98,11 +111,20 @@ jobs:
       - name: Build Windows application
         run: python -m PyInstaller storage-unit-converter-windows.spec --clean --noconfirm
 
+      - name: Build Windows CLI
+        run: python -m PyInstaller storage-unit-converter-cli.spec --clean --noconfirm
+
+      - name: Test standalone CLI
+        shell: powershell
+        run: |
+          & "dist\suc.exe" --help
+          & "dist\suc.exe" convert 100 GB GiB
+
       - name: Create distribution archive
         shell: powershell
         run: |
           Compress-Archive `
-            -Path "dist\Storage Unit Converter.exe" `
+            -Path "dist\Storage Unit Converter.exe", "dist\suc.exe" `
             -DestinationPath "Storage-Unit-Converter-Windows-x86_64.zip"
 
       - name: Upload build
@@ -142,14 +164,24 @@ jobs:
         
       - name: Build Linux application
         run: python -m PyInstaller storage-unit-converter-linux.spec --clean --noconfirm
+
+      - name: Build Linux CLI
+        run: python -m PyInstaller storage-unit-converter-cli.spec --clean --noconfirm
         
-      - name: Make executable
-        run: chmod +x "dist/Storage Unit Converter"
+      - name: Make executables executable
+        run: |
+          chmod +x "dist/Storage Unit Converter"
+          chmod +x "dist/suc"
         
+      - name: Test standalone CLI
+        run: |
+          "./dist/suc" --help
+          "./dist/suc" convert 100 GB GiB
+
       - name: Create distribution archive
         run: |
           tar -czf Storage-Unit-Converter-Linux-x86_64.tar.gz \
-            -C dist "Storage Unit Converter"
+            -C dist "Storage Unit Converter" "suc"
         
       - name: Upload build
         uses: actions/upload-artifact@v7
