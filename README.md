@@ -76,13 +76,40 @@ Pre-built graphical desktop applications are available through GitHub Releases f
 - Windows 64-bit (`x86_64`)
 - Linux 64-bit (`x86_64`)
 
-These pre-built archives provide the graphical desktop application.
+These pre-built archives provide both the graphical desktop application and a standalone command-line executable.
 
 ### Command-Line Interface
 
-The command-line interface is currently installed separately from the source repository.
+The command-line interface can be used either from a pre-built release archive or by installing the project from source.
 
-For end users, `pipx` is recommended:
+### Standalone CLI from Release Archives
+
+After extracting a pre-built release archive, run the standalone CLI from the extracted directory.
+
+#### macOS / Linux
+
+```bash
+./suc --help
+```
+
+Example:
+
+```bash
+./suc convert 100 GB GiB
+```
+#### Windows PowerShell
+
+```bash
+.\suc.exe --help
+```
+
+Example:
+
+```bash
+.\suc.exe convert 100 GB GiB
+```
+
+For end users who want the `suc` command available globally, `pipx` is recommended:
 
 ```bash
 git clone https://github.com/Aid3lito/storage-unit-converter.git
@@ -162,7 +189,8 @@ storage-unit-converter/
 │   └── screenshots/
 │       └── storage-unit-converter.png
 ├── packaging/
-│   └── launcher.py
+│   ├── launcher.py
+│   └── cli_launcher.py
 ├── src/
 │   └── storage_converter/
 │       ├── __init__.py
@@ -184,7 +212,8 @@ storage-unit-converter/
 ├── pyproject.toml
 ├── storage-unit-converter-linux.spec
 ├── storage-unit-converter-macos.spec
-└── storage-unit-converter-windows.spec
+├── storage-unit-converter-windows.spec
+└── storage-unit-converter-cli.spec
 ```
 
 ## Command-Line Interface
@@ -264,7 +293,7 @@ Pre-built graphical desktop applications are available through GitHub Releases f
 - Windows 64-bit (`x86_64`)
 - Linux 64-bit (`x86_64`)
 
-The downloadable release archives contain the graphical desktop application only. The command-line interface is installed separately from the source repository.
+The downloadable release archives contain both the graphical desktop application and a standalone command-line executable.
 
 ## Contributing
 

@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Added standalone CLI binaries to pre-built release archives for macOS, Windows and Linux
+- Added automated smoke tests for standalone CLI binaries in cross-platform build workflows
+
 ### Changed
 
-- Clarified the distinction between pre-built GUI releases and CLI installation in the README
-- Recommended `pipx` for end-user CLI installation
+- Clarified GUI and CLI distribution methods in the README
+- Documented standalone CLI usage for pre-built release archives
+- Recommended `pipx` for end-user CLI installation from source
 
 ## [1.0.0] - 2026-08-21
 
