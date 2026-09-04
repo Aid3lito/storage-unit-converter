@@ -9,8 +9,12 @@ from . import converter
 # CONSTANTES
 # ==============================
 
-LARGEUR_FENETRE = 800
-HAUTEUR_MIN_FENETRE = 800
+if sys.platform.startswith("linux"):
+    LARGEUR_FENETRE = 900
+    HAUTEUR_MIN_FENETRE = 900
+else:
+    LARGEUR_FENETRE = 800
+    HAUTEUR_MIN_FENETRE = 800
 
 PLACEHOLDER = "e.g. 100"
 
