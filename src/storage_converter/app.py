@@ -375,7 +375,8 @@ def creer_menu_unites(parent, variable):
             borderwidth=1,
             padx=6,
             pady=3,
-            fg="black"
+            fg="black",
+            indicatoron=True
         )
     else:
         bouton = ttk.Menubutton(
@@ -426,7 +427,8 @@ def creer_menu_operations(parent, variable):
             borderwidth=1,
             padx=6,
             pady=3,
-            fg="black"
+            fg="black",
+            indicatoron=True
         )
     else:
         bouton = ttk.Menubutton(
