@@ -183,9 +183,58 @@ jobs:
           tar -czf Storage-Unit-Converter-Linux-x86_64.tar.gz \
             -C dist "Storage Unit Converter" "suc"
         
+      - name: Create Debian package
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$GITHUB_REF_TYPE" != "tag" ]; then
+            VERSION="1.1.0-dev"
+          fi
+
+          PACKAGE_ROOT="release/deb/storage-unit-converter_${VERSION}_amd64"
+
+          mkdir -p "$PACKAGE_ROOT/DEBIAN"
+          mkdir -p "$PACKAGE_ROOT/usr/bin"
+          mkdir -p "$PACKAGE_ROOT/usr/share/applications"
+          mkdir -p "$PACKAGE_ROOT/usr/share/pixmaps"
+
+          cp "dist/Storage Unit Converter" \
+            "$PACKAGE_ROOT/usr/bin/storage-unit-converter"
+
+          cp "dist/suc" \
+            "$PACKAGE_ROOT/usr/bin/suc"
+
+          cp "packaging/linux/storage-unit-converter.desktop" \
+            "$PACKAGE_ROOT/usr/share/applications/storage-unit-converter.desktop"
+
+          cp "packaging/linux/storage-unit-converter.png" \
+            "$PACKAGE_ROOT/usr/share/pixmaps/storage-unit-converter.png"
+
+          chmod 755 "$PACKAGE_ROOT/usr/bin/storage-unit-converter"
+          chmod 755 "$PACKAGE_ROOT/usr/bin/suc"
+          chmod 644 "$PACKAGE_ROOT/usr/share/applications/storage-unit-converter.desktop"
+          chmod 644 "$PACKAGE_ROOT/usr/share/pixmaps/storage-unit-converter.png"
+
+          cat > "$PACKAGE_ROOT/DEBIAN/control" <<EOF
+          Package: storage-unit-converter
+          Version: ${VERSION}
+          Section: utils
+          Priority: optional
+          Architecture: amd64
+          Maintainer: Aid3lito
+          Description: Desktop storage unit converter
+           Convert storage units between decimal and binary formats.
+           Includes both a graphical interface and the suc command-line tool.
+          EOF
+
+          dpkg-deb --build \
+            "$PACKAGE_ROOT" \
+            "Storage-Unit-Converter-Linux-x86_64.deb"
+
       - name: Upload build
         uses: actions/upload-artifact@v7
         with:
           name: Storage-Unit-Converter-Linux-x86_64
-          path: Storage-Unit-Converter-Linux-x86_64.tar.gz
+          path: |
+            Storage-Unit-Converter-Linux-x86_64.tar.gz
+            Storage-Unit-Converter-Linux-x86_64.deb
           retention-days: 14

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Storage Unit Converter
+Comment=Convert storage units between decimal and binary formats
+Exec=/usr/bin/storage-unit-converter
+Icon=storage-unit-converter
+Terminal=false
+Categories=Utility;
+StartupNotify=true
