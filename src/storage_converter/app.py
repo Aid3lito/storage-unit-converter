@@ -830,6 +830,7 @@ frame_ajout = tk.Frame(fenetre)
 frame_ajout.pack()
 
 ajouter_ligne_valeur()
+lignes_valeurs[0]["entree"].focus_set()
 
 bouton_ajouter_valeur = ttk.Button(
     frame_ajout,
@@ -964,6 +965,34 @@ bouton_effacer_historique.pack(pady=10)
 
 # <ENTER> lance le calcul
 fenetre.bind("<Return>", lancer_calcul)
+fenetre.bind("<KP_Enter>", lancer_calcul)
+# <ESC> pour focus
+fenetre.bind(
+    "<Escape>",
+    lambda event: fenetre.focus_set()
+)
+# <CTRL/CMD + SHIFT + C> pour copier
+fenetre.bind(
+    "<Control-Shift-C>",
+    lambda event: copier_resultat()
+)
+
+# <CTRL/CMD + R> pour reset
+fenetre.bind(
+    "<Control-r>",
+    lambda event: reinitialiser_interface()
+)
+
+if sys.platform == "darwin":
+    fenetre.bind(
+        "<Command-Shift-C>",
+        lambda event: copier_resultat()
+    )
+
+    fenetre.bind(
+        "<Command-r>",
+        lambda event: reinitialiser_interface()
+    )
 
 # Cliquer en dehors des zones de texte pour désélectionner
 fenetre.bind("<Button-1>", retirer_focus_entree, add="+")
