@@ -393,6 +393,17 @@ def creer_menu_unites(parent, variable):
 
     bouton["menu"] = menu
 
+    if sys.platform == "win32":
+        bouton.bind(
+            "<Button-1>",
+            lambda event: basculer_menu(event, bouton, menu)
+        )
+
+        menu.bind(
+            "<Unmap>",
+            lambda event: setattr(bouton, "_menu_ouvert", False)
+        )
+
     ajouter_groupe_unites(
         menu,
         "Decimal",
@@ -459,7 +470,7 @@ def creer_menu_operations(parent, variable):
     )
 
     bouton["menu"] = menu
-    
+
     if sys.platform == "win32":
         bouton.bind(
             "<Button-1>",
