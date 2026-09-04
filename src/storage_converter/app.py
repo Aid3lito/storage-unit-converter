@@ -62,9 +62,7 @@ class ResultatNegatifError(Exception):
 
 fenetre = tk.Tk()
 fenetre.title("Storage Unit Converter")
-fenetre.geometry(
-    f"{LARGEUR_FENETRE}x{HAUTEUR_MIN_FENETRE}"
-)
+
 
 if sys.platform.startswith("linux"):
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
@@ -520,7 +518,59 @@ def creer_menu_operations(parent, variable):
     return bouton
 
 
+def definir_taille_initiale():
+    fenetre.update_idletasks()
 
+    largeur_requise = fenetre.winfo_reqwidth()
+    hauteur_requise = fenetre.winfo_reqheight()
+
+    if sys.platform.startswith("linux"):
+        largeur = max(
+            LARGEUR_FENETRE,
+            largeur_requise + 150
+        )
+
+        hauteur = max(
+            HAUTEUR_MIN_FENETRE,
+            hauteur_requise + 100
+        )
+    else:
+        largeur = max(
+            LARGEUR_FENETRE,
+            largeur_requise
+        )
+
+        hauteur = max(
+            HAUTEUR_MIN_FENETRE,
+            hauteur_requise
+        )
+
+    largeur_ecran = fenetre.winfo_screenwidth()
+    hauteur_ecran = fenetre.winfo_screenheight()
+
+    largeur = min(
+        largeur,
+        int(largeur_ecran * 0.95)
+    )
+
+    hauteur = min(
+        hauteur,
+        int(hauteur_ecran * 0.90)
+    )
+
+    position_x = max(
+        (largeur_ecran - largeur) // 2,
+        0
+    )
+
+    position_y = max(
+        (hauteur_ecran - hauteur) // 2,
+        0
+    )
+
+    fenetre.geometry(
+        f"{largeur}x{hauteur}+{position_x}+{position_y}"
+    )
 
 
 # REDIMENSIONNEMENT AUTOMATIQUE
@@ -997,6 +1047,6 @@ if sys.platform == "darwin":
 # Cliquer en dehors des zones de texte pour désélectionner
 fenetre.bind("<Button-1>", retirer_focus_entree, add="+")
 
-
+fenetre.after_idle(definir_taille_initiale)
 
 fenetre.mainloop()
