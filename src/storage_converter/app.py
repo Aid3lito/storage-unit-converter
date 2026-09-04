@@ -70,6 +70,11 @@ fenetre.geometry(
     f"{LARGEUR_FENETRE}x{HAUTEUR_MIN_FENETRE}"
 )
 
+fenetre.minsize(
+    LARGEUR_FENETRE,
+    HAUTEUR_MIN_FENETRE
+)
+
 if sys.platform.startswith("linux"):
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         chemin_icone = (
@@ -535,13 +540,18 @@ def ajuster_hauteur_fenetre():
     hauteur_necessaire = fenetre.winfo_reqheight()
     largeur_actuelle = fenetre.winfo_width()
 
+    largeur = max(
+        LARGEUR_FENETRE,
+        largeur_actuelle
+    )
+
     hauteur = max(
         HAUTEUR_MIN_FENETRE,
         hauteur_necessaire
-)
+    )
 
     fenetre.geometry(
-        f"{largeur_actuelle}x{hauteur}"
+        f"{largeur}x{hauteur}"
     )
 
 
