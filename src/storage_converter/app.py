@@ -417,6 +417,20 @@ def creer_menu_unites(parent, variable):
 
 # CRÉATION DU MENU DES OPÉRATIONS
 
+def basculer_menu(bouton, menu):
+    if getattr(bouton, "_menu_ouvert", False):
+        menu.unpost()
+        bouton._menu_ouvert = False
+        return
+
+    x = bouton.winfo_rootx()
+    y = bouton.winfo_rooty() + bouton.winfo_height()
+
+    bouton._menu_ouvert = True
+    menu.post(x, y)
+
+
+
 def creer_menu_operations(parent, variable):
     if sys.platform == "win32":
         bouton = tk.Menubutton(
@@ -444,6 +458,16 @@ def creer_menu_operations(parent, variable):
     )
 
     bouton["menu"] = menu
+
+    if sys.platform == "win32":
+        bouton.config(
+            command=lambda: basculer_menu(bouton, menu)
+        )
+
+    menu.bind(
+        "<Unmap>",
+        lambda event: setattr(bouton, "_menu_ouvert", False)
+    )
 
     def choisir_operation(valeur):
         variable.set(valeur)
