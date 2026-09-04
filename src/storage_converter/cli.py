@@ -162,11 +162,19 @@ def run_subtraction(args):
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        prog="storage-unit-converter",
-        description=(
-            "Convert, add, and subtract "
-            "decimal and binary storage units."
-        )
+        prog="suc",
+        description="Storage Unit Converter CLI",
+        epilog="""
+Examples:
+  suc convert 100 GB GiB
+  suc add 1 GB 500 MB --to GB
+  suc subtract 2 GB 500 MB --to GB
+
+Supported units:
+  Decimal: B, KB, MB, GB, TB, PB
+  Binary:  B, KiB, MiB, GiB, TiB, PiB
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
     subparsers = parser.add_subparsers(
@@ -179,7 +187,7 @@ def create_parser():
 
     convert_parser = subparsers.add_parser(
         "convert",
-        help="Convert a storage value."
+        help="Convert a value from one unit to another."
     )
 
     convert_parser.add_argument(
@@ -206,7 +214,7 @@ def create_parser():
 
     add_parser = subparsers.add_parser(
         "add",
-        help="Add storage values."
+        help="Add multiple storage values."
     )
 
     add_parser.add_argument(
@@ -231,7 +239,7 @@ def create_parser():
 
     subtract_parser = subparsers.add_parser(
         "subtract",
-        help="Subtract storage values."
+        help="Subtract multiple storage values."
     )
 
     subtract_parser.add_argument(

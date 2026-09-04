@@ -173,6 +173,16 @@ For command-line usage, see the [Command-Line Interface](#command-line-interface
 5. Select the desired result unit.
 6. Click **Calculate**.
 
+## Keyboard shortcuts
+
+- `Enter` — Calculate
+- `Numpad Enter` — Calculate
+- `Esc` — Remove focus from the current input
+- `Ctrl + Shift + C` — Copy the result
+- `Cmd + Shift + C` — Copy the result on macOS
+- `Ctrl + R` — Reset the interface
+- `Cmd + R` — Reset the interface on macOS
+
 ## Project Structure
 
 ```text
