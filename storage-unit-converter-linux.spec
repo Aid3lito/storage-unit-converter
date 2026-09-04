@@ -14,6 +14,10 @@ a = Analysis(
             "src/storage_converter/units_decimal.json",
             "storage_converter",
         ),
+        (
+            "assets/icons/app-icon.png",
+            "assets/icons",
+        ),
     ],
     hiddenimports=[],
     hookspath=[],

@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 import tkinter as tk
 from tkinter import ttk
 from . import converter
@@ -65,6 +66,30 @@ fenetre.geometry(
     f"{LARGEUR_FENETRE}x{HAUTEUR_MIN_FENETRE}"
 )
 
+if sys.platform.startswith("linux"):
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        chemin_icone = (
+            Path(sys._MEIPASS)
+            / "assets"
+            / "icons"
+            / "app-icon.png"
+        )
+    else:
+        chemin_icone = (
+            Path(__file__).resolve().parents[2]
+            / "assets"
+            / "icons"
+            / "app-icon.png"
+        )
+
+    if chemin_icone.exists():
+        icone_application = tk.PhotoImage(
+            file=str(chemin_icone)
+        )
+        fenetre.iconphoto(
+            True,
+            icone_application
+        )
 
 style = ttk.Style()
 
