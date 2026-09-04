@@ -65,6 +65,12 @@ class ResultatNegatifError(Exception):
 # ==============================
 
 fenetre = tk.Tk()
+if sys.platform.startswith("linux"):
+    fenetre.tk.call(
+        "tk",
+        "scaling",
+        1.25
+    )
 fenetre.title("Storage Unit Converter")
 fenetre.geometry(
     f"{LARGEUR_FENETRE}x{HAUTEUR_MIN_FENETRE}"
