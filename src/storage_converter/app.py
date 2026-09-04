@@ -1,3 +1,4 @@
+import sys
 import tkinter as tk
 from tkinter import ttk
 from . import converter
@@ -66,10 +67,21 @@ fenetre.geometry(
 
 
 style = ttk.Style()
+
 style.configure(
     "Custom.TMenubutton",
     foreground="black"
 )
+
+if sys.platform == "win32":
+    style.configure(
+        "Custom.TMenubutton",
+        foreground="black",
+        padding=(8, 4),
+        borderwidth=2,
+        relief="raised"
+    )
+
 style.configure(
     "Custom.TButton",
     foreground="black"
