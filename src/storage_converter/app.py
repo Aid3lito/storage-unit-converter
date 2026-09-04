@@ -9,12 +9,8 @@ from . import converter
 # CONSTANTES
 # ==============================
 
-if sys.platform.startswith("linux"):
-    LARGEUR_FENETRE = 900
-    HAUTEUR_MIN_FENETRE = 900
-else:
-    LARGEUR_FENETRE = 800
-    HAUTEUR_MIN_FENETRE = 800
+LARGEUR_FENETRE = 800
+HAUTEUR_MIN_FENETRE = 800
 
 PLACEHOLDER = "e.g. 100"
 
@@ -65,20 +61,9 @@ class ResultatNegatifError(Exception):
 # ==============================
 
 fenetre = tk.Tk()
-if sys.platform.startswith("linux"):
-    fenetre.tk.call(
-        "tk",
-        "scaling",
-        1.25
-    )
 fenetre.title("Storage Unit Converter")
 fenetre.geometry(
     f"{LARGEUR_FENETRE}x{HAUTEUR_MIN_FENETRE}"
-)
-
-fenetre.minsize(
-    LARGEUR_FENETRE,
-    HAUTEUR_MIN_FENETRE
 )
 
 if sys.platform.startswith("linux"):
@@ -546,18 +531,13 @@ def ajuster_hauteur_fenetre():
     hauteur_necessaire = fenetre.winfo_reqheight()
     largeur_actuelle = fenetre.winfo_width()
 
-    largeur = max(
-        LARGEUR_FENETRE,
-        largeur_actuelle
-    )
-
     hauteur = max(
         HAUTEUR_MIN_FENETRE,
         hauteur_necessaire
     )
 
     fenetre.geometry(
-        f"{largeur}x{hauteur}"
+        f"{largeur_actuelle}x{hauteur}"
     )
 
 
