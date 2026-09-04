@@ -73,15 +73,6 @@ style.configure(
     foreground="black"
 )
 
-if sys.platform == "win32":
-    style.configure(
-        "Custom.TMenubutton",
-        foreground="black",
-        padding=(8, 4),
-        borderwidth=2,
-        relief="raised"
-    )
-
 style.configure(
     "Custom.TButton",
     foreground="black"
@@ -375,12 +366,24 @@ def ajouter_groupe_unites(menu, titre, unites, variable):
         )
 
 def creer_menu_unites(parent, variable):
-    bouton = ttk.Menubutton(
-        parent,
-        textvariable=variable,
-        width=20,
-        style="Custom.TMenubutton"
-    )
+    if sys.platform == "win32":
+        bouton = tk.Menubutton(
+            parent,
+            textvariable=variable,
+            width=20,
+            relief="raised",
+            borderwidth=1,
+            padx=6,
+            pady=3,
+            fg="black"
+        )
+    else:
+        bouton = ttk.Menubutton(
+            parent,
+            textvariable=variable,
+            width=20,
+            style="Custom.TMenubutton"
+        )
 
     menu = tk.Menu(
         bouton,
@@ -414,12 +417,24 @@ def creer_menu_unites(parent, variable):
 # CRÉATION DU MENU DES OPÉRATIONS
 
 def creer_menu_operations(parent, variable):
-    bouton = ttk.Menubutton(
-        parent,
-        textvariable=variable,
-        width=20,
-        style="Custom.TMenubutton"
-    )
+    if sys.platform == "win32":
+        bouton = tk.Menubutton(
+            parent,
+            textvariable=variable,
+            width=20,
+            relief="raised",
+            borderwidth=1,
+            padx=6,
+            pady=3,
+            fg="black"
+        )
+    else:
+        bouton = ttk.Menubutton(
+            parent,
+            textvariable=variable,
+            width=20,
+            style="Custom.TMenubutton"
+        )
 
     menu = tk.Menu(
         bouton,
