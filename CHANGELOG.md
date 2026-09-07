@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Clarified GUI and CLI distribution methods in the README
 - Documented standalone CLI usage for pre-built release archives
 - Recommended `pipx` for end-user CLI installation from source
+- Improved initial window sizing across macOS, Windows and Linux
 
 ## [1.0.0] - 2026-08-21
 
