@@ -164,7 +164,8 @@ For command-line usage, see the [Command-Line Interface](#command-line-interface
 2. Enter a value.
 3. Select the source unit.
 4. Select the desired result unit.
-5. Click **Calculate**.
+5. Optionally use **Swap units** to exchange the source and result units.
+6. Click **Calculate**.
 
 ### Addition and Subtraction
 
@@ -174,6 +175,12 @@ For command-line usage, see the [Command-Line Interface](#command-line-interface
 4. Add additional input fields if necessary.
 5. Select the desired result unit.
 6. Click **Calculate**.
+
+### History
+
+Calculation history is automatically saved between application sessions.
+
+Use **Clear History** to remove both the visible history and the saved history.
 
 ## Keyboard shortcuts
 
@@ -317,6 +324,7 @@ Pre-built graphical desktop applications are available through GitHub Releases f
 - Linux 64-bit (`x86_64`)
 
 The downloadable release archives contain both the graphical desktop application and a standalone command-line executable.
+A Debian package (`.deb`) is also available for supported Debian-based Linux distributions.
 
 ## Contributing
 
