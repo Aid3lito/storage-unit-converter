@@ -21,6 +21,7 @@ Built with Python and Tkinter, Storage Unit Converter provides both a graphical 
 - Reset the interface instantly
 - No external runtime dependencies for pre-built desktop releases
 - Keyboard shortcuts for calculation, copy, reset and focus control
+- Swap source and target units instantly in Conversion mode
 
 ## Supported Platforms
 

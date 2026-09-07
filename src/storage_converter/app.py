@@ -43,6 +43,10 @@ TEXTE_RESULTAT_DEFAUT = "Result:"
 COULEUR_TEXTE = "#000000"
 COULEUR_CHAMP = "#FFFFFF"
 
+PADDING_RESULT_LABEL = (5, 5)
+PADDING_RESULT_MENU = (0, 5)
+PADDING_SWAP = (8, 18)
+
 lignes_valeurs = []
 historique = []
 
@@ -344,7 +348,19 @@ def copier_resultat():
     )
 
 
+def inverser_unites():
+    if not lignes_valeurs:
+        return
 
+    unite_source = lignes_valeurs[0]["unite"].get()
+    unite_cible = unite_resultat.get()
+
+    lignes_valeurs[0]["unite"].set(unite_cible)
+    unite_resultat.set(unite_source)
+
+    label_resultat.config(
+        text=TEXTE_RESULTAT_DEFAUT
+    )
 
 
 # MISE À JOUR DYNAMIQUE DE L'INTERFACE
@@ -359,12 +375,26 @@ def mettre_a_jour_interface():
             ligne["frame"].destroy()
 
         bouton_ajouter_valeur.pack_forget()
+        frame_ajout.pack_forget()
+
+        bouton_inverser_unites.pack(
+            pady=PADDING_SWAP,
+            before=frame_boutons
+        )
 
     else:
         while len(lignes_valeurs) < minimum:
             ajouter_ligne_valeur()
 
-        bouton_ajouter_valeur.pack(pady=10)
+        frame_ajout.pack(
+            before=label_unite_resultat
+        )
+
+        bouton_ajouter_valeur.pack(
+            pady=10
+        )
+
+        bouton_inverser_unites.pack_forget()
 
     ajuster_hauteur_fenetre()
 
@@ -877,8 +907,6 @@ frame_valeurs.pack(pady=20)
 
 frame_ajout = tk.Frame(fenetre)
 
-frame_ajout.pack()
-
 ajouter_ligne_valeur()
 lignes_valeurs[0]["entree"].focus_set()
 
@@ -900,7 +928,10 @@ label_unite_resultat = tk.Label(
     text="Result unit",
     fg=COULEUR_TEXTE
 )
-label_unite_resultat.pack(pady=(20, 5))
+label_unite_resultat.pack(
+    pady=PADDING_RESULT_LABEL
+)
+
 
 unite_resultat = tk.StringVar(
     value=UNITE_RESULTAT_DEFAUT
@@ -911,8 +942,20 @@ menu_unite_resultat = creer_menu_unites(
     unite_resultat
 )
 
-menu_unite_resultat.pack()
+menu_unite_resultat.pack(
+    pady=PADDING_RESULT_MENU
+)
 
+bouton_inverser_unites = ttk.Button(
+    fenetre,
+    text="⇅ Swap units",
+    command=inverser_unites,
+    style="Custom.TButton"
+)
+
+bouton_inverser_unites.pack(
+    pady=PADDING_SWAP
+)
 
 
 
