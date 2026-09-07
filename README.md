@@ -19,8 +19,8 @@ Built with Python and Tkinter, Storage Unit Converter provides both a graphical 
 - Calculation history
 - Copy results to the clipboard
 - Reset the interface instantly
-- Keyboard support with the Enter key
 - No external runtime dependencies for pre-built desktop releases
+- Keyboard shortcuts for calculation, copy, reset and focus control
 
 ## Supported Platforms
 
@@ -199,6 +199,9 @@ storage-unit-converter/
 │   └── screenshots/
 │       └── storage-unit-converter.png
 ├── packaging/
+│   ├── linux/
+│   │   ├── storage-unit-converter.desktop
+│   │   └── storage-unit-converter.png
 │   ├── launcher.py
 │   └── cli_launcher.py
 ├── src/
@@ -268,6 +271,14 @@ Example output:
 
 ```bash
 suc --help
+```
+
+### List supported units
+
+Display all decimal and binary storage units supported by the CLI:
+
+```bash
+suc units
 ```
 
 ## Development

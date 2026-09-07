@@ -113,6 +113,29 @@ class TestCliSubtraction(unittest.TestCase):
         with self.assertRaises(ValueError):
             cli.run_subtraction(args)
 
+class TestCliUnits(unittest.TestCase):
+
+    def test_units(self):
+        parser = cli.create_parser()
+
+        args = parser.parse_args(
+            ["units"]
+        )
+
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            result = args.function(args)
+
+        text = output.getvalue()
+
+        self.assertIsNone(result)
+        self.assertIn("Decimal units:", text)
+        self.assertIn("Binary units:", text)
+        self.assertIn("GB", text)
+        self.assertIn("GigaByte", text)
+        self.assertIn("GiB", text)
+        self.assertIn("GibiByte", text)
 
 class TestCliMain(unittest.TestCase):
 

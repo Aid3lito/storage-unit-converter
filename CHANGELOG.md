@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Added `suc units` command to display all supported decimal and binary storage units
+
 ## [1.1.0] - 2026-09-07
 
 ### Added

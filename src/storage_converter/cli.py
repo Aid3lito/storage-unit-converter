@@ -82,6 +82,18 @@ def run_conversion(args):
         f"{get_acronym(target_unit)}"
     )
 
+def run_units(args):
+    print("Decimal units:")
+
+    for name, data in converter.units_decimal.items():
+        print(f"  {data['acronyme']:<4} {name}")
+
+    print()
+
+    print("Binary units:")
+
+    for name, data in converter.units_binary.items():
+        print(f"  {data['acronyme']:<4} {name}")
 
 def parse_calculation_values(values):
     if len(values) < 4:
@@ -180,6 +192,17 @@ Supported units:
     subparsers = parser.add_subparsers(
         dest="command",
         required=True
+    )
+
+        # Units
+
+    units_parser = subparsers.add_parser(
+        "units",
+        help="Display the list of supported storage units."
+    )
+
+    units_parser.set_defaults(
+        function=run_units
     )
 
 
