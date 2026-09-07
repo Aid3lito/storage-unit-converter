@@ -1,4 +1,5 @@
 import sys
+import json
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk
@@ -58,6 +59,33 @@ class ResultatNegatifError(Exception):
 
 
 
+
+
+# ==============================
+# MÉMOIRE
+# ==============================
+
+def obtenir_dossier_donnees():
+    if sys.platform == "win32":
+        dossier_base = Path.home() / "AppData" / "Roaming"
+        return dossier_base / "StorageUnitConverter"
+
+    if sys.platform == "darwin":
+        return (
+            Path.home()
+            / "Library"
+            / "Application Support"
+            / "StorageUnitConverter"
+        )
+
+    return (
+        Path.home()
+        / ".config"
+        / "storage-unit-converter"
+    )
+
+DOSSIER_DONNEES = obtenir_dossier_donnees()
+FICHIER_HISTORIQUE = DOSSIER_DONNEES / "history.json"
 
 
 # ==============================
@@ -831,6 +859,48 @@ def formater_nombre(nombre):
 
 # GESTION DE L'HISTORIQUE
 
+# Chargement de l'historique au démarrage
+def charger_historique():
+    if not FICHIER_HISTORIQUE.exists():
+        return
+
+    try:
+        with FICHIER_HISTORIQUE.open(
+            "r",
+            encoding="utf-8"
+        ) as fichier:
+            donnees = json.load(fichier)
+
+        if not isinstance(donnees, list):
+            return
+
+        historique.clear()
+
+        for entree in donnees[:MAX_HISTORIQUE]:
+            if isinstance(entree, str):
+                historique.append(entree)
+
+    except (OSError, json.JSONDecodeError):
+        return
+
+# Sauvegarde de l'historique
+def sauvegarder_historique():
+    DOSSIER_DONNEES.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    with FICHIER_HISTORIQUE.open(
+        "w",
+        encoding="utf-8"
+    ) as fichier:
+        json.dump(
+            historique,
+            fichier,
+            ensure_ascii=False,
+            indent=2
+        )
+
 # Ajouter une valeur à l'historique
 def ajouter_historique(texte):
     historique.insert(0, texte)
@@ -839,6 +909,7 @@ def ajouter_historique(texte):
         historique.pop()
 
     mettre_a_jour_historique()
+    sauvegarder_historique()
 
 # Mettre à jour l'historique
 def mettre_a_jour_historique():
@@ -853,6 +924,7 @@ def mettre_a_jour_historique():
 def effacer_historique():
     historique.clear()
     mettre_a_jour_historique()
+    sauvegarder_historique()
 
 
 
@@ -1089,6 +1161,9 @@ if sys.platform == "darwin":
 
 # Cliquer en dehors des zones de texte pour désélectionner
 fenetre.bind("<Button-1>", retirer_focus_entree, add="+")
+
+charger_historique()
+mettre_a_jour_historique()
 
 fenetre.after_idle(definir_taille_initiale)
 
