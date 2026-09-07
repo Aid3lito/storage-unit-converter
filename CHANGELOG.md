@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-07
+
 ### Added
 
 - Added standalone CLI binaries to pre-built release archives for macOS, Windows and Linux
