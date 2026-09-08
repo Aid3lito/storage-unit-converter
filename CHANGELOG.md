@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Added keyboard shortcuts for swapping source and result units in Conversion mode
+
 ## [1.2.0] - 2026-09-07
 
 ### Added

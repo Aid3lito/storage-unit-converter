@@ -377,6 +377,9 @@ def copier_resultat():
 
 
 def inverser_unites():
+    if operation.get() != OPERATION_CONVERSION:
+        return
+    
     if not lignes_valeurs:
         return
 
@@ -1148,6 +1151,12 @@ fenetre.bind(
     lambda event: reinitialiser_interface()
 )
 
+# <CTRL + SHIFT + S> pour swap
+fenetre.bind(
+    "<Control-Shift-S>",
+    lambda event: inverser_unites()
+)
+
 if sys.platform == "darwin":
     fenetre.bind(
         "<Command-Shift-C>",
@@ -1159,6 +1168,11 @@ if sys.platform == "darwin":
         lambda event: reinitialiser_interface()
     )
 
+    fenetre.bind(
+        "<Command-Shift-S>",
+        lambda event: inverser_unites()
+)
+    
 # Cliquer en dehors des zones de texte pour désélectionner
 fenetre.bind("<Button-1>", retirer_focus_entree, add="+")
 
