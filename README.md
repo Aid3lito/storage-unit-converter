@@ -316,9 +316,13 @@ macOS / Linux
 
 ```bash
 git clone https://github.com/Aid3lito/storage-unit-converter.git
+
 cd storage-unit-converter
+
 python3 -m venv .venv
+
 source .venv/bin/activate
+
 python3 -m pip install -e .
 ```
 
@@ -326,9 +330,13 @@ Windows PowerShell
 
 ```bash
 git clone https://github.com/Aid3lito/storage-unit-converter.git
+
 cd storage-unit-converter
+
 python -m venv .venv
+
 .venv\Scripts\Activate.ps1
+
 python -m pip install -e .
 ```
 
