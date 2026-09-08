@@ -88,6 +88,18 @@ The command-line interface can be used either from a pre-built release archive o
 
 After extracting a pre-built release archive, run the standalone CLI from the extracted directory.
 
+### Version
+
+```bash
+suc --version
+```
+
+Equivalent long command:
+
+```bash
+storage-unit-converter --version
+```
+
 #### macOS / Linux
 
 ```bash

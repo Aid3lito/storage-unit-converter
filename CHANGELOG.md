@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://spam.inserm.fr/fmlurls
 - Added keyboard shortcuts for swapping source and result units in Conversion mode
 - Added persistent basic user preferences for the selected operation, source units and result unit
 - Added automatic creation and recovery of the preferences file
+- Added `--version` support to both `suc` and `storage-unit-converter`
 
 ### Changed
 
@@ -19,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://spam.inserm.fr/fmlurls
 - Improved Tab and Shift + Tab navigation across input fields and controls
 - Improved focus behavior when switching operation modes and using Reset
 - Hidden unnecessary row deletion controls in Conversion mode
+- Improved CLI help with the complete list of supported decimal and binary units
+- Updated package version metadata to 1.3.0
 
 ## [1.2.0] - 2026-09-07
 

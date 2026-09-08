@@ -1,6 +1,6 @@
 import argparse
 import sys
-
+from importlib.metadata import PackageNotFoundError, version
 from . import converter
 
 
@@ -15,6 +15,12 @@ EXIT_ERROR = 1
 # ==============================
 # HELPERS
 # ==============================
+
+def get_version():
+    try:
+        return version("storage-unit-converter")
+    except PackageNotFoundError:
+        return "development"
 
 def resolve_unit(unit):
     resolved_unit = converter.trouver_unite(unit)
@@ -174,7 +180,6 @@ def run_subtraction(args):
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        prog="suc",
         description="Storage Unit Converter CLI",
         epilog="""
 Examples:
@@ -183,10 +188,16 @@ Examples:
   suc subtract 2 GB 500 MB --to GB
 
 Supported units:
-  Decimal: B, KB, MB, GB, TB, PB
-  Binary:  B, KiB, MiB, GiB, TiB, PiB
+  Decimal: B, KB, MB, GB, TB, PB, EB, ZB, YB
+  Binary:  B, KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB
 """,
         formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"Storage Unit Converter {get_version()}"
     )
 
     subparsers = parser.add_subparsers(
