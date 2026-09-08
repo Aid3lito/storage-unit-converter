@@ -180,16 +180,30 @@ def run_subtraction(args):
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description="Storage Unit Converter CLI",
+        description=(
+            "Storage Unit Converter\n"
+            "======================\n\n"
+            "Fast decimal and binary storage unit conversions "
+            "from your terminal."
+        ),
         epilog="""
 Examples:
+
   suc convert 100 GB GiB
   suc add 1 GB 500 MB --to GB
   suc subtract 2 GB 500 MB --to GB
+  suc units
 
+  
 Supported units:
+
   Decimal: B, KB, MB, GB, TB, PB, EB, ZB, YB
   Binary:  B, KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB
+
+  
+Tip:
+
+  Use 'suc <command> --help' for command-specific help.
 """,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -202,7 +216,9 @@ Supported units:
 
     subparsers = parser.add_subparsers(
         dest="command",
-        required=True
+        required=True,
+        title="Commands",
+        metavar=""
     )
 
         # Units
