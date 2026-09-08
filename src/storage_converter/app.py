@@ -4,6 +4,7 @@ from pathlib import Path
 import tkinter as tk
 from tkinter import ttk
 from . import converter
+from . import history_store
 
 
 # ==============================
@@ -1032,45 +1033,21 @@ def charger_preferences():
 
 # Chargement de l'historique au démarrage
 def charger_historique():
-    if not FICHIER_HISTORIQUE.exists():
-        return
+    historique.clear()
 
-    try:
-        with FICHIER_HISTORIQUE.open(
-            "r",
-            encoding="utf-8"
-        ) as fichier:
-            donnees = json.load(fichier)
-
-        if not isinstance(donnees, list):
-            return
-
-        historique.clear()
-
-        for entree in donnees[:MAX_HISTORIQUE]:
-            if isinstance(entree, str):
-                historique.append(entree)
-
-    except (OSError, json.JSONDecodeError):
-        return
+    historique.extend(
+        history_store.load_history(
+            FICHIER_HISTORIQUE,
+            MAX_HISTORIQUE
+        )
+    )
 
 # Sauvegarde de l'historique
 def sauvegarder_historique():
-    DOSSIER_DONNEES.mkdir(
-        parents=True,
-        exist_ok=True
+    history_store.save_history(
+        FICHIER_HISTORIQUE,
+        historique
     )
-
-    with FICHIER_HISTORIQUE.open(
-        "w",
-        encoding="utf-8"
-    ) as fichier:
-        json.dump(
-            historique,
-            fichier,
-            ensure_ascii=False,
-            indent=2
-        )
 
 # Ajouter une valeur à l'historique
 def ajouter_historique(texte):
