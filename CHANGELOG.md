@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Added keyboard shortcuts for swapping source and result units in Conversion mode
 
+### Changed
+
+- Improved keyboard focus and navigation throughout the graphical interface
+- Improved Tab and Shift + Tab navigation across input fields and controls
+- Improved focus behavior when switching operation modes and using Reset
+- Hidden unnecessary row deletion controls in Conversion mode
+
 ## [1.2.0] - 2026-09-07
 
 ### Added

@@ -405,6 +405,8 @@ def mettre_a_jour_interface():
             ligne = lignes_valeurs.pop()
             ligne["frame"].destroy()
 
+        lignes_valeurs[0]["bouton_supprimer"].grid_remove()
+
         bouton_ajouter_valeur.pack_forget()
         frame_ajout.pack_forget()
 
@@ -416,6 +418,9 @@ def mettre_a_jour_interface():
     else:
         while len(lignes_valeurs) < minimum:
             ajouter_ligne_valeur()
+        
+        for ligne in lignes_valeurs:
+            ligne["bouton_supprimer"].grid()
 
         frame_ajout.pack(
             before=label_unite_resultat
@@ -428,7 +433,7 @@ def mettre_a_jour_interface():
         bouton_inverser_unites.pack_forget()
 
     ajuster_hauteur_fenetre()
-
+    focus_premiere_ligne_vide()
 
 
 
@@ -654,6 +659,29 @@ def ajuster_hauteur_fenetre():
 
 
 
+# FOCUS
+
+def ajouter_ligne_valeur_et_focus():
+    ajouter_ligne_valeur()
+    lignes_valeurs[-1]["entree"].focus_set()
+
+
+def focus_premiere_ligne_vide():
+    cible = None
+
+    for ligne in lignes_valeurs:
+        contenu = ligne["entree"].get().strip()
+
+        if contenu == "" or contenu == PLACEHOLDER:
+            cible = ligne["entree"]
+            break
+
+    if cible is None and lignes_valeurs:
+        cible = lignes_valeurs[0]["entree"]
+
+    if cible is not None:
+        fenetre.after_idle(cible.focus_set)
+
 
 # RÉINITIALISATION
 
@@ -680,6 +708,8 @@ def reinitialiser_interface():
     label_resultat.config(
         text=TEXTE_RESULTAT_DEFAUT
     )
+
+    lignes_valeurs[0]["entree"].focus_set()
 
 
 
@@ -984,11 +1014,12 @@ frame_ajout = tk.Frame(fenetre)
 
 ajouter_ligne_valeur()
 lignes_valeurs[0]["entree"].focus_set()
+lignes_valeurs[0]["bouton_supprimer"].grid_remove()
 
 bouton_ajouter_valeur = ttk.Button(
     frame_ajout,
     text="+ Add value",
-    command=ajouter_ligne_valeur,
+    command=ajouter_ligne_valeur_et_focus,
     style="Custom.TButton"
 )
 
@@ -1101,7 +1132,8 @@ liste_historique = tk.Listbox(
 scrollbar_historique = tk.Scrollbar(
     frame_historique,
     orient="vertical",
-    command=liste_historique.yview
+    command=liste_historique.yview,
+    takefocus=False
 )
 
 liste_historique.config(

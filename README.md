@@ -193,6 +193,8 @@ Use **Clear History** to remove both the visible history and the saved history.
 - `Cmd + R` — Reset the interface on macOS
 - `Ctrl + Shift + S` — Swap source and result units in Conversion mode
 - `Cmd + Shift + S` — Swap source and result units in Conversion mode on macOS
+- `Tab` — Move focus to the next interface control
+- `Shift + Tab` — Move focus to the previous interface control
 
 ## Project Structure
 
