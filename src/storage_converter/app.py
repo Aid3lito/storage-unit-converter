@@ -656,6 +656,8 @@ def ajuster_hauteur_fenetre():
         f"{largeur_actuelle}x{hauteur}"
     )
 
+    fenetre.update_idletasks()
+
 
 
 
