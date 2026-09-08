@@ -182,6 +182,20 @@ Calculation history is automatically saved between application sessions.
 
 Use **Clear History** to remove both the visible history and the saved history.
 
+### Persistent preferences
+
+Storage Unit Converter automatically remembers basic user preferences between sessions:
+
+- Selected operation
+- Source unit in Conversion mode
+- First two source units in Addition and Subtraction modes
+- Result unit
+
+Preferences are stored automatically in the user's application data directory.
+No manual setup is required.
+
+Using Reset restores the default preferences and saves them for the next session.
+
 ## Keyboard shortcuts
 
 - `Enter` — Calculate

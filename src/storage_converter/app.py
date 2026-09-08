@@ -86,6 +86,7 @@ def obtenir_dossier_donnees():
 
 DOSSIER_DONNEES = obtenir_dossier_donnees()
 FICHIER_HISTORIQUE = DOSSIER_DONNEES / "history.json"
+FICHIER_PREFERENCES = DOSSIER_DONNEES / "preferences.json"
 
 
 # ==============================
@@ -188,7 +189,19 @@ def recuperer_valeurs():
     return valeurs
 
 
+def obtenir_unites_affichage():
+    unites = []
 
+    for groupe in (
+        converter.units_decimal,
+        converter.units_binary
+    ):
+        for nom, donnees in groupe.items():
+            unites.append(
+                f'{donnees["acronyme"]} - {nom}'
+            )
+
+    return unites
 
 
 # CALCULS
@@ -439,6 +452,10 @@ def mettre_a_jour_interface():
 
 # CRÉATION DES MENUS D'UNITÉS
 
+def definir_unite(variable, valeur):
+    variable.set(valeur)
+    sauvegarder_preferences()
+
 def ajouter_groupe_unites(menu, titre, unites, variable):
     menu.add_command(
         label=f"--- {titre} ---",
@@ -450,7 +467,10 @@ def ajouter_groupe_unites(menu, titre, unites, variable):
 
         menu.add_command(
             label=texte,
-            command=lambda valeur=texte: variable.set(valeur)
+            command=lambda valeur=texte: definir_unite(
+                variable,
+                valeur
+            )
         )
 
 def creer_menu_unites(parent, variable):
@@ -573,6 +593,7 @@ def creer_menu_operations(parent, variable):
     def choisir_operation(valeur):
         variable.set(valeur)
         mettre_a_jour_interface()
+        sauvegarder_preferences()
 
     for choix in OPERATIONS:
         menu.add_command(
@@ -711,7 +732,7 @@ def reinitialiser_interface():
 
     lignes_valeurs[0]["entree"].focus_set()
 
-
+    sauvegarder_preferences()
 
 
 
@@ -886,7 +907,124 @@ def formater_nombre(nombre):
     return texte
 
 
+# ==============================
+# GESTION DES PRÉFÉRENCES
+# ==============================
 
+def sauvegarder_preferences():
+    DOSSIER_DONNEES.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    choix_operation = operation.get()
+
+    source_units = []
+
+    if lignes_valeurs:
+        source_units.append(
+            lignes_valeurs[0]["unite"].get()
+        )
+
+    if (
+        choix_operation in (
+            OPERATION_ADDITION,
+            OPERATION_SOUSTRACTION
+        )
+        and len(lignes_valeurs) >= 2
+    ):
+        source_units.append(
+            lignes_valeurs[1]["unite"].get()
+        )
+
+    preferences = {
+        "operation": choix_operation,
+        "source_units": source_units,
+        "result_unit": unite_resultat.get()
+    }
+
+    with FICHIER_PREFERENCES.open(
+        "w",
+        encoding="utf-8"
+    ) as fichier:
+        json.dump(
+            preferences,
+            fichier,
+            ensure_ascii=False,
+            indent=2
+        )
+
+
+def charger_preferences():
+    if not FICHIER_PREFERENCES.exists():
+        sauvegarder_preferences()
+        return
+
+    try:
+        with FICHIER_PREFERENCES.open(
+            "r",
+            encoding="utf-8"
+        ) as fichier:
+            preferences = json.load(fichier)
+
+        if not isinstance(preferences, dict):
+            sauvegarder_preferences()
+            return
+
+        operation_sauvegardee = preferences.get(
+            "operation"
+        )
+
+        source_units_sauvegardees = preferences.get(
+            "source_units"
+        )
+
+        unite_resultat_sauvegardee = preferences.get(
+            "result_unit"
+        )
+
+        if operation_sauvegardee in OPERATIONS:
+            operation.set(
+                operation_sauvegardee
+            )
+
+        mettre_a_jour_interface()
+
+        unites_valides = obtenir_unites_affichage()
+
+        if isinstance(source_units_sauvegardees, list):
+            if (
+                len(source_units_sauvegardees) >= 1
+                and source_units_sauvegardees[0] in unites_valides
+            ):
+                lignes_valeurs[0]["unite"].set(
+                    source_units_sauvegardees[0]
+                )
+
+            if (
+                operation.get() in (
+                    OPERATION_ADDITION,
+                    OPERATION_SOUSTRACTION
+                )
+                and len(lignes_valeurs) >= 2
+                and len(source_units_sauvegardees) >= 2
+                and source_units_sauvegardees[1] in unites_valides
+            ):
+                lignes_valeurs[1]["unite"].set(
+                    source_units_sauvegardees[1]
+                )
+
+        if unite_resultat_sauvegardee in unites_valides:
+            unite_resultat.set(
+                unite_resultat_sauvegardee
+            )
+
+    except (
+        OSError,
+        json.JSONDecodeError
+    ):
+        sauvegarder_preferences()
+        return
 
 
 
@@ -1207,6 +1345,8 @@ if sys.platform == "darwin":
     
 # Cliquer en dehors des zones de texte pour désélectionner
 fenetre.bind("<Button-1>", retirer_focus_entree, add="+")
+
+charger_preferences()
 
 charger_historique()
 mettre_a_jour_historique()

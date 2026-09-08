@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://spam.inserm.fr/fmlurls
 ### Added
 
 - Added keyboard shortcuts for swapping source and result units in Conversion mode
+- Added persistent basic user preferences for the selected operation, source units and result unit
+- Added automatic creation and recovery of the preferences file
 
 ### Changed
 
