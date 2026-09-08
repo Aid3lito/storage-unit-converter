@@ -656,7 +656,6 @@ def ajuster_hauteur_fenetre():
         f"{largeur_actuelle}x{hauteur}"
     )
 
-    fenetre.update_idletasks()
 
 
 
@@ -824,7 +823,11 @@ def creer_ligne_valeur():
     }
 
     bouton_supprimer.config(
-        command=lambda: supprimer_ligne_valeur(ligne)
+        command=lambda: fenetre.after(
+            0,
+            supprimer_ligne_valeur,
+            ligne
+        )
     )
 
     return ligne
