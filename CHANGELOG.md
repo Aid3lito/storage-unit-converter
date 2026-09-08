@@ -2,8 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/).
+The format is based on [Keep a Changelog](https://spam.inserm.fr/fmlurlsvc/?fewReq=:B:JVUzODw8My9/NDsnOS9gbTQ5ODM5OC96YG5naH18e2w0PjlvMGsxaDA9az4/Oj4+OzFrPGs/azwwMGtsazA8aztsOz09PTA4bS99NDg+MTExPzE/PDoveGBtND8xMUt/UTl4OTs6OD0wJD8xMUt/UTl6OTs6OD0wL3tqeX00YXxuZn17YGtmfGVlYGx7SW5kaGBlJ2pmZC9qNDw7L2FtZTQ5&url=https%3a%2f%2fkeepachangelog.com%2fen%2f1.1.0%2f ),
+and this project adheres to [Semantic Versioning](https://spam.inserm.fr/fmlurlsvc/?fewReq=:B:JVUzODw8My9/NDsnOS9gbTQ5ODM5OC96YG5naH18e2w0bD9oO2s9Omo6Oz09O2g4Pm1sMWs/ODo6OzkwOmw7OG1oPTo7ajoxOi99NDg+MTExPzE/PDoveGBtND8xMUt/UTl4OTs6OD0wJD8xMUt/UTl6OTs6OD0wL3tqeX00YXxuZn17YGtmfGVlYGx7SW5kaGBlJ2pmZC9qNDw7L2FtZTQ5&url=https%3a%2f%2fsemver.org%2f ).
 
 ## [Unreleased]
 

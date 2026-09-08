@@ -136,7 +136,6 @@ style.configure(
 
 
 
-
 # ==============================
 # FONCTIONS
 # ==============================
@@ -823,11 +822,7 @@ def creer_ligne_valeur():
     }
 
     bouton_supprimer.config(
-        command=lambda: fenetre.after(
-            0,
-            supprimer_ligne_valeur,
-            ligne
-        )
+        command=lambda: supprimer_ligne_valeur(ligne)
     )
 
     return ligne

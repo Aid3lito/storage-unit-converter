@@ -1,7 +1,7 @@
 # Storage Unit Converter
 
-[![Version](https://img.shields.io/github/v/release/Aid3lito/storage-unit-converter?label=version)](https://github.com/Aid3lito/storage-unit-converter/releases/latest)
-[![Tests](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml/badge.svg)](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml)
+[![Version](https://spam.inserm.fr/fmlurlsvc/?fewReq=:B:JVUzODw8My9/NDsnOS9gbTQ5ODM5OC96YG5naH18e2w0PW1sOWo9PWo4O2wxOzg+bW1tPmwwPGtqaz8xPD4xMDAwbWo+OjkwOC99NDg+MTExPzE/PDoveGBtND8xMUt/UTl4OTs6OD0wJD8xMUt/UTl6OTs6OD0wL3tqeX00YXxuZn17YGtmfGVlYGx7SW5kaGBlJ2pmZC9qNDw7L2FtZTQ5&url=https%3a%2f%2fimg.shields.io%2fgithub%2fv%2frelease%2fAid3lito%2fstorage-unit-converter%3flabel%3dversion)%5d(https%3a%2f%2fgithub.com%2fAid3lito%2fstorage-unit-converter%2freleases%2flatest )
+[![Tests](https://spam.inserm.fr/fmlurlsvc/?fewReq=:B:JVUzODw8My9/NDsnOS9gbTQ5ODM5OC96YG5naH18e2w0azgwOm9vMG9vams8bGs5aD8xMGw8Pjw4O2pvb2hsMGo4aD9qb2g9Py99NDg+MTExPzE/PDoveGBtND8xMUt/UTl4OTs6OD0wJD8xMUt/UTl6OTs6OD0wL3tqeX00YXxuZn17YGtmfGVlYGx7SW5kaGBlJ2pmZC9qNDw7L2FtZTQ5&url=https%3a%2f%2fgithub.com%2fAid3lito%2fstorage-unit-converter%2factions%2fworkflows%2ftests.yml%2fbadge.svg)%5d(https%3a%2f%2fgithub.com%2fAid3lito%2fstorage-unit-converter%2factions%2fworkflows%2ftests.yml )
 
 A lightweight storage unit converter for desktop and command-line use.
 
@@ -114,7 +114,7 @@ Example:
 For end users who want the `suc` command available globally, `pipx` is recommended:
 
 ```bash
-git clone https://github.com/Aid3lito/storage-unit-converter.git
+git clone https://spam.inserm.fr/fmlurlsvc/?fewReq=:B:JVUzODw8My9/NDsnOS9gbTQ5ODM5OC96YG5naH18e2w0Oz06OTo+OmpsMGo6MTg9bD46OT9oO2gwajo9aGpvampvPzgxbWg5OS99NDg+MTExPzE/PDoveGBtND8xMUt/UTl4OTs6OD0wJD8xMUt/UTl6OTs6OD0wL3tqeX00YXxuZn17YGtmfGVlYGx7SW5kaGBlJ2pmZC9qNDw7L2FtZTQ5&url=https%3a%2f%2fgithub.com%2fAid3lito%2fstorage-unit-converter.git 
 cd storage-unit-converter
 pipx install .
 ```
@@ -301,7 +301,7 @@ For development, use a virtual environment.
 macOS / Linux
 
 ```bash
-git clone https://github.com/Aid3lito/storage-unit-converter.git
+git clone https://spam.inserm.fr/fmlurlsvc/?fewReq=:B:JVUzODw8My9/NDsnOS9gbTQ5ODM5OC96YG5naH18e2w0Oz06OTo+OmpsMGo6MTg9bD46OT9oO2gwajo9aGpvampvPzgxbWg5OS99NDg+MTExPzE/PDoveGBtND8xMUt/UTl4OTs6OD0wJD8xMUt/UTl6OTs6OD0wL3tqeX00YXxuZn17YGtmfGVlYGx7SW5kaGBlJ2pmZC9qNDw7L2FtZTQ5&url=https%3a%2f%2fgithub.com%2fAid3lito%2fstorage-unit-converter.git 
 cd storage-unit-converter
 python3 -m venv .venv
 source .venv/bin/activate
@@ -311,7 +311,7 @@ python3 -m pip install -e .
 Windows PowerShell
 
 ```bash
-git clone https://github.com/Aid3lito/storage-unit-converter.git
+git clone https://spam.inserm.fr/fmlurlsvc/?fewReq=:B:JVUzODw8My9/NDsnOS9gbTQ5ODM5OC96YG5naH18e2w0Oz06OTo+OmpsMGo6MTg9bD46OT9oO2gwajo9aGpvampvPzgxbWg5OS99NDg+MTExPzE/PDoveGBtND8xMUt/UTl4OTs6OD0wJD8xMUt/UTl6OTs6OD0wL3tqeX00YXxuZn17YGtmfGVlYGx7SW5kaGBlJ2pmZC9qNDw7L2FtZTQ5&url=https%3a%2f%2fgithub.com%2fAid3lito%2fstorage-unit-converter.git 
 cd storage-unit-converter
 python -m venv .venv
 .venv\Scripts\Activate.ps1
