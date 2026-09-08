@@ -115,7 +115,9 @@ For end users who want the `suc` command available globally, `pipx` is recommend
 
 ```bash
 git clone https://github.com/Aid3lito/storage-unit-converter.git
+
 cd storage-unit-converter
+
 pipx install .
 ```
 After installation, the following commands are available:
