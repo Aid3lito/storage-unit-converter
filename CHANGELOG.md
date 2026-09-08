@@ -2,17 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://spam.inserm.fr/fmlurlsvc/?fewReq=:B:JVUzODw8My9/NDsnOS9gbTQ5ODM5OC96YG5naH18e2w0PjlvMGsxaDA9az4/Oj4+OzFrPGs/azwwMGtsazA8aztsOz09PTA4bS99NDg+MTExPzE/PDoveGBtND8xMUt/UTl4OTs6OD0wJD8xMUt/UTl6OTs6OD0wL3tqeX00YXxuZn17YGtmfGVlYGx7SW5kaGBlJ2pmZC9qNDw7L2FtZTQ5&url=https%3a%2f%2fkeepachangelog.com%2fen%2f1.1.0%2f ),
-and this project adheres to [Semantic Versioning](https://spam.inserm.fr/fmlurlsvc/?fewReq=:B:JVUzODw8My9/NDsnOS9gbTQ5ODM5OC96YG5naH18e2w0bD9oO2s9Omo6Oz09O2g4Pm1sMWs/ODo6OzkwOmw7OG1oPTo7ajoxOi99NDg+MTExPzE/PDoveGBtND8xMUt/UTl4OTs6OD0wJD8xMUt/UTl6OTs6OD0wL3tqeX00YXxuZn17YGtmfGVlYGx7SW5kaGBlJ2pmZC9qNDw7L2FtZTQ5&url=https%3a%2f%2fsemver.org%2f ).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.3.0] - 2026-09-08
 
 ### Added
 
-- Added keyboard shortcuts for swapping source and result units in Conversion mode
+- Added keyboard shortcut for swapping source and result units in Conversion mode
 - Added persistent basic user preferences for the selected operation, source units and result unit
 - Added automatic creation and recovery of the preferences file
 - Added `--version` support to both `suc` and `storage-unit-converter`
+- Added automated tests for persistent history handling
+- Added atomic JSON writes for user data files
+- Added automated tests for user data write failures and recovery
 
 ### Changed
 
@@ -20,7 +23,9 @@ and this project adheres to [Semantic Versioning](https://spam.inserm.fr/fmlurls
 - Improved Tab and Shift + Tab navigation across input fields and controls
 - Improved focus behavior when switching operation modes and using Reset
 - Hidden unnecessary row deletion controls in Conversion mode
-- Improved CLI help with the complete list of supported decimal and binary units
+- Improved CLI help with clearer structure, examples and the complete list of supported units
+- Centralized persistent history storage in a dedicated module
+- Hardened history and preferences persistence against interrupted or failed writes
 - Updated package version metadata to 1.3.0
 
 ## [1.2.0] - 2026-09-07

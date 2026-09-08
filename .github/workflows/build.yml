@@ -186,8 +186,9 @@ jobs:
       - name: Create Debian package
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
+
           if [ "$GITHUB_REF_TYPE" != "tag" ]; then
-            VERSION="1.1.0-dev"
+            VERSION="$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)-dev"
           fi
 
           PACKAGE_ROOT="release/deb/storage-unit-converter_${VERSION}_amd64"
