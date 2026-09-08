@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import ttk
 from . import converter
 from . import history_store
+from . import data_store
 
 
 # ==============================
@@ -913,11 +914,6 @@ def formater_nombre(nombre):
 # ==============================
 
 def sauvegarder_preferences():
-    DOSSIER_DONNEES.mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
     choix_operation = operation.get()
 
     source_units = []
@@ -944,16 +940,10 @@ def sauvegarder_preferences():
         "result_unit": unite_resultat.get()
     }
 
-    with FICHIER_PREFERENCES.open(
-        "w",
-        encoding="utf-8"
-    ) as fichier:
-        json.dump(
-            preferences,
-            fichier,
-            ensure_ascii=False,
-            indent=2
-        )
+    data_store.save_json(
+        FICHIER_PREFERENCES,
+        preferences
+    )
 
 
 def charger_preferences():

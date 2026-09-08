@@ -1,5 +1,5 @@
 import json
-
+from . import data_store
 
 def load_history(file_path, max_entries):
     if not file_path.exists():
@@ -31,18 +31,7 @@ def load_history(file_path, max_entries):
 
 
 def save_history(file_path, history):
-    file_path.parent.mkdir(
-        parents=True,
-        exist_ok=True
+    return data_store.save_json(
+        file_path,
+        history
     )
-
-    with file_path.open(
-        "w",
-        encoding="utf-8"
-    ) as file:
-        json.dump(
-            history,
-            file,
-            ensure_ascii=False,
-            indent=2
-        )
