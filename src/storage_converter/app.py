@@ -262,7 +262,7 @@ if sys.platform.startswith("linux"):
 
 style = ttk.Style()
 
-if sys.platform == "darwin":
+if sys.platform in ("darwin", "win32"):
     style.theme_use("clam")
 
 style.configure(
@@ -617,28 +617,12 @@ def ajouter_groupe_unites(menu, titre, unites, variable):
         )
 
 def creer_menu_unites(parent, variable):
-    if sys.platform == "win32":
-        bouton = tk.Menubutton(
-            parent,
-            textvariable=variable,
-            width=20,
-            relief="raised",
-            borderwidth=1,
-            padx=6,
-            pady=3,
-            fg=obtenir_theme()["text"],
-            indicatoron=True,
-            bg=obtenir_theme()["button_background"],
-            activebackground=obtenir_theme()["button_active"],
-            activeforeground=obtenir_theme()["button_text"]
-        )
-    else:
-        bouton = ttk.Menubutton(
-            parent,
-            textvariable=variable,
-            width=20,
-            style="Custom.TMenubutton"
-        )
+    bouton = ttk.Menubutton(
+        parent,
+        textvariable=variable,
+        width=20,
+        style="Custom.TMenubutton"
+    )
 
     menu = tk.Menu(
         bouton,
@@ -698,25 +682,12 @@ def basculer_menu(event, bouton, menu):
 
 
 def creer_menu_operations(parent, variable):
-    if sys.platform == "win32":
-        bouton = tk.Menubutton(
-            parent,
-            textvariable=variable,
-            width=20,
-            relief="raised",
-            borderwidth=1,
-            padx=6,
-            pady=3,
-            fg=obtenir_theme()["text"],
-            indicatoron=True
-        )
-    else:
-        bouton = ttk.Menubutton(
-            parent,
-            textvariable=variable,
-            width=20,
-            style="Custom.TMenubutton"
-        )
+    bouton = ttk.Menubutton(
+        parent,
+        textvariable=variable,
+        width=20,
+        style="Custom.TMenubutton"
+    )
 
     menu = tk.Menu(
         bouton,
