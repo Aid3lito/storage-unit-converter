@@ -223,6 +223,9 @@ Using Reset restores the default preferences and saves them for the next session
 - `Cmd + Shift + S` — Swap source and result units in Conversion mode on macOS
 - `Tab` — Move focus to the next interface control
 - `Shift + Tab` — Move focus to the previous interface control
+- `Ctrl + Shift + +` — Add a new value in Addition and Subtraction modes on Windows and Linux
+- `Cmd + Shift + +` — Add a new value in Addition and Subtraction modes on macOS
+- `Ctrl/Cmd + +` on the numeric keypad — Add a new value when a numeric keypad is available
 
 ## Project Structure
 
