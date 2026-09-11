@@ -1301,7 +1301,7 @@ fenetre.bind(
 
 # <CTRL + SHIFT + A> pour ajouter une valeur
 fenetre.bind(
-    "<Control-Shift-+>",
+    "<Control-Shift-plus>",
     ajouter_valeur_raccourci
 )
 
