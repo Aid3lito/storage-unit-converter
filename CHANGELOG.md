@@ -11,8 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Added light and dark interface themes
+- Added persistent theme preference across application sessions
 - Added keyboard shortcut for adding values in Addition and Subtraction modes
-- Added numpad support for the add-value shortcut
+- Added numeric keypad support for the add-value shortcut
+
+### Changed
+
+- Unified themed buttons and unit selectors across supported platforms
+- Improved cross-platform interface consistency on macOS, Windows and Linux
 
 ## [1.3.0] - 2026-09-08
 

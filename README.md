@@ -23,6 +23,8 @@ Built with Python and Tkinter, Storage Unit Converter provides both a graphical 
 - Keyboard shortcuts for calculation, copy, reset and focus control
 - Swap source and target units instantly in Conversion mode
 - Persistent conversion history across application sessions
+- Light and dark interface themes
+- Persistent theme preference across application sessions
 
 ## Supported Platforms
 
@@ -204,11 +206,12 @@ Storage Unit Converter automatically remembers basic user preferences between se
 - Source unit in Conversion mode
 - First two source units in Addition and Subtraction modes
 - Result unit
+- Interface theme
 
 Preferences are stored automatically in the user's application data directory.
 No manual setup is required.
 
-Using Reset restores the default preferences and saves them for the next session.
+Using Reset restores the default conversion preferences and saves them for the next session. The selected interface theme is preserved.
 
 ## Keyboard shortcuts
 
