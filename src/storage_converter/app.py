@@ -52,7 +52,7 @@ THEME_LIGHT = {
     "selection_text": "#FFFFFF",
     "button_background": "#E8E8E8",
     "button_active": "#D8D8D8",
-"button_text": "#000000",
+    "button_text": "#000000",
 }
 
 THEME_DARK = {
@@ -93,6 +93,15 @@ def obtenir_theme():
 
 def appliquer_theme():
     theme = obtenir_theme()
+
+    if theme_actuel == "dark":
+        bouton_theme.config(
+            text="Light mode"
+        )
+    else:
+        bouton_theme.config(
+            text="Dark mode"
+        )
 
     fenetre.configure(
         bg=theme["background"]
@@ -188,16 +197,11 @@ def basculer_theme():
 
     if theme_actuel == "light":
         theme_actuel = "dark"
-        bouton_theme.config(
-            text="Light mode"
-        )
     else:
         theme_actuel = "light"
-        bouton_theme.config(
-            text="Dark mode"
-        )
 
     appliquer_theme()
+    sauvegarder_preferences()
 
 # ==============================
 # MÉMOIRE
@@ -1074,7 +1078,8 @@ def sauvegarder_preferences():
     preferences = {
         "operation": choix_operation,
         "source_units": source_units,
-        "result_unit": unite_resultat.get()
+        "result_unit": unite_resultat.get(),
+        "theme": theme_actuel
     }
 
     data_store.save_json(
@@ -1111,6 +1116,10 @@ def charger_preferences():
             "result_unit"
         )
 
+        theme_sauvegarde = preferences.get(
+            "theme"
+        )
+
         if operation_sauvegardee in OPERATIONS:
             operation.set(
                 operation_sauvegardee
@@ -1142,10 +1151,17 @@ def charger_preferences():
                     source_units_sauvegardees[1]
                 )
 
+        global theme_actuel
+
+        if theme_sauvegarde in THEMES:
+            theme_actuel = theme_sauvegarde
+
         if unite_resultat_sauvegardee in unites_valides:
             unite_resultat.set(
                 unite_resultat_sauvegardee
             )
+
+        appliquer_theme()
 
     except (
         OSError,
