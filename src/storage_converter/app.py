@@ -1305,6 +1305,11 @@ fenetre.bind(
     ajouter_valeur_raccourci
 )
 
+fenetre.bind(
+    "<Control-KP_Add>",
+    ajouter_valeur_raccourci
+)
+
 if sys.platform == "darwin":
     fenetre.bind(
         "<Command-Shift-C>",
@@ -1323,6 +1328,11 @@ if sys.platform == "darwin":
 
     fenetre.bind(
         "<Command-Shift-plus>",
+        ajouter_valeur_raccourci
+    )
+
+    fenetre.bind(
+        "<Command-KP_Add>",
         ajouter_valeur_raccourci
     )
     
