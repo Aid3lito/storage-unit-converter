@@ -258,6 +258,9 @@ if sys.platform.startswith("linux"):
 
 style = ttk.Style()
 
+if sys.platform == "darwin":
+    style.theme_use("clam")
+
 style.configure(
     "Custom.TMenubutton",
     foreground=obtenir_theme()["text"]
