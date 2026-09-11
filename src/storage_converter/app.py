@@ -958,7 +958,10 @@ def creer_bouton_suppression(parent):
 
 def creer_ligne_valeur():
 
-    frame_ligne = tk.Frame(frame_valeurs)
+    frame_ligne = tk.Frame(
+        frame_valeurs,
+        bg=obtenir_theme()["background"]
+    )
 
     entree = creer_entree_valeur(frame_ligne)
 
