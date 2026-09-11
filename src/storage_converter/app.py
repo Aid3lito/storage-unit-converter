@@ -688,6 +688,11 @@ def ajouter_ligne_valeur_et_focus():
     ajouter_ligne_valeur()
     lignes_valeurs[-1]["entree"].focus_set()
 
+def ajouter_valeur_raccourci(event=None):
+    if operation.get() == OPERATION_CONVERSION:
+        return
+
+    ajouter_ligne_valeur_et_focus()
 
 def focus_premiere_ligne_vide():
     cible = None
@@ -1294,6 +1299,12 @@ fenetre.bind(
     lambda event: inverser_unites()
 )
 
+# <CTRL + SHIFT + A> pour ajouter une valeur
+fenetre.bind(
+    "<Control-Shift-+>",
+    ajouter_valeur_raccourci
+)
+
 if sys.platform == "darwin":
     fenetre.bind(
         "<Command-Shift-C>",
@@ -1308,7 +1319,12 @@ if sys.platform == "darwin":
     fenetre.bind(
         "<Command-Shift-S>",
         lambda event: inverser_unites()
-)
+    )
+
+    fenetre.bind(
+        "<Command-Shift-+>",
+        ajouter_valeur_raccourci
+    )
     
 # Cliquer en dehors des zones de texte pour désélectionner
 fenetre.bind("<Button-1>", retirer_focus_entree, add="+")
