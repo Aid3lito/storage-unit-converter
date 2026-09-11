@@ -154,9 +154,11 @@ def appliquer_theme():
     style.map(
         "Custom.TMenubutton",
         background=[
+            ("focus", theme["button_active"]),
             ("active", theme["button_active"])
         ],
         foreground=[
+            ("focus", theme["button_text"]),
             ("active", theme["button_text"])
         ]
     )
@@ -170,10 +172,12 @@ def appliquer_theme():
     style.map(
         "Custom.TButton",
         background=[
+            ("focus", theme["button_active"]),
             ("active", theme["button_active"]),
             ("pressed", theme["button_active"])
         ],
         foreground=[
+            ("focus", theme["button_text"]),
             ("active", theme["button_text"]),
             ("pressed", theme["button_text"])
         ]
@@ -928,7 +932,10 @@ def creer_entree_valeur(parent):
         width=20,
         bg=theme["field"],
         fg=theme["text"],
-        insertbackground=theme["text"]
+        insertbackground=theme["text"],
+        highlightthickness=2,
+        highlightbackground=theme["background"],
+        highlightcolor=theme["selection"]
     )
 
     entree.insert(0, PLACEHOLDER)
