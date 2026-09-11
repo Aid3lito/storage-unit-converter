@@ -1322,7 +1322,7 @@ if sys.platform == "darwin":
     )
 
     fenetre.bind(
-        "<Command-Shift-+>",
+        "<Command-Shift-plus>",
         ajouter_valeur_raccourci
     )
     
