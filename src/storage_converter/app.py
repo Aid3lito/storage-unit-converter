@@ -75,7 +75,7 @@ THEMES = {
 THEME_DEFAUT = "light"
 theme_actuel = THEME_DEFAUT
 
-PADDING_RESULT_LABEL = (5, 5)
+PADDING_RESULT_LABEL = (3, 3)
 PADDING_RESULT_MENU = (0, 5)
 PADDING_SWAP = (8, 18)
 
@@ -624,7 +624,7 @@ def creer_menu_unites(parent, variable):
     bouton = ttk.Menubutton(
         parent,
         textvariable=variable,
-        width=20,
+        width=22,
         style="Custom.TMenubutton"
     )
 
@@ -689,7 +689,7 @@ def creer_menu_operations(parent, variable):
     bouton = ttk.Menubutton(
         parent,
         textvariable=variable,
-        width=20,
+        width=22,
         style="Custom.TMenubutton"
     )
 
@@ -904,7 +904,7 @@ def creer_entree_valeur(parent):
 
     entree = tk.Entry(
         parent,
-        width=20,
+        width=22,
         bg=theme["field"],
         fg=theme["text"],
         insertbackground=theme["text"],
@@ -963,13 +963,13 @@ def creer_ligne_valeur():
     entree.grid(
         row=0,
         column=0,
-        padx=5
+        padx=(5, 3)
     )
 
     menu_unite.grid(
         row=0,
         column=1,
-        padx=5
+        padx=(3, 5)
     )
 
     bouton_supprimer.grid(
@@ -1234,7 +1234,7 @@ titre = tk.Label(
     font=("Arial", 20, "bold"),
     fg=obtenir_theme()["text"]
 )
-titre.pack(pady=20)
+titre.pack(pady=(20, 15))
 
 bouton_theme = ttk.Button(
     fenetre,
@@ -1244,7 +1244,7 @@ bouton_theme = ttk.Button(
 )
 
 bouton_theme.pack(
-    pady=(0, 10)
+    pady=(0, 15)
 )
 
 
@@ -1256,7 +1256,9 @@ label_operation = tk.Label(
     text="Operation",
     fg=obtenir_theme()["text"]
 )
-label_operation.pack(pady=10)
+label_operation.pack(
+    pady=(5, 5)
+)
 
 operation = tk.StringVar()
 
@@ -1275,7 +1277,9 @@ menu_operation.pack()
 # CONTENEUR DES VALEURS
 
 frame_valeurs = tk.Frame(fenetre)
-frame_valeurs.pack(pady=20)
+frame_valeurs.pack(
+    pady=(18, 15)
+)
 
 frame_ajout = tk.Frame(fenetre)
 
@@ -1336,7 +1340,9 @@ bouton_inverser_unites.pack(
 # BOUTON DE CALCUL ET RÉSULTAT
 
 frame_boutons = tk.Frame(fenetre)
-frame_boutons.pack(pady=20)
+frame_boutons.pack(
+    pady=(18, 15)
+)
 
 # Bouton calcul
 bouton_calculer = ttk.Button(
@@ -1372,7 +1378,9 @@ label_resultat = tk.Label(
     font=("Arial", 14, "bold"),
     fg=obtenir_theme()["text"]
 )
-label_resultat.pack(pady=20)
+label_resultat.pack(
+    pady=(12, 10)
+)
 
 # Historique
 titre_historique = tk.Label(
@@ -1381,7 +1389,9 @@ titre_historique = tk.Label(
     font=("Arial", 12, "bold"),
     fg=obtenir_theme()["text"]
 )
-titre_historique.pack(pady=(10, 5))
+titre_historique.pack(
+    pady=(8, 6)
+)
 
 frame_historique = tk.Frame(fenetre)
 frame_historique.pack(pady=5)
