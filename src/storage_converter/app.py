@@ -82,11 +82,14 @@ PADDING_SWAP = (8, 18)
 lignes_valeurs = []
 historique = []
 
+
 class ValeurNegativeError(Exception):
     pass
 
+
 class ResultatNegatifError(Exception):
     pass
+
 
 def obtenir_theme():
     return THEMES[theme_actuel]
@@ -155,9 +158,9 @@ def appliquer_theme():
     )
 
     style.configure(
-    "Custom.TMenubutton",
-    background=theme["button_background"],
-    foreground=theme["button_text"]
+        "Custom.TMenubutton",
+        background=theme["button_background"],
+        foreground=theme["button_text"]
     )
 
     style.map(
@@ -1468,7 +1471,7 @@ fenetre.bind(
     lambda event: inverser_unites()
 )
 
-# <CTRL + SHIFT + A> pour ajouter une valeur
+# <CTRL/CMD + SHIFT + +> pour ajouter une valeur
 fenetre.bind(
     "<Control-Shift-plus>",
     ajouter_valeur_raccourci
