@@ -57,9 +57,12 @@ Storage Unit Converter supports:
 - Pebibyte (PiB)
 - Exbibyte (EiB)
 
-## Screenshot
+## Screenshots
 
-![Storage Unit Converter](assets/screenshots/storage-unit-converter.png)
+<p align="center">
+  <img src="assets/screenshots/conversion-dark.png" alt="Storage Unit Converter - Conversion in Dark mode" width="48%">
+  <img src="assets/screenshots/addition-light.png" alt="Storage Unit Converter - Addition in Light mode" width="48%">
+</p>
 
 ## Requirements for Source Installation
 
