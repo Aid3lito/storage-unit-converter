@@ -249,7 +249,8 @@ storage-unit-converter/
 │   │   ├── app-icon.icns
 │   │   └── app-icon.ico
 │   └── screenshots/
-│       └── storage-unit-converter.png
+│       ├── addition-light.png
+│       └── conversion-dark.png
 ├── packaging/
 │   ├── linux/
 │   │   ├── storage-unit-converter.desktop
@@ -265,8 +266,10 @@ storage-unit-converter/
 │       ├── units_binary.json
 │       └── units_decimal.json
 ├── tests/
-│   ├── test_cli.py
-│   └── test_converter.py
+    ├── test_cli.py
+    ├── test_converter.py
+    ├── test_data_store.py
+    └── test_history.py
 ├── .gitattributes
 ├── .gitignore
 ├── CHANGELOG.md
