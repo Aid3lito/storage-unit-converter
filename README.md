@@ -3,9 +3,18 @@
 [![Version](https://img.shields.io/github/v/release/Aid3lito/storage-unit-converter?label=version)](https://github.com/Aid3lito/storage-unit-converter/releases/latest)
 [![Tests](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml/badge.svg)](https://github.com/Aid3lito/storage-unit-converter/actions/workflows/tests.yml)
 
-A lightweight storage unit converter for desktop and command-line use.
+A lightweight, cross-platform storage unit converter for desktop and command-line use.
 
-Built with Python and Tkinter, Storage Unit Converter provides both a graphical interface and a command-line interface for converting, adding, and subtracting decimal and binary storage values.
+Convert, add and subtract decimal and binary storage values through a graphical desktop application or a fast command-line interface.
+
+**Available for Windows, macOS and Linux.**
+
+## Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/conversion-dark.png" alt="Storage Unit Converter - Conversion in Dark mode" width="48%">
+  <img src="assets/screenshots/addition-light.png" alt="Storage Unit Converter - Addition in Light mode" width="48%">
+</p>
 
 ## Features
 
@@ -56,13 +65,6 @@ Storage Unit Converter supports:
 - Tebibyte (TiB)
 - Pebibyte (PiB)
 - Exbibyte (EiB)
-
-## Screenshots
-
-<p align="center">
-  <img src="assets/screenshots/conversion-dark.png" alt="Storage Unit Converter - Conversion in Dark mode" width="48%">
-  <img src="assets/screenshots/addition-light.png" alt="Storage Unit Converter - Addition in Light mode" width="48%">
-</p>
 
 ## Requirements for Source Installation
 
