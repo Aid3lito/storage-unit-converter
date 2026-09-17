@@ -94,10 +94,6 @@ def appliquer_langue():
         tr("app.title")
     )
 
-    titre.config(
-        text=tr("app.title")
-    )
-
     label_operation.config(
         text=tr("label.operation")
     )
@@ -132,10 +128,6 @@ def appliquer_langue():
 
     bouton_effacer_historique.config(
         text=tr("button.clear_history")
-    )
-
-    bouton_parametres.config(
-        text=tr("settings.title")
     )
 
     operation_affichage.set(
@@ -186,11 +178,11 @@ def appliquer_theme():
 
     if theme_actuel == "dark":
         bouton_theme.config(
-            text=tr("button.light_mode")
+            text="☀"
         )
     else:
         bouton_theme.config(
-            text=tr("button.dark_mode")
+            text="☾"
         )
 
     fenetre.configure(
@@ -198,7 +190,6 @@ def appliquer_theme():
     )
 
     for widget in (
-        titre,
         label_operation,
         label_unite_resultat,
         label_resultat,
@@ -1343,37 +1334,33 @@ def effacer_historique():
 # CONSTRUCTION DE L'INTERFACE
 # ==============================
 
-
-# TITRE
-
-titre = tk.Label(
-    fenetre,
-    text=tr("app.title"),
-    font=("Arial", 20, "bold"),
-    fg=obtenir_theme(theme_actuel)["text"]
-)
-titre.pack(pady=(20, 15))
-
 bouton_theme = ttk.Button(
     fenetre,
-    text=tr("button.dark_mode"),
+    text="☾",
+    width=3,
     command=basculer_theme,
-    style="Custom.TButton"
+    style="Custom.TButton",
 )
 
-bouton_theme.pack(
-    pady=(0, 15)
+bouton_theme.place(
+    x=20,
+    y=20,
+    anchor="nw",
 )
 
 bouton_parametres = ttk.Button(
     fenetre,
-    text=tr("settings.title"),
+    text="⚙",
+    width=3,
     command=ouvrir_parametres,
     style="Custom.TButton",
 )
 
-bouton_parametres.pack(
-    pady=(0, 15)
+bouton_parametres.place(
+    relx=1.0,
+    x=-20,
+    y=20,
+    anchor="ne",
 )
 
 # SÉLECTION DE L'OPÉRATION

@@ -2,6 +2,51 @@ import tkinter as tk
 from tkinter import ttk
 
 
+def creer_selecteur(
+    parent,
+    variable_affichage,
+    options,
+    callback,
+):
+    bouton = ttk.Menubutton(
+        parent,
+        textvariable=variable_affichage,
+        width=22,
+        style="Custom.TMenubutton",
+    )
+
+    menu = tk.Menu(
+        bouton,
+        tearoff=0,
+    )
+
+    bouton["menu"] = menu
+    bouton.menu_options = menu
+
+    for libelle, valeur in options.items():
+        menu.add_command(
+            label=libelle,
+            command=lambda valeur=valeur: callback(valeur),
+        )
+
+    return bouton
+
+
+def mettre_a_jour_selecteur(
+    bouton,
+    options,
+    callback,
+):
+    menu = bouton.menu_options
+
+    menu.delete(0, "end")
+
+    for libelle, valeur in options.items():
+        menu.add_command(
+            label=libelle,
+            command=lambda valeur=valeur: callback(valeur),
+        )
+
 def ouvrir_fenetre_parametres(
     parent,
     tr,
@@ -22,6 +67,7 @@ def ouvrir_fenetre_parametres(
         return fenetre_existante
 
     fenetre_parametres = tk.Toplevel(parent)
+    fenetre_parametres.geometry("460x360")
 
     fenetre_parametres.title(
         tr("settings.title")
@@ -43,22 +89,13 @@ def ouvrir_fenetre_parametres(
         expand=True
     )
 
-    titre = ttk.Label(
-        frame,
-        text=tr("settings.title"),
-        font=("Arial", 14, "bold"),
-    )
-    titre.pack(
-        pady=(0, 15)
-    )
-
     label_langue = ttk.Label(
         frame,
         text=tr("settings.language"),
     )
 
     label_langue.pack(
-        pady=(0, 5)
+        pady=(10, 5)
     )
 
     langues_affichees = {
@@ -76,29 +113,20 @@ def ouvrir_fenetre_parametres(
             value=langue_affichee_actuelle
         )
 
-    selecteur_langue = ttk.Combobox(
-        frame,
-        textvariable=variable_langue,
-        state="readonly",
-        values=tuple(langues_affichees.keys()),
-        width=18,
-    )
-    selecteur_langue.pack(
-        pady=(0, 15)
-    )
-
-    def appliquer_selection_langue(event=None):
-        langue = langues_affichees[
-            variable_langue.get()
-        ]
-
+    def appliquer_selection_langue(langue):
         changer_langue(langue)
 
         rafraichir_textes()
 
-    selecteur_langue.bind(
-        "<<ComboboxSelected>>",
-        appliquer_selection_langue
+    selecteur_langue = creer_selecteur(
+        frame,
+        variable_langue,
+        langues_affichees,
+        appliquer_selection_langue,
+    )
+
+    selecteur_langue.pack(
+        pady=(0, 25)
     )
 
     label_theme = ttk.Label(
@@ -107,7 +135,7 @@ def ouvrir_fenetre_parametres(
     )
 
     label_theme.pack(
-        pady=(0, 5)
+        pady=(0, 25)
     )
 
     themes_affiches = {
@@ -125,26 +153,26 @@ def ouvrir_fenetre_parametres(
         value=theme_affiche_actuel
     )
 
-    selecteur_theme = ttk.Combobox(
+    def appliquer_selection_theme(theme):
+        changer_theme(theme)
+
+        variable_theme.set(
+            next(
+                label
+                for label, code in themes_affiches.items()
+                if code == theme
+            )
+        )
+
+    selecteur_theme = creer_selecteur(
         frame,
-        textvariable=variable_theme,
-        state="readonly",
-        values=tuple(themes_affiches.keys()),
-        width=18,
+        variable_theme,
+        themes_affiches,
+        appliquer_selection_theme,
     )
 
     selecteur_theme.pack(
-        pady=(0, 15)
-    )
-
-    def appliquer_selection_theme(event=None):
-        changer_theme(
-            themes_affiches[variable_theme.get()]
-        )
-
-    selecteur_theme.bind(
-        "<<ComboboxSelected>>",
-        appliquer_selection_theme
+        pady=(0, 20)
     )
 
     bouton_fermer = ttk.Button(
@@ -157,10 +185,6 @@ def ouvrir_fenetre_parametres(
     def rafraichir_textes():
         fenetre_parametres.title(
             tr("settings.title")
-        )
-
-        titre.config(
-            text=tr("settings.title")
         )
 
         label_langue.config(
@@ -185,8 +209,10 @@ def ouvrir_fenetre_parametres(
             nouvelles_langues_affichees
         )
 
-        selecteur_langue["values"] = tuple(
-            langues_affichees.keys()
+        mettre_a_jour_selecteur(
+            selecteur_langue,
+            langues_affichees,
+            appliquer_selection_langue,
         )
 
         variable_langue.set(
@@ -207,8 +233,10 @@ def ouvrir_fenetre_parametres(
             nouveaux_themes_affiches
         )
 
-        selecteur_theme["values"] = tuple(
-            themes_affiches.keys()
+        mettre_a_jour_selecteur(
+            selecteur_theme,
+            themes_affiches,
+            appliquer_selection_theme,
         )
 
         variable_theme.set(
