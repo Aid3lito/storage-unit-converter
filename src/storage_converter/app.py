@@ -3,9 +3,17 @@ import json
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk
+
 from . import converter
 from . import history_store
 from . import data_store
+
+from .ui.theme import (
+    THEMES,
+    THEME_DEFAUT,
+    configurer_styles_ttk,
+    obtenir_theme,
+)
 
 
 # ==============================
@@ -43,36 +51,6 @@ EXPOSANTS_UNICODE = str.maketrans(
 
 TEXTE_RESULTAT_DEFAUT = "Result:"
 
-THEME_LIGHT = {
-    "background": "#F0F0F0",
-    "field": "#FFFFFF",
-    "text": "#000000",
-    "placeholder": "#808080",
-    "selection": "#0078D7",
-    "selection_text": "#FFFFFF",
-    "button_background": "#E8E8E8",
-    "button_active": "#D8D8D8",
-    "button_text": "#000000",
-}
-
-THEME_DARK = {
-    "background": "#1E1E1E",
-    "field": "#2B2B2B",
-    "text": "#E8E8E8",
-    "placeholder": "#A0A0A0",
-    "selection": "#3A7AFE",
-    "selection_text": "#FFFFFF",
-    "button_background": "#3A3A3A",
-    "button_active": "#4A4A4A",
-    "button_text": "#F2F2F2"
-}
-
-THEMES = {
-    "light": THEME_LIGHT,
-    "dark": THEME_DARK
-}
-
-THEME_DEFAUT = "light"
 theme_actuel = THEME_DEFAUT
 
 PADDING_RESULT_LABEL = (3, 3)
@@ -91,11 +69,8 @@ class ResultatNegatifError(Exception):
     pass
 
 
-def obtenir_theme():
-    return THEMES[theme_actuel]
-
 def appliquer_theme():
-    theme = obtenir_theme()
+    theme = obtenir_theme(theme_actuel)
 
     if theme_actuel == "dark":
         bouton_theme.config(
@@ -157,43 +132,7 @@ def appliquer_theme():
         selectforeground=theme["selection_text"]
     )
 
-    style.configure(
-        "Custom.TMenubutton",
-        background=theme["button_background"],
-        foreground=theme["button_text"]
-    )
-
-    style.map(
-        "Custom.TMenubutton",
-        background=[
-            ("focus", theme["button_active"]),
-            ("active", theme["button_active"])
-        ],
-        foreground=[
-            ("focus", theme["button_text"]),
-            ("active", theme["button_text"])
-        ]
-    )
-
-    style.configure(
-        "Custom.TButton",
-        background=theme["button_background"],
-        foreground=theme["button_text"]
-    )
-
-    style.map(
-        "Custom.TButton",
-        background=[
-            ("focus", theme["button_active"]),
-            ("active", theme["button_active"]),
-            ("pressed", theme["button_active"])
-        ],
-        foreground=[
-            ("focus", theme["button_text"]),
-            ("active", theme["button_text"]),
-            ("pressed", theme["button_text"])
-        ]
-    )
+    configurer_styles_ttk(style, theme)
 
 def basculer_theme():
     global theme_actuel
@@ -272,14 +211,9 @@ style = ttk.Style()
 if sys.platform in ("darwin", "win32"):
     style.theme_use("clam")
 
-style.configure(
-    "Custom.TMenubutton",
-    foreground=obtenir_theme()["text"]
-)
-
-style.configure(
-    "Custom.TButton",
-    foreground=obtenir_theme()["text"]
+configurer_styles_ttk(
+    style,
+    obtenir_theme(theme_actuel)
 )
 
 
@@ -298,7 +232,7 @@ def effacer_placeholder(event):
     if entree.get() == PLACEHOLDER:
         entree.delete(0, tk.END)
         entree.config(
-            fg=obtenir_theme()["text"]
+            fg=obtenir_theme(theme_actuel)["text"]
         )
 
 def remettre_placeholder(event):
@@ -306,7 +240,7 @@ def remettre_placeholder(event):
 
     if entree.get() == "":
         entree.insert(0, PLACEHOLDER)
-        entree.config(fg=obtenir_theme()["placeholder"])
+        entree.config(fg=obtenir_theme(theme_actuel)["placeholder"])
 
 def retirer_focus_entree(event):
     if isinstance(event.widget, (tk.Tk, tk.Frame, tk.Label)):
@@ -903,7 +837,7 @@ def supprimer_ligne_valeur(ligne):
 
 
 def creer_entree_valeur(parent):
-    theme = obtenir_theme()
+    theme = obtenir_theme(theme_actuel)
 
     entree = tk.Entry(
         parent,
@@ -945,7 +879,7 @@ def creer_ligne_valeur():
 
     frame_ligne = tk.Frame(
         frame_valeurs,
-        bg=obtenir_theme()["background"]
+        bg=obtenir_theme(theme_actuel)["background"]
     )
 
     entree = creer_entree_valeur(frame_ligne)
@@ -1235,7 +1169,7 @@ titre = tk.Label(
     fenetre,
     text="Storage Unit Converter",
     font=("Arial", 20, "bold"),
-    fg=obtenir_theme()["text"]
+    fg=obtenir_theme(theme_actuel)["text"]
 )
 titre.pack(pady=(20, 15))
 
@@ -1257,7 +1191,7 @@ bouton_theme.pack(
 label_operation = tk.Label(
     fenetre,
     text="Operation",
-    fg=obtenir_theme()["text"]
+    fg=obtenir_theme(theme_actuel)["text"]
 )
 label_operation.pack(
     pady=(5, 5)
@@ -1306,7 +1240,7 @@ bouton_ajouter_valeur = ttk.Button(
 label_unite_resultat = tk.Label(
     fenetre,
     text="Result unit",
-    fg=obtenir_theme()["text"]
+    fg=obtenir_theme(theme_actuel)["text"]
 )
 label_unite_resultat.pack(
     pady=PADDING_RESULT_LABEL
@@ -1379,7 +1313,7 @@ label_resultat = tk.Label(
     fenetre,
     text=TEXTE_RESULTAT_DEFAUT,
     font=("Arial", 14, "bold"),
-    fg=obtenir_theme()["text"]
+    fg=obtenir_theme(theme_actuel)["text"]
 )
 label_resultat.pack(
     pady=(12, 10)
@@ -1390,7 +1324,7 @@ titre_historique = tk.Label(
     fenetre,
     text="History",
     font=("Arial", 12, "bold"),
-    fg=obtenir_theme()["text"]
+    fg=obtenir_theme(theme_actuel)["text"]
 )
 titre_historique.pack(
     pady=(8, 6)
@@ -1399,7 +1333,7 @@ titre_historique.pack(
 frame_historique = tk.Frame(fenetre)
 frame_historique.pack(pady=5)
 
-theme = obtenir_theme()
+theme = obtenir_theme(theme_actuel)
 
 liste_historique = tk.Listbox(
     frame_historique,
