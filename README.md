@@ -266,10 +266,10 @@ storage-unit-converter/
 │       ├── units_binary.json
 │       └── units_decimal.json
 ├── tests/
-    ├── test_cli.py
-    ├── test_converter.py
-    ├── test_data_store.py
-    └── test_history.py
+│   ├── test_cli.py
+│   ├── test_converter.py
+│   ├── test_data_store.py
+│   └── test_history.py
 ├── .gitattributes
 ├── .gitignore
 ├── CHANGELOG.md

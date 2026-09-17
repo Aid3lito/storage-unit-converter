@@ -9,8 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-### Added
-
 - Added light and dark interface themes
 - Added persistent theme preference across application sessions
 - Added keyboard shortcut for adding values in Addition and Subtraction modes
@@ -20,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Unified themed buttons and unit selectors across supported platforms
 - Improved cross-platform interface consistency on macOS, Windows and Linux
+- Refined interface spacing and alignment
+- Improved delete button sizing for better cross-platform consistency
 
 ## [1.3.0] - 2026-09-08
 
