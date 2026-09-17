@@ -39,3 +39,40 @@ def load_preferences(path):
         return DEFAULT_PREFERENCES.copy()
 
     return preferences
+
+def validate_preferences(
+    loaded_preferences,
+    valid_operations,
+    valid_units,
+    valid_themes,
+):
+    validated = DEFAULT_PREFERENCES.copy()
+
+    operation = loaded_preferences.get("operation")
+
+    if operation in valid_operations:
+        validated["operation"] = operation
+
+    source_units = loaded_preferences.get("source_units")
+
+    if isinstance(source_units, list):
+        validated_source_units = [
+            unit
+            for unit in source_units
+            if unit in valid_units
+        ]
+
+        if validated_source_units:
+            validated["source_units"] = validated_source_units
+
+    result_unit = loaded_preferences.get("result_unit")
+
+    if result_unit in valid_units:
+        validated["result_unit"] = result_unit
+
+    theme = loaded_preferences.get("theme")
+
+    if theme in valid_themes:
+        validated["theme"] = theme
+
+    return validated

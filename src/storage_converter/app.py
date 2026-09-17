@@ -1033,6 +1033,15 @@ def charger_preferences():
         FICHIER_PREFERENCES
     )
 
+    unites_valides = obtenir_unites_affichage()
+
+    preferences_chargees = preferences.validate_preferences(
+        preferences_chargees,
+        OPERATIONS,
+        unites_valides,
+        THEMES,
+    )
+
     operation_sauvegardee = preferences_chargees.get(
         "operation"
     )
@@ -1049,20 +1058,14 @@ def charger_preferences():
         "theme"
     )
 
-    if operation_sauvegardee in OPERATIONS:
-        operation.set(
-            operation_sauvegardee
-        )
+    operation.set(
+        operation_sauvegardee
+    )
 
     mettre_a_jour_interface()
 
-    unites_valides = obtenir_unites_affichage()
-
     if isinstance(source_units_sauvegardees, list):
-        if (
-            len(source_units_sauvegardees) >= 1
-            and source_units_sauvegardees[0] in unites_valides
-        ):
+        if (len(source_units_sauvegardees) >= 1):
             lignes_valeurs[0]["unite"].set(
                 source_units_sauvegardees[0]
             )
@@ -1074,19 +1077,16 @@ def charger_preferences():
             )
             and len(lignes_valeurs) >= 2
             and len(source_units_sauvegardees) >= 2
-            and source_units_sauvegardees[1] in unites_valides
         ):
             lignes_valeurs[1]["unite"].set(
                 source_units_sauvegardees[1]
             )
 
-    if theme_sauvegarde in THEMES:
-        theme_actuel = theme_sauvegarde
+    theme_actuel = theme_sauvegarde
 
-    if unite_resultat_sauvegardee in unites_valides:
-        unite_resultat.set(
-            unite_resultat_sauvegardee
-        )
+    unite_resultat.set(
+        unite_resultat_sauvegardee
+    )
 
     appliquer_theme()
 
