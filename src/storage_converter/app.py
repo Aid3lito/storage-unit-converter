@@ -937,7 +937,7 @@ def creer_bouton_suppression(parent):
     return ttk.Button(
         parent,
         text="×",
-        width=1,
+        width=2,
         style="Custom.TButton"
     )
 
