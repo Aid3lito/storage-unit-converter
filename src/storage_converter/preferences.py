@@ -4,10 +4,11 @@ from . import data_store
 
 
 DEFAULT_PREFERENCES = {
-    "operation": "Conversion",
+    "operation": "conversion",
     "source_units": ["GB - GigaByte"],
     "result_unit": "GiB - GibiByte",
     "theme": "light",
+    "language": "en",
 }
 
 
@@ -45,10 +46,22 @@ def validate_preferences(
     valid_operations,
     valid_units,
     valid_themes,
+    valid_languages,
 ):
     validated = DEFAULT_PREFERENCES.copy()
 
     operation = loaded_preferences.get("operation")
+
+    legacy_operations = {
+        "Conversion": "conversion",
+        "Addition": "addition",
+        "Subtraction": "subtraction",
+    }
+
+    operation = legacy_operations.get(
+        operation,
+        operation,
+    )
 
     if operation in valid_operations:
         validated["operation"] = operation
@@ -74,5 +87,10 @@ def validate_preferences(
 
     if theme in valid_themes:
         validated["theme"] = theme
+
+    language = loaded_preferences.get("language")
+
+    if language in valid_languages:
+        validated["language"] = language
 
     return validated

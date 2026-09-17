@@ -1,7 +1,9 @@
 import sys
-from pathlib import Path
 import tkinter as tk
+
+from pathlib import Path
 from tkinter import ttk
+from .localization.manager import LocalizationManager
 
 from . import converter
 from . import history_store
@@ -14,7 +16,6 @@ from .ui.theme import (
     obtenir_theme,
 )
 
-from . import preferences
 
 
 # ==============================
@@ -30,9 +31,9 @@ MAX_HISTORIQUE = 10
 
 SEUIL_NOTATION_SCIENTIFIQUE = 0.0001
 
-OPERATION_CONVERSION = "Conversion"
-OPERATION_ADDITION = "Addition"
-OPERATION_SOUSTRACTION = "Subtraction"
+OPERATION_CONVERSION = "conversion"
+OPERATION_ADDITION = "addition"
+OPERATION_SOUSTRACTION = "subtraction"
 
 OPERATIONS = (
     OPERATION_CONVERSION,
@@ -50,7 +51,8 @@ EXPOSANTS_UNICODE = str.maketrans(
     "⁰¹²³⁴⁵⁶⁷⁸⁹⁻"
 )
 
-TEXTE_RESULTAT_DEFAUT = "Result:"
+def texte_resultat_defaut():
+    return tr("label.result")
 
 theme_actuel = THEME_DEFAUT
 
@@ -61,6 +63,108 @@ PADDING_SWAP = (8, 18)
 lignes_valeurs = []
 historique = []
 
+LANGUES_DISPONIBLES = (
+    "en",
+    "fr",
+)
+
+DOSSIER_LOCALISATION = (
+    Path(__file__).resolve().parent
+    / "localization"
+)
+
+localization = LocalizationManager(
+    DOSSIER_LOCALISATION,
+    language="en",
+)
+
+
+def tr(key):
+    return localization.translate(key)
+
+
+def obtenir_libelle_operation(operation_id):
+    return tr(f"operation.{operation_id}")
+
+def appliquer_langue():
+    fenetre.title(
+        tr("app.title")
+    )
+
+    titre.config(
+        text=tr("app.title")
+    )
+
+    label_operation.config(
+        text=tr("label.operation")
+    )
+
+    label_unite_resultat.config(
+        text=tr("label.result_unit")
+    )
+
+    bouton_ajouter_valeur.config(
+        text=tr("button.add_value")
+    )
+
+    bouton_inverser_unites.config(
+        text=tr("button.swap_units")
+    )
+
+    bouton_calculer.config(
+        text=tr("button.calculate")
+    )
+
+    bouton_reinitialiser.config(
+        text=tr("button.reset")
+    )
+
+    bouton_copier.config(
+        text=tr("button.copy")
+    )
+
+    titre_historique.config(
+        text=tr("section.history")
+    )
+
+    bouton_effacer_historique.config(
+        text=tr("button.clear_history")
+    )
+
+    operation_affichage.set(
+        obtenir_libelle_operation(
+            operation.get()
+        )
+    )
+
+    mettre_a_jour_menu_operations()
+
+    for ligne in lignes_valeurs:
+        mettre_a_jour_menu_unites(
+            ligne["menu_unite"]
+        )
+
+    mettre_a_jour_menu_unites(
+        menu_unite_resultat
+    )
+
+    label_resultat.config(
+        text=texte_resultat_defaut()
+    )
+
+    appliquer_theme()
+
+def changer_langue(langue):
+    if langue not in LANGUES_DISPONIBLES:
+        return
+
+    if localization.language == langue:
+        return
+
+    localization.set_language(langue)
+
+    appliquer_langue()
+    sauvegarder_preferences()
 
 class ValeurNegativeError(Exception):
     pass
@@ -75,11 +179,11 @@ def appliquer_theme():
 
     if theme_actuel == "dark":
         bouton_theme.config(
-            text="Light mode"
+            text=tr("button.light_mode")
         )
     else:
         bouton_theme.config(
-            text="Dark mode"
+            text=tr("button.dark_mode")
         )
 
     fenetre.configure(
@@ -179,7 +283,9 @@ FICHIER_PREFERENCES = DOSSIER_DONNEES / "preferences.json"
 # ==============================
 
 fenetre = tk.Tk()
-fenetre.title("Storage Unit Converter")
+fenetre.title(
+    tr("app.title")
+)
 
 
 if sys.platform.startswith("linux"):
@@ -389,7 +495,7 @@ def afficher_resultat(resultat, unite_arrivee):
     resultat_formate = formater_nombre(resultat)
 
     label_resultat.config(
-        text=f"{TEXTE_RESULTAT_DEFAUT} {resultat_formate} {acronyme_resultat}"
+        text=f"{texte_resultat_defaut()} {resultat_formate} {acronyme_resultat}"
     )
 
     return resultat_formate, acronyme_resultat
@@ -436,17 +542,17 @@ def lancer_calcul(event=None):
 
     except ResultatNegatifError:
         afficher_erreur(
-            "Operation impossible: the result cannot be negative."
+            tr("error.negative_result")
         )
 
     except ValeurNegativeError:
         afficher_erreur(
-            "Invalid value: please enter a positive number."
+            tr("error.negative_value")
         )
 
     except ValueError:
         afficher_erreur(
-            "Invalid value: please enter a number."
+            tr("error.invalid_value")
         )
 
 
@@ -458,18 +564,22 @@ def lancer_calcul(event=None):
 def copier_resultat():
     texte = label_resultat.cget("text")
 
-    if not texte.startswith(f"{TEXTE_RESULTAT_DEFAUT} "):
+    if not texte.startswith(f"{texte_resultat_defaut()} "):
         return
 
     fenetre.clipboard_clear()
     fenetre.clipboard_append(texte)
     fenetre.update()
 
-    bouton_copier.config(text="Copied ✓")
+    bouton_copier.config(
+        text=tr("button.copied")
+    )
 
     fenetre.after(
         1500,
-        lambda: bouton_copier.config(text="Copy")
+        lambda: bouton_copier.config(
+            text=tr("button.copy")
+        )
     )
 
 
@@ -487,7 +597,7 @@ def inverser_unites():
     unite_resultat.set(unite_source)
 
     label_resultat.config(
-        text=TEXTE_RESULTAT_DEFAUT
+        text=texte_resultat_defaut()
     )
 
 
@@ -572,6 +682,7 @@ def creer_menu_unites(parent, variable):
     )
 
     bouton["menu"] = menu
+    bouton.menu_unites = menu
 
     if sys.platform == "win32":
         bouton.bind(
@@ -586,7 +697,7 @@ def creer_menu_unites(parent, variable):
 
     ajouter_groupe_unites(
         menu,
-        "Decimal",
+        tr("group.decimal"),
         converter.units_decimal,
         variable
     )
@@ -595,14 +706,27 @@ def creer_menu_unites(parent, variable):
 
     ajouter_groupe_unites(
         menu,
-        "Binary",
+        tr("group.binary"),
         converter.units_binary,
         variable
     )
 
     return bouton
 
+def mettre_a_jour_menu_unites(bouton):
+    menu = bouton.menu_unites
 
+    menu.entryconfig(
+        0,
+        label=f'--- {tr("group.decimal")} ---'
+    )
+
+    index_binaire = len(converter.units_decimal) + 2
+
+    menu.entryconfig(
+        index_binaire,
+        label=f'--- {tr("group.binary")} ---'
+    )
 
 
 
@@ -623,10 +747,14 @@ def basculer_menu(event, bouton, menu):
 
 
 
-def creer_menu_operations(parent, variable):
+def creer_menu_operations(
+    parent,
+    variable,
+    variable_affichage,
+):
     bouton = ttk.Menubutton(
         parent,
-        textvariable=variable,
+        textvariable=variable_affichage,
         width=22,
         style="Custom.TMenubutton"
     )
@@ -637,6 +765,7 @@ def creer_menu_operations(parent, variable):
     )
 
     bouton["menu"] = menu
+    bouton.menu_operations = menu
 
     if sys.platform == "win32":
         bouton.bind(
@@ -651,17 +780,30 @@ def creer_menu_operations(parent, variable):
 
     def choisir_operation(valeur):
         variable.set(valeur)
+
+        variable_affichage.set(
+            obtenir_libelle_operation(valeur)
+        )
+
         mettre_a_jour_interface()
         sauvegarder_preferences()
 
     for choix in OPERATIONS:
         menu.add_command(
-            label=choix,
+            label=obtenir_libelle_operation(choix),
             command=lambda valeur=choix: choisir_operation(valeur)
         )
 
     return bouton
 
+def mettre_a_jour_menu_operations():
+    menu = menu_operation.menu_operations
+
+    for index, choix in enumerate(OPERATIONS):
+        menu.entryconfig(
+            index,
+            label=obtenir_libelle_operation(choix)
+        )
 
 def definir_taille_initiale():
     fenetre.update_idletasks()
@@ -791,7 +933,7 @@ def reinitialiser_interface():
 
     # Réinitialise le résultat
     label_resultat.config(
-        text=TEXTE_RESULTAT_DEFAUT
+        text=texte_resultat_defaut()
     )
 
     lignes_valeurs[0]["entree"].focus_set()
@@ -920,6 +1062,7 @@ def creer_ligne_valeur():
         "frame": frame_ligne,
         "entree": entree,
         "unite": unite,
+        "menu_unite": menu_unite,
         "bouton_supprimer": bouton_supprimer
     }
 
@@ -1017,7 +1160,8 @@ def sauvegarder_preferences():
         "operation": choix_operation,
         "source_units": source_units,
         "result_unit": unite_resultat.get(),
-        "theme": theme_actuel
+        "theme": theme_actuel,
+        "language": localization.language,
     }
 
     preferences.save_preferences(
@@ -1040,6 +1184,7 @@ def charger_preferences():
         OPERATIONS,
         unites_valides,
         THEMES,
+        LANGUES_DISPONIBLES,
     )
 
     operation_sauvegardee = preferences_chargees.get(
@@ -1058,8 +1203,20 @@ def charger_preferences():
         "theme"
     )
 
+    langue_sauvegardee = preferences_chargees.get(
+        "language"
+    )
+
     operation.set(
         operation_sauvegardee
+    )
+
+    localization.set_language(
+        langue_sauvegardee
+    )
+
+    operation_affichage.set(
+        obtenir_libelle_operation(operation_sauvegardee)
     )
 
     mettre_a_jour_interface()
@@ -1088,7 +1245,7 @@ def charger_preferences():
         unite_resultat_sauvegardee
     )
 
-    appliquer_theme()
+    appliquer_langue()
 
 
 
@@ -1150,7 +1307,7 @@ def effacer_historique():
 
 titre = tk.Label(
     fenetre,
-    text="Storage Unit Converter",
+    text=tr("app.title"),
     font=("Arial", 20, "bold"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
@@ -1158,7 +1315,7 @@ titre.pack(pady=(20, 15))
 
 bouton_theme = ttk.Button(
     fenetre,
-    text="Dark mode",
+    text=tr("button.dark_mode"),
     command=basculer_theme,
     style="Custom.TButton"
 )
@@ -1173,7 +1330,7 @@ bouton_theme.pack(
 
 label_operation = tk.Label(
     fenetre,
-    text="Operation",
+    text=tr("label.operation"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
 label_operation.pack(
@@ -1181,13 +1338,20 @@ label_operation.pack(
 )
 
 operation = tk.StringVar()
+operation_affichage = tk.StringVar()
 
 menu_operation = creer_menu_operations(
     fenetre,
-    operation
+    operation,
+    operation_affichage
 )
 
 operation.set(OPERATION_DEFAUT)
+
+operation_affichage.set(
+    obtenir_libelle_operation(OPERATION_DEFAUT)
+)
+
 menu_operation.pack()
 
 
@@ -1209,7 +1373,7 @@ lignes_valeurs[0]["bouton_supprimer"].grid_remove()
 
 bouton_ajouter_valeur = ttk.Button(
     frame_ajout,
-    text="+ Add value",
+    text=tr("button.add_value"),
     command=ajouter_ligne_valeur_et_focus,
     style="Custom.TButton"
 )
@@ -1222,7 +1386,7 @@ bouton_ajouter_valeur = ttk.Button(
 
 label_unite_resultat = tk.Label(
     fenetre,
-    text="Result unit",
+    text=tr("label.result_unit"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
 label_unite_resultat.pack(
@@ -1245,7 +1409,7 @@ menu_unite_resultat.pack(
 
 bouton_inverser_unites = ttk.Button(
     fenetre,
-    text="⇅ Swap units",
+    text=tr("button.swap_units"),
     command=inverser_unites,
     style="Custom.TButton"
 )
@@ -1267,7 +1431,7 @@ frame_boutons.pack(
 # Bouton calcul
 bouton_calculer = ttk.Button(
     frame_boutons,
-    text="Calculate",
+    text=tr("button.calculate"),
     command=lancer_calcul,
     style="Custom.TButton"
 )
@@ -1276,7 +1440,7 @@ bouton_calculer.pack(side="left", padx=10)
 # Bouton réinitialiser
 bouton_reinitialiser = ttk.Button(
     frame_boutons,
-    text="Reset",
+    text=tr("button.reset"),
     command=reinitialiser_interface,
     style="Custom.TButton"
 )
@@ -1285,7 +1449,7 @@ bouton_reinitialiser.pack(side="left", padx=10)
 # Bouton copier
 bouton_copier = ttk.Button(
     frame_boutons,
-    text="Copy",
+    text=tr("button.copy"),
     command=copier_resultat,
     style="Custom.TButton"
 )
@@ -1294,7 +1458,7 @@ bouton_copier.pack(side="left", padx=10)
 # Résultat
 label_resultat = tk.Label(
     fenetre,
-    text=TEXTE_RESULTAT_DEFAUT,
+    text=texte_resultat_defaut(),
     font=("Arial", 14, "bold"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
@@ -1305,7 +1469,7 @@ label_resultat.pack(
 # Historique
 titre_historique = tk.Label(
     fenetre,
-    text="History",
+    text=tr("section.history"),
     font=("Arial", 12, "bold"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
@@ -1352,7 +1516,7 @@ scrollbar_historique.pack(
 # Bouton effacer
 bouton_effacer_historique = ttk.Button(
     fenetre,
-    text="Clear History",
+    text=tr("button.clear_history"),
     command=effacer_historique,
     style="Custom.TButton"
 )
