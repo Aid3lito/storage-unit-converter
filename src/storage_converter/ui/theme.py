@@ -31,3 +31,42 @@ THEME_DEFAUT = "light"
 
 def obtenir_theme(nom_theme):
     return THEMES[nom_theme]
+
+def configurer_styles_ttk(style, theme):
+    style.configure(
+        "Custom.TMenubutton",
+        background=theme["button_background"],
+        foreground=theme["button_text"]
+    )
+
+    style.map(
+        "Custom.TMenubutton",
+        background=[
+            ("focus", theme["button_active"]),
+            ("active", theme["button_active"])
+        ],
+        foreground=[
+            ("focus", theme["button_text"]),
+            ("active", theme["button_text"])
+        ]
+    )
+
+    style.configure(
+        "Custom.TButton",
+        background=theme["button_background"],
+        foreground=theme["button_text"]
+    )
+
+    style.map(
+        "Custom.TButton",
+        background=[
+            ("focus", theme["button_active"]),
+            ("active", theme["button_active"]),
+            ("pressed", theme["button_active"])
+        ],
+        foreground=[
+            ("focus", theme["button_text"]),
+            ("active", theme["button_text"]),
+            ("pressed", theme["button_text"])
+        ]
+    )

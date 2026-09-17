@@ -3,10 +3,17 @@ import json
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk
+
 from . import converter
 from . import history_store
 from . import data_store
-from .ui.theme import THEMES, THEME_DEFAUT, obtenir_theme
+
+from .ui.theme import (
+    THEMES,
+    THEME_DEFAUT,
+    configurer_styles_ttk,
+    obtenir_theme,
+)
 
 
 # ==============================
@@ -125,43 +132,7 @@ def appliquer_theme():
         selectforeground=theme["selection_text"]
     )
 
-    style.configure(
-        "Custom.TMenubutton",
-        background=theme["button_background"],
-        foreground=theme["button_text"]
-    )
-
-    style.map(
-        "Custom.TMenubutton",
-        background=[
-            ("focus", theme["button_active"]),
-            ("active", theme["button_active"])
-        ],
-        foreground=[
-            ("focus", theme["button_text"]),
-            ("active", theme["button_text"])
-        ]
-    )
-
-    style.configure(
-        "Custom.TButton",
-        background=theme["button_background"],
-        foreground=theme["button_text"]
-    )
-
-    style.map(
-        "Custom.TButton",
-        background=[
-            ("focus", theme["button_active"]),
-            ("active", theme["button_active"]),
-            ("pressed", theme["button_active"])
-        ],
-        foreground=[
-            ("focus", theme["button_text"]),
-            ("active", theme["button_text"]),
-            ("pressed", theme["button_text"])
-        ]
-    )
+    configurer_styles_ttk(style, theme)
 
 def basculer_theme():
     global theme_actuel
@@ -240,14 +211,9 @@ style = ttk.Style()
 if sys.platform in ("darwin", "win32"):
     style.theme_use("clam")
 
-style.configure(
-    "Custom.TMenubutton",
-    foreground=obtenir_theme(theme_actuel)["text"]
-)
-
-style.configure(
-    "Custom.TButton",
-    foreground=obtenir_theme(theme_actuel)["text"]
+configurer_styles_ttk(
+    style,
+    obtenir_theme(theme_actuel)
 )
 
 
