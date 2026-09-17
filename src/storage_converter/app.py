@@ -31,9 +31,9 @@ MAX_HISTORIQUE = 10
 
 SEUIL_NOTATION_SCIENTIFIQUE = 0.0001
 
-OPERATION_CONVERSION = "Conversion"
-OPERATION_ADDITION = "Addition"
-OPERATION_SOUSTRACTION = "Subtraction"
+OPERATION_CONVERSION = "conversion"
+OPERATION_ADDITION = "addition"
+OPERATION_SOUSTRACTION = "subtraction"
 
 OPERATIONS = (
     OPERATION_CONVERSION,
@@ -70,12 +70,16 @@ DOSSIER_LOCALISATION = (
 
 localization = LocalizationManager(
     DOSSIER_LOCALISATION,
-    language="fr",
+    language="en",
 )
 
 
 def tr(key):
     return localization.translate(key)
+
+
+def obtenir_libelle_operation(operation_id):
+    return tr(f"operation.{operation_id}")
 
 
 class ValeurNegativeError(Exception):
@@ -645,10 +649,14 @@ def basculer_menu(event, bouton, menu):
 
 
 
-def creer_menu_operations(parent, variable):
+def creer_menu_operations(
+    parent,
+    variable,
+    variable_affichage,
+):
     bouton = ttk.Menubutton(
         parent,
-        textvariable=variable,
+        textvariable=variable_affichage,
         width=22,
         style="Custom.TMenubutton"
     )
@@ -673,12 +681,17 @@ def creer_menu_operations(parent, variable):
 
     def choisir_operation(valeur):
         variable.set(valeur)
+
+        variable_affichage.set(
+            obtenir_libelle_operation(valeur)
+        )
+
         mettre_a_jour_interface()
         sauvegarder_preferences()
 
     for choix in OPERATIONS:
         menu.add_command(
-            label=choix,
+            label=obtenir_libelle_operation(choix),
             command=lambda valeur=choix: choisir_operation(valeur)
         )
 
@@ -1084,6 +1097,10 @@ def charger_preferences():
         operation_sauvegardee
     )
 
+    operation_affichage.set(
+        obtenir_libelle_operation(operation_sauvegardee)
+    )
+
     mettre_a_jour_interface()
 
     if isinstance(source_units_sauvegardees, list):
@@ -1203,13 +1220,20 @@ label_operation.pack(
 )
 
 operation = tk.StringVar()
+operation_affichage = tk.StringVar()
 
 menu_operation = creer_menu_operations(
     fenetre,
-    operation
+    operation,
+    operation_affichage
 )
 
 operation.set(OPERATION_DEFAUT)
+
+operation_affichage.set(
+    obtenir_libelle_operation(OPERATION_DEFAUT)
+)
+
 menu_operation.pack()
 
 

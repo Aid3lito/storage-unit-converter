@@ -17,5 +17,8 @@
   "group.binary": "Binaire",
   "error.negative_result": "Opération impossible : le résultat ne peut pas être négatif.",
   "error.negative_value": "Valeur invalide : veuillez saisir un nombre positif.",
-  "error.invalid_value": "Valeur invalide : veuillez saisir un nombre."
+  "error.invalid_value": "Valeur invalide : veuillez saisir un nombre.",
+  "operation.conversion": "Conversion",
+  "operation.addition": "Addition",
+  "operation.subtraction": "Soustraction"
 }
