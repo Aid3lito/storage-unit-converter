@@ -1,12 +1,11 @@
 import sys
-import json
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk
 
 from . import converter
 from . import history_store
-from . import data_store
+from . import preferences
 
 from .ui.theme import (
     THEMES,
@@ -14,6 +13,8 @@ from .ui.theme import (
     configurer_styles_ttk,
     obtenir_theme,
 )
+
+from . import preferences
 
 
 # ==============================
@@ -1012,100 +1013,82 @@ def sauvegarder_preferences():
             lignes_valeurs[1]["unite"].get()
         )
 
-    preferences = {
+    preferences_actuelles = {
         "operation": choix_operation,
         "source_units": source_units,
         "result_unit": unite_resultat.get(),
         "theme": theme_actuel
     }
 
-    data_store.save_json(
+    preferences.save_preferences(
         FICHIER_PREFERENCES,
-        preferences
+        preferences_actuelles,
     )
 
 
 def charger_preferences():
-    if not FICHIER_PREFERENCES.exists():
-        sauvegarder_preferences()
-        return
+    global theme_actuel
 
-    try:
-        with FICHIER_PREFERENCES.open(
-            "r",
-            encoding="utf-8"
-        ) as fichier:
-            preferences = json.load(fichier)
+    preferences_chargees = preferences.load_preferences(
+        FICHIER_PREFERENCES
+    )
 
-        if not isinstance(preferences, dict):
-            sauvegarder_preferences()
-            return
+    unites_valides = obtenir_unites_affichage()
 
-        operation_sauvegardee = preferences.get(
-            "operation"
-        )
+    preferences_chargees = preferences.validate_preferences(
+        preferences_chargees,
+        OPERATIONS,
+        unites_valides,
+        THEMES,
+    )
 
-        source_units_sauvegardees = preferences.get(
-            "source_units"
-        )
+    operation_sauvegardee = preferences_chargees.get(
+        "operation"
+    )
 
-        unite_resultat_sauvegardee = preferences.get(
-            "result_unit"
-        )
+    source_units_sauvegardees = preferences_chargees.get(
+        "source_units"
+    )
 
-        theme_sauvegarde = preferences.get(
-            "theme"
-        )
+    unite_resultat_sauvegardee = preferences_chargees.get(
+        "result_unit"
+    )
 
-        if operation_sauvegardee in OPERATIONS:
-            operation.set(
-                operation_sauvegardee
+    theme_sauvegarde = preferences_chargees.get(
+        "theme"
+    )
+
+    operation.set(
+        operation_sauvegardee
+    )
+
+    mettre_a_jour_interface()
+
+    if isinstance(source_units_sauvegardees, list):
+        if (len(source_units_sauvegardees) >= 1):
+            lignes_valeurs[0]["unite"].set(
+                source_units_sauvegardees[0]
             )
 
-        mettre_a_jour_interface()
-
-        unites_valides = obtenir_unites_affichage()
-
-        if isinstance(source_units_sauvegardees, list):
-            if (
-                len(source_units_sauvegardees) >= 1
-                and source_units_sauvegardees[0] in unites_valides
-            ):
-                lignes_valeurs[0]["unite"].set(
-                    source_units_sauvegardees[0]
-                )
-
-            if (
-                operation.get() in (
-                    OPERATION_ADDITION,
-                    OPERATION_SOUSTRACTION
-                )
-                and len(lignes_valeurs) >= 2
-                and len(source_units_sauvegardees) >= 2
-                and source_units_sauvegardees[1] in unites_valides
-            ):
-                lignes_valeurs[1]["unite"].set(
-                    source_units_sauvegardees[1]
-                )
-
-        global theme_actuel
-
-        if theme_sauvegarde in THEMES:
-            theme_actuel = theme_sauvegarde
-
-        if unite_resultat_sauvegardee in unites_valides:
-            unite_resultat.set(
-                unite_resultat_sauvegardee
+        if (
+            operation.get() in (
+                OPERATION_ADDITION,
+                OPERATION_SOUSTRACTION
+            )
+            and len(lignes_valeurs) >= 2
+            and len(source_units_sauvegardees) >= 2
+        ):
+            lignes_valeurs[1]["unite"].set(
+                source_units_sauvegardees[1]
             )
 
-        appliquer_theme()
+    theme_actuel = theme_sauvegarde
 
-    except (
-        OSError,
-        json.JSONDecodeError
-    ):
-        sauvegarder_preferences()
-        return
+    unite_resultat.set(
+        unite_resultat_sauvegardee
+    )
+
+    appliquer_theme()
 
 
 
