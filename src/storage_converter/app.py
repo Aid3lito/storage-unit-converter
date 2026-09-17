@@ -139,6 +139,15 @@ def appliquer_langue():
 
     mettre_a_jour_menu_operations()
 
+    for ligne in lignes_valeurs:
+        mettre_a_jour_menu_unites(
+            ligne["menu_unite"]
+        )
+
+    mettre_a_jour_menu_unites(
+        menu_unite_resultat
+    )
+
     label_resultat.config(
         text=texte_resultat_defaut()
     )
@@ -661,6 +670,7 @@ def creer_menu_unites(parent, variable):
     )
 
     bouton["menu"] = menu
+    bouton.menu_unites = menu
 
     if sys.platform == "win32":
         bouton.bind(
@@ -691,7 +701,20 @@ def creer_menu_unites(parent, variable):
 
     return bouton
 
+def mettre_a_jour_menu_unites(bouton):
+    menu = bouton.menu_unites
 
+    menu.entryconfig(
+        0,
+        label=f'--- {tr("group.decimal")} ---'
+    )
+
+    index_binaire = len(converter.units_decimal) + 2
+
+    menu.entryconfig(
+        index_binaire,
+        label=f'--- {tr("group.binary")} ---'
+    )
 
 
 
@@ -1027,6 +1050,7 @@ def creer_ligne_valeur():
         "frame": frame_ligne,
         "entree": entree,
         "unite": unite,
+        "menu_unite": menu_unite,
         "bouton_supprimer": bouton_supprimer
     }
 
