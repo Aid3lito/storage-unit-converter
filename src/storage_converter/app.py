@@ -15,7 +15,7 @@ from .ui.theme import (
 )
 
 from . import preferences
-
+from .localization.manager import LocalizationManager
 
 # ==============================
 # CONSTANTES
@@ -60,6 +60,20 @@ PADDING_SWAP = (8, 18)
 
 lignes_valeurs = []
 historique = []
+
+DOSSIER_LOCALISATION = (
+    Path(__file__).resolve().parent
+    / "localization"
+)
+
+localization = LocalizationManager(
+    DOSSIER_LOCALISATION,
+    language="en",
+)
+
+
+def tr(key):
+    return localization.translate(key)
 
 
 class ValeurNegativeError(Exception):
@@ -179,7 +193,9 @@ FICHIER_PREFERENCES = DOSSIER_DONNEES / "preferences.json"
 # ==============================
 
 fenetre = tk.Tk()
-fenetre.title("Storage Unit Converter")
+fenetre.title(
+    tr("app.title")
+)
 
 
 if sys.platform.startswith("linux"):
@@ -469,7 +485,9 @@ def copier_resultat():
 
     fenetre.after(
         1500,
-        lambda: bouton_copier.config(text="Copy")
+        lambda: bouton_copier.config(
+            text=tr("button.copy")
+        )
     )
 
 
@@ -1150,7 +1168,7 @@ def effacer_historique():
 
 titre = tk.Label(
     fenetre,
-    text="Storage Unit Converter",
+    text=tr("app.title"),
     font=("Arial", 20, "bold"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
@@ -1267,7 +1285,7 @@ frame_boutons.pack(
 # Bouton calcul
 bouton_calculer = ttk.Button(
     frame_boutons,
-    text="Calculate",
+    text=tr("button.calculate"),
     command=lancer_calcul,
     style="Custom.TButton"
 )
@@ -1276,7 +1294,7 @@ bouton_calculer.pack(side="left", padx=10)
 # Bouton réinitialiser
 bouton_reinitialiser = ttk.Button(
     frame_boutons,
-    text="Reset",
+    text=tr("button.reset"),
     command=reinitialiser_interface,
     style="Custom.TButton"
 )
@@ -1285,7 +1303,7 @@ bouton_reinitialiser.pack(side="left", padx=10)
 # Bouton copier
 bouton_copier = ttk.Button(
     frame_boutons,
-    text="Copy",
+    text=tr("button.copy"),
     command=copier_resultat,
     style="Custom.TButton"
 )
