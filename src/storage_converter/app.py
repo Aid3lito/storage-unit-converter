@@ -4,6 +4,7 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import ttk
 from .localization.manager import LocalizationManager
+from .ui.settings_window import ouvrir_fenetre_parametres
 
 from . import converter
 from . import history_store
@@ -68,6 +69,8 @@ LANGUES_DISPONIBLES = (
     "fr",
 )
 
+fenetre_parametres = None
+
 DOSSIER_LOCALISATION = (
     Path(__file__).resolve().parent
     / "localization"
@@ -129,6 +132,10 @@ def appliquer_langue():
 
     bouton_effacer_historique.config(
         text=tr("button.clear_history")
+    )
+
+    bouton_parametres.config(
+        text=tr("settings.title")
     )
 
     operation_affichage.set(
@@ -240,15 +247,49 @@ def appliquer_theme():
     configurer_styles_ttk(style, theme)
 
 def basculer_theme():
+    nouveau_theme = (
+        "dark"
+        if theme_actuel == "light"
+        else "light"
+    )
+
+    changer_theme(nouveau_theme)
+
+def changer_theme(nouveau_theme):
     global theme_actuel
 
-    if theme_actuel == "light":
-        theme_actuel = "dark"
-    else:
-        theme_actuel = "light"
+    if nouveau_theme not in THEMES:
+        return
+
+    if theme_actuel == nouveau_theme:
+        return
+
+    theme_actuel = nouveau_theme
 
     appliquer_theme()
     sauvegarder_preferences()
+
+def ouvrir_parametres():
+    global fenetre_parametres
+
+    fenetre_parametres = ouvrir_fenetre_parametres(
+        fenetre,
+        tr,
+        localization.language,
+        changer_langue,
+        theme_actuel,
+        changer_theme,
+        obtenir_langue_actuelle,
+        obtenir_theme_actuel,
+        fenetre_parametres,
+    )
+
+def obtenir_langue_actuelle():
+    return localization.language
+
+
+def obtenir_theme_actuel():
+    return theme_actuel
 
 # ==============================
 # MÉMOIRE
@@ -1324,7 +1365,16 @@ bouton_theme.pack(
     pady=(0, 15)
 )
 
+bouton_parametres = ttk.Button(
+    fenetre,
+    text=tr("settings.title"),
+    command=ouvrir_parametres,
+    style="Custom.TButton",
+)
 
+bouton_parametres.pack(
+    pady=(0, 15)
+)
 
 # SÉLECTION DE L'OPÉRATION
 

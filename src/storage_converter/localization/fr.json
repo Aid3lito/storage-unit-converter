@@ -20,5 +20,13 @@
   "error.invalid_value": "Valeur invalide : veuillez saisir un nombre.",
   "operation.conversion": "Conversion",
   "operation.addition": "Addition",
-  "operation.subtraction": "Soustraction"
+  "operation.subtraction": "Soustraction",
+  "settings.title": "Paramètres",
+  "button.close": "Fermer",
+  "settings.language": "Langue",
+  "language.english": "Anglais",
+  "language.french": "Français",
+  "settings.theme": "Thème",
+  "theme.light": "Clair",
+  "theme.dark": "Sombre"
 }

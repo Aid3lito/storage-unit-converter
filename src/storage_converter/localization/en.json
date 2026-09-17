@@ -20,5 +20,13 @@
   "error.invalid_value": "Invalid value: please enter a number.",
   "operation.conversion": "Conversion",
   "operation.addition": "Addition",
-  "operation.subtraction": "Subtraction"
+  "operation.subtraction": "Subtraction",
+  "settings.title": "Settings",
+  "button.close": "Close",
+  "settings.language": "Language",
+  "language.english": "English",
+  "language.french": "French",
+  "settings.theme": "Theme",
+  "theme.light": "Light",
+  "theme.dark": "Dark"
 }
