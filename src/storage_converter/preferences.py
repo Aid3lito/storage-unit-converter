@@ -8,6 +8,7 @@ DEFAULT_PREFERENCES = {
     "source_units": ["GB - GigaByte"],
     "result_unit": "GiB - GibiByte",
     "theme": "light",
+    "language": "en",
 }
 
 
@@ -45,6 +46,7 @@ def validate_preferences(
     valid_operations,
     valid_units,
     valid_themes,
+    valid_languages,
 ):
     validated = DEFAULT_PREFERENCES.copy()
 
@@ -85,5 +87,10 @@ def validate_preferences(
 
     if theme in valid_themes:
         validated["theme"] = theme
+
+    language = loaded_preferences.get("language")
+
+    if language in valid_languages:
+        validated["language"] = language
 
     return validated

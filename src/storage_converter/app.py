@@ -63,6 +63,11 @@ PADDING_SWAP = (8, 18)
 lignes_valeurs = []
 historique = []
 
+LANGUES_DISPONIBLES = (
+    "en",
+    "fr",
+)
+
 DOSSIER_LOCALISATION = (
     Path(__file__).resolve().parent
     / "localization"
@@ -81,6 +86,64 @@ def tr(key):
 def obtenir_libelle_operation(operation_id):
     return tr(f"operation.{operation_id}")
 
+def appliquer_langue():
+    fenetre.title(
+        tr("app.title")
+    )
+
+    titre.config(
+        text=tr("app.title")
+    )
+
+    label_operation.config(
+        text=tr("label.operation")
+    )
+
+    label_unite_resultat.config(
+        text=tr("label.result_unit")
+    )
+
+    bouton_ajouter_valeur.config(
+        text=tr("button.add_value")
+    )
+
+    bouton_inverser_unites.config(
+        text=tr("button.swap_units")
+    )
+
+    bouton_calculer.config(
+        text=tr("button.calculate")
+    )
+
+    bouton_reinitialiser.config(
+        text=tr("button.reset")
+    )
+
+    bouton_copier.config(
+        text=tr("button.copy")
+    )
+
+    titre_historique.config(
+        text=tr("section.history")
+    )
+
+    bouton_effacer_historique.config(
+        text=tr("button.clear_history")
+    )
+
+    operation_affichage.set(
+        obtenir_libelle_operation(
+            operation.get()
+        )
+    )
+
+    mettre_a_jour_menu_operations()
+
+    label_resultat.config(
+        text=texte_resultat_defaut()
+    )
+
+    appliquer_theme()
 
 class ValeurNegativeError(Exception):
     pass
@@ -667,6 +730,7 @@ def creer_menu_operations(
     )
 
     bouton["menu"] = menu
+    bouton.menu_operations = menu
 
     if sys.platform == "win32":
         bouton.bind(
@@ -697,6 +761,14 @@ def creer_menu_operations(
 
     return bouton
 
+def mettre_a_jour_menu_operations():
+    menu = menu_operation.menu_operations
+
+    for index, choix in enumerate(OPERATIONS):
+        menu.entryconfig(
+            index,
+            label=obtenir_libelle_operation(choix)
+        )
 
 def definir_taille_initiale():
     fenetre.update_idletasks()
@@ -1052,7 +1124,8 @@ def sauvegarder_preferences():
         "operation": choix_operation,
         "source_units": source_units,
         "result_unit": unite_resultat.get(),
-        "theme": theme_actuel
+        "theme": theme_actuel,
+        "language": localization.language,
     }
 
     preferences.save_preferences(
@@ -1075,6 +1148,7 @@ def charger_preferences():
         OPERATIONS,
         unites_valides,
         THEMES,
+        LANGUES_DISPONIBLES,
     )
 
     operation_sauvegardee = preferences_chargees.get(
@@ -1093,8 +1167,16 @@ def charger_preferences():
         "theme"
     )
 
+    langue_sauvegardee = preferences_chargees.get(
+        "language"
+    )
+
     operation.set(
         operation_sauvegardee
+    )
+
+    localization.set_language(
+        langue_sauvegardee
     )
 
     operation_affichage.set(
@@ -1127,7 +1209,7 @@ def charger_preferences():
         unite_resultat_sauvegardee
     )
 
-    appliquer_theme()
+    appliquer_langue()
 
 
 
