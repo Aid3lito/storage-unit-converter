@@ -1,7 +1,9 @@
 import sys
-from pathlib import Path
 import tkinter as tk
+
+from pathlib import Path
 from tkinter import ttk
+from .localization.manager import LocalizationManager
 
 from . import converter
 from . import history_store
@@ -14,8 +16,7 @@ from .ui.theme import (
     obtenir_theme,
 )
 
-from . import preferences
-from .localization.manager import LocalizationManager
+
 
 # ==============================
 # CONSTANTES
@@ -50,7 +51,8 @@ EXPOSANTS_UNICODE = str.maketrans(
     "⁰¹²³⁴⁵⁶⁷⁸⁹⁻"
 )
 
-TEXTE_RESULTAT_DEFAUT = "Result:"
+def texte_resultat_defaut():
+    return tr("label.result")
 
 theme_actuel = THEME_DEFAUT
 
@@ -68,7 +70,7 @@ DOSSIER_LOCALISATION = (
 
 localization = LocalizationManager(
     DOSSIER_LOCALISATION,
-    language="en",
+    language="fr",
 )
 
 
@@ -89,11 +91,11 @@ def appliquer_theme():
 
     if theme_actuel == "dark":
         bouton_theme.config(
-            text="Light mode"
+            text=tr("button.light_mode")
         )
     else:
         bouton_theme.config(
-            text="Dark mode"
+            text=tr("button.dark_mode")
         )
 
     fenetre.configure(
@@ -405,7 +407,7 @@ def afficher_resultat(resultat, unite_arrivee):
     resultat_formate = formater_nombre(resultat)
 
     label_resultat.config(
-        text=f"{TEXTE_RESULTAT_DEFAUT} {resultat_formate} {acronyme_resultat}"
+        text=f"{texte_resultat_defaut()} {resultat_formate} {acronyme_resultat}"
     )
 
     return resultat_formate, acronyme_resultat
@@ -452,17 +454,17 @@ def lancer_calcul(event=None):
 
     except ResultatNegatifError:
         afficher_erreur(
-            "Operation impossible: the result cannot be negative."
+            tr("error.negative_result")
         )
 
     except ValeurNegativeError:
         afficher_erreur(
-            "Invalid value: please enter a positive number."
+            tr("error.negative_value")
         )
 
     except ValueError:
         afficher_erreur(
-            "Invalid value: please enter a number."
+            tr("error.invalid_value")
         )
 
 
@@ -474,14 +476,16 @@ def lancer_calcul(event=None):
 def copier_resultat():
     texte = label_resultat.cget("text")
 
-    if not texte.startswith(f"{TEXTE_RESULTAT_DEFAUT} "):
+    if not texte.startswith(f"{texte_resultat_defaut()} "):
         return
 
     fenetre.clipboard_clear()
     fenetre.clipboard_append(texte)
     fenetre.update()
 
-    bouton_copier.config(text="Copied ✓")
+    bouton_copier.config(
+        text=tr("button.copied")
+    )
 
     fenetre.after(
         1500,
@@ -505,7 +509,7 @@ def inverser_unites():
     unite_resultat.set(unite_source)
 
     label_resultat.config(
-        text=TEXTE_RESULTAT_DEFAUT
+        text=texte_resultat_defaut()
     )
 
 
@@ -604,7 +608,7 @@ def creer_menu_unites(parent, variable):
 
     ajouter_groupe_unites(
         menu,
-        "Decimal",
+        tr("group.decimal"),
         converter.units_decimal,
         variable
     )
@@ -613,7 +617,7 @@ def creer_menu_unites(parent, variable):
 
     ajouter_groupe_unites(
         menu,
-        "Binary",
+        tr("group.binary"),
         converter.units_binary,
         variable
     )
@@ -809,7 +813,7 @@ def reinitialiser_interface():
 
     # Réinitialise le résultat
     label_resultat.config(
-        text=TEXTE_RESULTAT_DEFAUT
+        text=texte_resultat_defaut()
     )
 
     lignes_valeurs[0]["entree"].focus_set()
@@ -1176,7 +1180,7 @@ titre.pack(pady=(20, 15))
 
 bouton_theme = ttk.Button(
     fenetre,
-    text="Dark mode",
+    text=tr("button.dark_mode"),
     command=basculer_theme,
     style="Custom.TButton"
 )
@@ -1191,7 +1195,7 @@ bouton_theme.pack(
 
 label_operation = tk.Label(
     fenetre,
-    text="Operation",
+    text=tr("label.operation"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
 label_operation.pack(
@@ -1227,7 +1231,7 @@ lignes_valeurs[0]["bouton_supprimer"].grid_remove()
 
 bouton_ajouter_valeur = ttk.Button(
     frame_ajout,
-    text="+ Add value",
+    text=tr("button.add_value"),
     command=ajouter_ligne_valeur_et_focus,
     style="Custom.TButton"
 )
@@ -1240,7 +1244,7 @@ bouton_ajouter_valeur = ttk.Button(
 
 label_unite_resultat = tk.Label(
     fenetre,
-    text="Result unit",
+    text=tr("label.result_unit"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
 label_unite_resultat.pack(
@@ -1263,7 +1267,7 @@ menu_unite_resultat.pack(
 
 bouton_inverser_unites = ttk.Button(
     fenetre,
-    text="⇅ Swap units",
+    text=tr("button.swap_units"),
     command=inverser_unites,
     style="Custom.TButton"
 )
@@ -1312,7 +1316,7 @@ bouton_copier.pack(side="left", padx=10)
 # Résultat
 label_resultat = tk.Label(
     fenetre,
-    text=TEXTE_RESULTAT_DEFAUT,
+    text=texte_resultat_defaut(),
     font=("Arial", 14, "bold"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
@@ -1323,7 +1327,7 @@ label_resultat.pack(
 # Historique
 titre_historique = tk.Label(
     fenetre,
-    text="History",
+    text=tr("section.history"),
     font=("Arial", 12, "bold"),
     fg=obtenir_theme(theme_actuel)["text"]
 )
@@ -1370,7 +1374,7 @@ scrollbar_historique.pack(
 # Bouton effacer
 bouton_effacer_historique = ttk.Button(
     fenetre,
-    text="Clear History",
+    text=tr("button.clear_history"),
     command=effacer_historique,
     style="Custom.TButton"
 )

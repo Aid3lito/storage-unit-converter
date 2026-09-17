@@ -2,5 +2,20 @@
   "app.title": "Convertisseur d’unités de stockage",
   "button.calculate": "Calculer",
   "button.reset": "Réinitialiser",
-  "button.copy": "Copier"
+  "button.copy": "Copier",
+  "button.copied": "Copié ✓",
+  "button.dark_mode": "Mode sombre",
+  "button.light_mode": "Mode clair",
+  "button.add_value": "+ Ajouter une valeur",
+  "button.swap_units": "⇅ Inverser les unités",
+  "button.clear_history": "Effacer l’historique",
+  "label.operation": "Opération",
+  "label.result_unit": "Unité de résultat",
+  "label.result": "Résultat :",
+  "section.history": "Historique",
+  "group.decimal": "Décimal",
+  "group.binary": "Binaire",
+  "error.negative_result": "Opération impossible : le résultat ne peut pas être négatif.",
+  "error.negative_value": "Valeur invalide : veuillez saisir un nombre positif.",
+  "error.invalid_value": "Valeur invalide : veuillez saisir un nombre."
 }
