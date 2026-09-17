@@ -154,6 +154,18 @@ def appliquer_langue():
 
     appliquer_theme()
 
+def changer_langue(langue):
+    if langue not in LANGUES_DISPONIBLES:
+        return
+
+    if localization.language == langue:
+        return
+
+    localization.set_language(langue)
+
+    appliquer_langue()
+    sauvegarder_preferences()
+
 class ValeurNegativeError(Exception):
     pass
 
