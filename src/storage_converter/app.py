@@ -58,7 +58,9 @@ def texte_resultat_defaut():
 theme_actuel = THEME_DEFAUT
 operation_demarrage = OPERATION_DEFAUT
 unite_entree_demarrage = UNITE_ENTREE_DEFAUT
+deuxieme_unite_entree_demarrage = UNITE_ENTREE_DEFAUT
 unite_resultat_demarrage = UNITE_RESULTAT_DEFAUT
+historique_active = True
 
 PADDING_RESULT_LABEL = (3, 3)
 PADDING_RESULT_MENU = (0, 5)
@@ -274,6 +276,14 @@ def changer_operation_demarrage(nouvelle_operation):
         return
 
     operation_demarrage = nouvelle_operation
+
+    operation.set(nouvelle_operation)
+
+    operation_affichage.set(
+        obtenir_libelle_operation(nouvelle_operation)
+    )
+
+    mettre_a_jour_interface()
     sauvegarder_preferences()
 
 
@@ -290,7 +300,36 @@ def changer_unite_entree_demarrage(nouvelle_unite):
         return
 
     unite_entree_demarrage = nouvelle_unite
+
+    if lignes_valeurs:
+        lignes_valeurs[0]["unite"].set(
+            nouvelle_unite
+        )
+
     sauvegarder_preferences()
+
+
+def changer_deuxieme_unite_entree_demarrage(nouvelle_unite):
+    global deuxieme_unite_entree_demarrage
+
+    if nouvelle_unite not in obtenir_unites_affichage():
+        return
+
+    if deuxieme_unite_entree_demarrage == nouvelle_unite:
+        return
+
+    deuxieme_unite_entree_demarrage = nouvelle_unite
+
+    if len(lignes_valeurs) >= 2:
+        lignes_valeurs[1]["unite"].set(
+            nouvelle_unite
+        )
+
+    sauvegarder_preferences()
+
+
+def obtenir_deuxieme_unite_entree_demarrage():
+    return deuxieme_unite_entree_demarrage
 
 def changer_unite_resultat_demarrage(nouvelle_unite):
     global unite_resultat_demarrage
@@ -302,8 +341,35 @@ def changer_unite_resultat_demarrage(nouvelle_unite):
         return
 
     unite_resultat_demarrage = nouvelle_unite
+
+    unite_resultat.set(
+        nouvelle_unite
+    )
+
     sauvegarder_preferences()
 
+def changer_historique_active(nouvelle_valeur):
+    global historique_active
+
+    if not isinstance(nouvelle_valeur, bool):
+        return
+
+    if historique_active == nouvelle_valeur:
+        return
+
+    historique_active = nouvelle_valeur
+
+    if historique_active:
+        charger_historique()
+    else:
+        historique.clear()
+
+    mettre_a_jour_historique()
+    sauvegarder_preferences()
+
+
+def obtenir_historique_active():
+    return historique_active
 
 def obtenir_unite_resultat_demarrage():
     return unite_resultat_demarrage
@@ -327,8 +393,12 @@ def ouvrir_parametres():
         obtenir_operation_demarrage,
         changer_unite_entree_demarrage,
         obtenir_unite_entree_demarrage,
+        changer_deuxieme_unite_entree_demarrage,
+        obtenir_deuxieme_unite_entree_demarrage,
         changer_unite_resultat_demarrage,
         obtenir_unite_resultat_demarrage,
+        changer_historique_active,
+        obtenir_historique_active,
         obtenir_unites_affichage(),
         fenetre_parametres,
     )
@@ -1251,10 +1321,12 @@ def sauvegarder_preferences():
         "default_operation": operation_demarrage,
         "source_units": source_units,
         "default_input_unit": unite_entree_demarrage,
+        "default_second_input_unit": deuxieme_unite_entree_demarrage,
         "result_unit": unite_resultat.get(),
         "default_result_unit": unite_resultat_demarrage,
         "theme": theme_actuel,
         "language": localization.language,
+        "history_enabled": historique_active,
     }
 
     preferences.save_preferences(
@@ -1264,7 +1336,12 @@ def sauvegarder_preferences():
 
 
 def charger_preferences():
-    global theme_actuel, operation_demarrage, unite_entree_demarrage, unite_resultat_demarrage
+    global theme_actuel
+    global operation_demarrage
+    global unite_entree_demarrage
+    global deuxieme_unite_entree_demarrage
+    global unite_resultat_demarrage
+    global historique_active
         
 
     preferences_chargees = preferences.load_preferences(
@@ -1297,6 +1374,10 @@ def charger_preferences():
         "default_input_unit"
     )
 
+    deuxieme_unite_entree_demarrage_sauvegardee = preferences_chargees.get(
+        "default_second_input_unit"
+    )
+
     unite_resultat_sauvegardee = preferences_chargees.get(
         "result_unit"
     )
@@ -1313,9 +1394,15 @@ def charger_preferences():
         "language"
     )
 
+    historique_active_sauvegardee = preferences_chargees.get(
+        "history_enabled"
+    )
+
     operation_demarrage = operation_demarrage_sauvegardee
     unite_entree_demarrage = unite_entree_demarrage_sauvegardee
+    deuxieme_unite_entree_demarrage = deuxieme_unite_entree_demarrage_sauvegardee
     unite_resultat_demarrage = unite_resultat_demarrage_sauvegardee
+    historique_active = historique_active_sauvegardee
 
     operation.set(
         operation_demarrage
@@ -1342,16 +1429,14 @@ def charger_preferences():
         )
 
     if (
-        isinstance(source_units_sauvegardees, list)
-        and operation.get() in (
+        operation.get() in (
             OPERATION_ADDITION,
             OPERATION_SOUSTRACTION
         )
         and len(lignes_valeurs) >= 2
-        and len(source_units_sauvegardees) >= 2
     ):
         lignes_valeurs[1]["unite"].set(
-            source_units_sauvegardees[1]
+            deuxieme_unite_entree_demarrage
         )
 
     theme_actuel = theme_sauvegarde
@@ -1370,6 +1455,9 @@ def charger_preferences():
 def charger_historique():
     historique.clear()
 
+    if not historique_active:
+        return
+
     historique.extend(
         history_store.load_history(
             FICHIER_HISTORIQUE,
@@ -1386,6 +1474,9 @@ def sauvegarder_historique():
 
 # Ajouter une valeur à l'historique
 def ajouter_historique(texte):
+    if not historique_active:
+        return
+    
     historique.insert(0, texte)
 
     if len(historique) > MAX_HISTORIQUE:

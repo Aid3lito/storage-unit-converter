@@ -31,5 +31,10 @@
   "theme.dark": "Dark",
   "settings.default_operation": "Default startup operation",
   "settings.default_input_unit": "Default input unit",
-  "settings.default_result_unit": "Default result unit"
+  "settings.default_result_unit": "Default result unit",
+  "settings.history_enabled": "History",
+  "option.enabled": "Enabled",
+  "option.disabled": "Disabled",
+  "settings.default_input_unit_1": "Default input unit 1",
+  "settings.default_second_input_unit": "Default input unit 2"
 }

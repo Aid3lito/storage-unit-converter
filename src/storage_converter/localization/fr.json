@@ -31,5 +31,10 @@
   "theme.dark": "Sombre",
   "settings.default_operation": "Opération au démarrage",
   "settings.default_input_unit": "Unité d’entrée par défaut",
-  "settings.default_result_unit": "Unité de résultat par défaut"
+  "settings.default_result_unit": "Unité de résultat par défaut",
+  "settings.history_enabled": "Historique",
+  "option.enabled": "Activé",
+  "option.disabled": "Désactivé",
+  "settings.default_input_unit_1": "Unité d’entrée par défaut 1",
+  "settings.default_second_input_unit": "Unité d’entrée par défaut 2"
 }

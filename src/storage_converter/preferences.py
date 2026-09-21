@@ -8,10 +8,12 @@ DEFAULT_PREFERENCES = {
     "default_operation": "conversion",
     "source_units": ["GB - GigaByte"],
     "default_input_unit": "GB - GigaByte",
+    "default_second_input_unit": "GB - GigaByte",
     "result_unit": "GiB - GibiByte",
     "default_result_unit": "GiB - GibiByte",
     "theme": "light",
     "language": "en",
+    "history_enabled": True,
 }
 
 
@@ -96,6 +98,13 @@ def validate_preferences(
     if default_input_unit in valid_units:
         validated["default_input_unit"] = default_input_unit
 
+    default_second_input_unit = loaded_preferences.get(
+        "default_second_input_unit"
+    )
+
+    if default_second_input_unit in valid_units:
+        validated["default_second_input_unit"] = default_second_input_unit
+
     result_unit = loaded_preferences.get("result_unit")
 
     if result_unit in valid_units:
@@ -117,5 +126,12 @@ def validate_preferences(
 
     if language in valid_languages:
         validated["language"] = language
+
+    history_enabled = loaded_preferences.get(
+        "history_enabled"
+    )
+
+    if isinstance(history_enabled, bool):
+        validated["history_enabled"] = history_enabled
 
     return validated

@@ -60,8 +60,12 @@ def ouvrir_fenetre_parametres(
     obtenir_operation_demarrage,
     changer_unite_entree_demarrage,
     obtenir_unite_entree_demarrage,
+    changer_deuxieme_unite_entree_demarrage,
+    obtenir_deuxieme_unite_entree_demarrage,
     changer_unite_resultat_demarrage,
     obtenir_unite_resultat_demarrage,
+    changer_historique_active,
+    obtenir_historique_active,
     unites_disponibles,
     fenetre_existante=None,
 ):
@@ -95,12 +99,27 @@ def ouvrir_fenetre_parametres(
         expand=True
     )
 
+    frame.columnconfigure(
+        0,
+        weight=1,
+        uniform="settings"
+    )
+
+    frame.columnconfigure(
+        1,
+        weight=1,
+        uniform="settings"
+    )
+
     label_langue = ttk.Label(
         frame,
         text=tr("settings.language"),
     )
 
-    label_langue.pack(
+    label_langue.grid(
+        row=0,
+        column=0,
+        padx=15,
         pady=(10, 5)
     )
 
@@ -131,7 +150,10 @@ def ouvrir_fenetre_parametres(
         appliquer_selection_langue,
     )
 
-    selecteur_langue.pack(
+    selecteur_langue.grid(
+        row=1,
+        column=0,
+        padx=15,
         pady=(0, 25)
     )
 
@@ -140,8 +162,11 @@ def ouvrir_fenetre_parametres(
         text=tr("settings.theme"),
     )
 
-    label_theme.pack(
-        pady=(0, 25)
+    label_theme.grid(
+        row=0,
+        column=1,
+        padx=15,
+        pady=(10, 5)
     )
 
     themes_affiches = {
@@ -177,8 +202,11 @@ def ouvrir_fenetre_parametres(
         appliquer_selection_theme,
     )
 
-    selecteur_theme.pack(
-        pady=(0, 20)
+    selecteur_theme.grid(
+        row=1,
+        column=1,
+        padx=15,
+        pady=(0, 25)
     )
 
     label_operation_demarrage = ttk.Label(
@@ -186,7 +214,10 @@ def ouvrir_fenetre_parametres(
         text=tr("settings.default_operation"),
     )
 
-    label_operation_demarrage.pack(
+    label_operation_demarrage.grid(
+        row=2,
+        column=0,
+        columnspan=2,
         pady=(0, 5)
     )
 
@@ -217,6 +248,8 @@ def ouvrir_fenetre_parametres(
             )
         )
 
+        mettre_a_jour_affichage_unites()
+
     selecteur_operation_demarrage = creer_selecteur(
         frame,
         variable_operation_demarrage,
@@ -224,7 +257,10 @@ def ouvrir_fenetre_parametres(
         appliquer_selection_operation_demarrage,
     )
 
-    selecteur_operation_demarrage.pack(
+    selecteur_operation_demarrage.grid(
+        row=3,
+        column=0,
+        columnspan=2,
         pady=(0, 25)
     )
 
@@ -233,7 +269,10 @@ def ouvrir_fenetre_parametres(
         text=tr("settings.default_input_unit"),
     )
 
-    label_unite_entree_demarrage.pack(
+    label_unite_entree_demarrage.grid(
+        row=4,
+        column=0,
+        padx=15,
         pady=(0, 5)
     )
 
@@ -260,8 +299,34 @@ def ouvrir_fenetre_parametres(
         appliquer_selection_unite_entree_demarrage,
     )
 
-    selecteur_unite_entree_demarrage.pack(
+    selecteur_unite_entree_demarrage.grid(
+        row=5,
+        column=0,
+        padx=15,
         pady=(0, 25)
+    )
+
+    label_deuxieme_unite_entree_demarrage = ttk.Label(
+        frame,
+        text=tr("settings.default_second_input_unit"),
+    )
+
+    variable_deuxieme_unite_entree_demarrage = tk.StringVar(
+        value=obtenir_deuxieme_unite_entree_demarrage()
+    )
+
+    def appliquer_selection_deuxieme_unite_entree_demarrage(unite):
+        changer_deuxieme_unite_entree_demarrage(unite)
+
+        variable_deuxieme_unite_entree_demarrage.set(
+            unite
+        )
+
+    selecteur_deuxieme_unite_entree_demarrage = creer_selecteur(
+        frame,
+        variable_deuxieme_unite_entree_demarrage,
+        options_unites,
+        appliquer_selection_deuxieme_unite_entree_demarrage,
     )
 
     label_unite_resultat_demarrage = ttk.Label(
@@ -269,7 +334,10 @@ def ouvrir_fenetre_parametres(
         text=tr("settings.default_result_unit"),
     )
 
-    label_unite_resultat_demarrage.pack(
+    label_unite_resultat_demarrage.grid(
+        row=4,
+        column=1,
+        padx=15,
         pady=(0, 5)
     )
 
@@ -291,7 +359,62 @@ def ouvrir_fenetre_parametres(
         appliquer_selection_unite_resultat_demarrage,
     )
 
-    selecteur_unite_resultat_demarrage.pack(
+    selecteur_unite_resultat_demarrage.grid(
+        row=5,
+        column=1,
+        padx=15,
+        pady=(0, 25)
+    )
+
+    label_historique = ttk.Label(
+        frame,
+        text=tr("settings.history_enabled"),
+    )
+
+    label_historique.grid(
+        row=8,
+        column=0,
+        padx=15,
+        pady=(0, 5)
+    )
+
+    options_historique = {
+        tr("option.enabled"): True,
+        tr("option.disabled"): False,
+    }
+
+    historique_affiche_actuel = next(
+        label
+        for label, valeur in options_historique.items()
+        if valeur is obtenir_historique_active()
+    )
+
+    variable_historique = tk.StringVar(
+        value=historique_affiche_actuel
+    )
+
+    def appliquer_selection_historique(valeur):
+        changer_historique_active(valeur)
+
+        variable_historique.set(
+            next(
+                label
+                for label, option in options_historique.items()
+                if option is valeur
+            )
+        )
+
+    selecteur_historique = creer_selecteur(
+        frame,
+        variable_historique,
+        options_historique,
+        appliquer_selection_historique,
+    )
+
+    selecteur_historique.grid(
+        row=9,
+        column=0,
+        padx=15,
         pady=(0, 25)
     )
 
@@ -300,7 +423,13 @@ def ouvrir_fenetre_parametres(
         text=tr("button.close"),
         command=fenetre_parametres.destroy,
     )
-    bouton_fermer.pack()
+
+    bouton_fermer.grid(
+        row=10,
+        column=0,
+        columnspan=2,
+        pady=(0, 10)
+    )
 
     def rafraichir_textes():
         fenetre_parametres.title(
@@ -325,6 +454,17 @@ def ouvrir_fenetre_parametres(
 
         label_unite_resultat_demarrage.config(
             text=tr("settings.default_result_unit")
+        )
+
+        label_historique.config(
+            text=tr("settings.history_enabled")
+        )
+
+        selecteur_historique.grid(
+            row=7,
+            column=0,
+            padx=15,
+            pady=(0, 25)
         )
 
         bouton_fermer.config(
@@ -396,6 +536,30 @@ def ouvrir_fenetre_parametres(
             )
         )
 
+        nouvelles_options_historique = {
+            tr("option.enabled"): True,
+            tr("option.disabled"): False,
+        }
+
+        options_historique.clear()
+        options_historique.update(
+            nouvelles_options_historique
+        )
+
+        mettre_a_jour_selecteur(
+            selecteur_historique,
+            options_historique,
+            appliquer_selection_historique,
+        )
+
+        variable_historique.set(
+            next(
+                label
+                for label, valeur in options_historique.items()
+                if valeur is obtenir_historique_active()
+            )
+        )
+
         variable_theme.set(
             next(
                 label
@@ -404,6 +568,65 @@ def ouvrir_fenetre_parametres(
             )
         )
 
+    def mettre_a_jour_affichage_unites():
+        operation_actuelle = obtenir_operation_demarrage()
+
+        if operation_actuelle in ("addition", "subtraction"):
+            label_unite_entree_demarrage.config(
+                text=tr("settings.default_input_unit_1")
+            )
+
+            label_deuxieme_unite_entree_demarrage.grid(
+                row=4,
+                column=1,
+                padx=15,
+                pady=(0, 5)
+            )
+
+            selecteur_deuxieme_unite_entree_demarrage.grid(
+                row=5,
+                column=1,
+                padx=15,
+                pady=(0, 25)
+            )
+
+            label_unite_resultat_demarrage.grid(
+                row=6,
+                column=0,
+                columnspan=2,
+                pady=(0, 5)
+            )
+
+            selecteur_unite_resultat_demarrage.grid(
+                row=7,
+                column=0,
+                columnspan=2,
+                pady=(0, 25)
+            )
+
+        else:
+            label_unite_entree_demarrage.config(
+                text=tr("settings.default_input_unit")
+            )
+
+            label_deuxieme_unite_entree_demarrage.grid_remove()
+            selecteur_deuxieme_unite_entree_demarrage.grid_remove()
+
+            label_unite_resultat_demarrage.grid(
+                row=4,
+                column=1,
+                columnspan=1,
+                pady=(0, 5)
+            )
+
+            selecteur_unite_resultat_demarrage.grid(
+                row=5,
+                column=1,
+                columnspan=1,
+                pady=(0, 25)
+            )
+
+    mettre_a_jour_affichage_unites()
     fenetre_parametres.grab_set()
 
     return fenetre_parametres

@@ -90,10 +90,12 @@ def test_validate_preferences_accepts_valid_values():
             "GB - GigaByte",
         ],
         "default_input_unit": "MB - MegaByte",
+        "default_second_input_unit": "MB - MegaByte",
         "result_unit": "TB - TeraByte",
         "default_result_unit": "TB - TeraByte",
         "theme": "dark",
         "language": "fr",
+        "history_enabled": False,
     }
 
     result = preferences.validate_preferences(
@@ -333,3 +335,63 @@ def test_validate_preferences_replaces_invalid_default_result_unit():
     )
 
     assert result["default_result_unit"] == "GiB - GibiByte"
+
+
+def test_validate_preferences_accepts_valid_history_enabled():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["history_enabled"] = False
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["history_enabled"] is False
+
+
+def test_validate_preferences_replaces_invalid_history_enabled():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["history_enabled"] = "invalid"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["history_enabled"] is True
+
+
+def test_validate_preferences_accepts_valid_default_second_input_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_second_input_unit"] = "GiB - GibiByte"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_second_input_unit"] == "GiB - GibiByte"
+
+
+def test_validate_preferences_replaces_invalid_default_second_input_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_second_input_unit"] = "invalid"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_second_input_unit"] == "GB - GigaByte"
