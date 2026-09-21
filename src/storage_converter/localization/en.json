@@ -30,5 +30,6 @@
   "theme.light": "Light",
   "theme.dark": "Dark",
   "settings.default_operation": "Default startup operation",
-  "settings.default_input_unit": "Default input unit"
+  "settings.default_input_unit": "Default input unit",
+  "settings.default_result_unit": "Default result unit"
 }

@@ -60,6 +60,8 @@ def ouvrir_fenetre_parametres(
     obtenir_operation_demarrage,
     changer_unite_entree_demarrage,
     obtenir_unite_entree_demarrage,
+    changer_unite_resultat_demarrage,
+    obtenir_unite_resultat_demarrage,
     unites_disponibles,
     fenetre_existante=None,
 ):
@@ -262,6 +264,37 @@ def ouvrir_fenetre_parametres(
         pady=(0, 25)
     )
 
+    label_unite_resultat_demarrage = ttk.Label(
+        frame,
+        text=tr("settings.default_result_unit"),
+    )
+
+    label_unite_resultat_demarrage.pack(
+        pady=(0, 5)
+    )
+
+    variable_unite_resultat_demarrage = tk.StringVar(
+        value=obtenir_unite_resultat_demarrage()
+    )
+
+    def appliquer_selection_unite_resultat_demarrage(unite):
+        changer_unite_resultat_demarrage(unite)
+
+        variable_unite_resultat_demarrage.set(
+            unite
+        )
+
+    selecteur_unite_resultat_demarrage = creer_selecteur(
+        frame,
+        variable_unite_resultat_demarrage,
+        options_unites,
+        appliquer_selection_unite_resultat_demarrage,
+    )
+
+    selecteur_unite_resultat_demarrage.pack(
+        pady=(0, 25)
+    )
+
     bouton_fermer = ttk.Button(
         frame,
         text=tr("button.close"),
@@ -288,6 +321,10 @@ def ouvrir_fenetre_parametres(
 
         label_unite_entree_demarrage.config(
             text=tr("settings.default_input_unit")
+        )
+
+        label_unite_resultat_demarrage.config(
+            text=tr("settings.default_result_unit")
         )
 
         bouton_fermer.config(

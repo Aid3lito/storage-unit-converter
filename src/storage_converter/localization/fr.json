@@ -30,5 +30,6 @@
   "theme.light": "Clair",
   "theme.dark": "Sombre",
   "settings.default_operation": "Opération au démarrage",
-  "settings.default_input_unit": "Unité d’entrée par défaut"
+  "settings.default_input_unit": "Unité d’entrée par défaut",
+  "settings.default_result_unit": "Unité de résultat par défaut"
 }

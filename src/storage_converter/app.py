@@ -58,6 +58,7 @@ def texte_resultat_defaut():
 theme_actuel = THEME_DEFAUT
 operation_demarrage = OPERATION_DEFAUT
 unite_entree_demarrage = UNITE_ENTREE_DEFAUT
+unite_resultat_demarrage = UNITE_RESULTAT_DEFAUT
 
 PADDING_RESULT_LABEL = (3, 3)
 PADDING_RESULT_MENU = (0, 5)
@@ -291,6 +292,21 @@ def changer_unite_entree_demarrage(nouvelle_unite):
     unite_entree_demarrage = nouvelle_unite
     sauvegarder_preferences()
 
+def changer_unite_resultat_demarrage(nouvelle_unite):
+    global unite_resultat_demarrage
+
+    if nouvelle_unite not in obtenir_unites_affichage():
+        return
+
+    if unite_resultat_demarrage == nouvelle_unite:
+        return
+
+    unite_resultat_demarrage = nouvelle_unite
+    sauvegarder_preferences()
+
+
+def obtenir_unite_resultat_demarrage():
+    return unite_resultat_demarrage
 
 def obtenir_unite_entree_demarrage():
     return unite_entree_demarrage
@@ -311,6 +327,8 @@ def ouvrir_parametres():
         obtenir_operation_demarrage,
         changer_unite_entree_demarrage,
         obtenir_unite_entree_demarrage,
+        changer_unite_resultat_demarrage,
+        obtenir_unite_resultat_demarrage,
         obtenir_unites_affichage(),
         fenetre_parametres,
     )
@@ -1234,6 +1252,7 @@ def sauvegarder_preferences():
         "source_units": source_units,
         "default_input_unit": unite_entree_demarrage,
         "result_unit": unite_resultat.get(),
+        "default_result_unit": unite_resultat_demarrage,
         "theme": theme_actuel,
         "language": localization.language,
     }
@@ -1245,7 +1264,8 @@ def sauvegarder_preferences():
 
 
 def charger_preferences():
-    global theme_actuel, operation_demarrage, unite_entree_demarrage
+    global theme_actuel, operation_demarrage, unite_entree_demarrage, unite_resultat_demarrage
+        
 
     preferences_chargees = preferences.load_preferences(
         FICHIER_PREFERENCES
@@ -1281,6 +1301,10 @@ def charger_preferences():
         "result_unit"
     )
 
+    unite_resultat_demarrage_sauvegardee = preferences_chargees.get(
+        "default_result_unit"
+    )
+
     theme_sauvegarde = preferences_chargees.get(
         "theme"
     )
@@ -1291,6 +1315,7 @@ def charger_preferences():
 
     operation_demarrage = operation_demarrage_sauvegardee
     unite_entree_demarrage = unite_entree_demarrage_sauvegardee
+    unite_resultat_demarrage = unite_resultat_demarrage_sauvegardee
 
     operation.set(
         operation_demarrage
@@ -1332,7 +1357,7 @@ def charger_preferences():
     theme_actuel = theme_sauvegarde
 
     unite_resultat.set(
-        unite_resultat_sauvegardee
+        unite_resultat_demarrage
     )
 
     appliquer_langue()

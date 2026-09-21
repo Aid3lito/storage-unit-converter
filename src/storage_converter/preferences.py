@@ -9,6 +9,7 @@ DEFAULT_PREFERENCES = {
     "source_units": ["GB - GigaByte"],
     "default_input_unit": "GB - GigaByte",
     "result_unit": "GiB - GibiByte",
+    "default_result_unit": "GiB - GibiByte",
     "theme": "light",
     "language": "en",
 }
@@ -99,6 +100,13 @@ def validate_preferences(
 
     if result_unit in valid_units:
         validated["result_unit"] = result_unit
+
+    default_result_unit = loaded_preferences.get(
+        "default_result_unit"
+    )
+
+    if default_result_unit in valid_units:
+        validated["default_result_unit"] = default_result_unit
 
     theme = loaded_preferences.get("theme")
 
