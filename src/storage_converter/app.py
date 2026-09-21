@@ -62,6 +62,8 @@ deuxieme_unite_entree_demarrage = UNITE_ENTREE_DEFAUT
 unite_resultat_demarrage = UNITE_RESULTAT_DEFAUT
 historique_active = True
 historique_max_entrees = MAX_HISTORIQUE_DEFAUT
+memorisation_nombre_lignes_active = False
+nombre_lignes_memorise = 2
 
 PADDING_RESULT_LABEL = (3, 3)
 PADDING_RESULT_MENU = (0, 5)
@@ -400,6 +402,60 @@ def changer_historique_max_entrees(nouvelle_valeur):
 def obtenir_historique_max_entrees():
     return historique_max_entrees
 
+def changer_memorisation_nombre_lignes(nouvelle_valeur):
+    global memorisation_nombre_lignes_active
+    global nombre_lignes_memorise
+
+    if not isinstance(nouvelle_valeur, bool):
+        return
+
+    if memorisation_nombre_lignes_active == nouvelle_valeur:
+        return
+
+    memorisation_nombre_lignes_active = nouvelle_valeur
+
+    if (
+        memorisation_nombre_lignes_active
+        and operation.get() in (
+            OPERATION_ADDITION,
+            OPERATION_SOUSTRACTION,
+        )
+    ):
+        nombre_lignes_memorise = max(
+            len(lignes_valeurs),
+            2,
+        )
+
+    sauvegarder_preferences()
+
+
+def obtenir_memorisation_nombre_lignes():
+    return memorisation_nombre_lignes_active
+
+
+def memoriser_nombre_lignes_actuel():
+    global nombre_lignes_memorise
+
+    if not memorisation_nombre_lignes_active:
+        return
+
+    if operation.get() not in (
+        OPERATION_ADDITION,
+        OPERATION_SOUSTRACTION,
+    ):
+        return
+
+    nouveau_nombre = max(
+        len(lignes_valeurs),
+        2,
+    )
+
+    if nombre_lignes_memorise == nouveau_nombre:
+        return
+
+    nombre_lignes_memorise = nouveau_nombre
+    sauvegarder_preferences()
+
 def obtenir_unite_resultat_demarrage():
     return unite_resultat_demarrage
 
@@ -430,6 +486,8 @@ def ouvrir_parametres():
         obtenir_historique_active,
         changer_historique_max_entrees,
         obtenir_historique_max_entrees,
+        changer_memorisation_nombre_lignes,
+        obtenir_memorisation_nombre_lignes,
         obtenir_unites_affichage(),
         fenetre_parametres,
     )
@@ -814,8 +872,18 @@ def mettre_a_jour_interface():
         )
 
     else:
-        while len(lignes_valeurs) < minimum:
+        nombre_cible = minimum
+
+        if memorisation_nombre_lignes_active:
+            nombre_cible = max(
+                nombre_lignes_memorise,
+                minimum,
+            )
+
+        while len(lignes_valeurs) < nombre_cible:
             ajouter_ligne_valeur()
+
+
         
         for ligne in lignes_valeurs:
             ligne["bouton_supprimer"].grid()
@@ -1076,6 +1144,7 @@ def ajuster_hauteur_fenetre():
 
 def ajouter_ligne_valeur_et_focus():
     ajouter_ligne_valeur()
+    memoriser_nombre_lignes_actuel()
     lignes_valeurs[-1]["entree"].focus_set()
 
 def ajouter_valeur_raccourci(event=None):
@@ -1169,6 +1238,7 @@ def supprimer_ligne_valeur(ligne):
             index
         )
 
+    memoriser_nombre_lignes_actuel()
     ajuster_hauteur_fenetre()
 
 
@@ -1362,6 +1432,8 @@ def sauvegarder_preferences():
         "language": localization.language,
         "history_enabled": historique_active,
         "history_max_entries": historique_max_entrees,
+        "remember_input_row_count": memorisation_nombre_lignes_active,
+        "input_row_count": nombre_lignes_memorise,
     }
 
     preferences.save_preferences(
@@ -1378,7 +1450,8 @@ def charger_preferences():
     global unite_resultat_demarrage
     global historique_active
     global historique_max_entrees
-        
+    global memorisation_nombre_lignes_active
+    global nombre_lignes_memorise
 
     preferences_chargees = preferences.load_preferences(
         FICHIER_PREFERENCES
@@ -1438,12 +1511,22 @@ def charger_preferences():
         "history_max_entries"
     )
 
+    memorisation_nombre_lignes_sauvegardee = preferences_chargees.get(
+        "remember_input_row_count"
+    )
+
+    nombre_lignes_memorise_sauvegarde = preferences_chargees.get(
+        "input_row_count"
+    )
+
     operation_demarrage = operation_demarrage_sauvegardee
     unite_entree_demarrage = unite_entree_demarrage_sauvegardee
     deuxieme_unite_entree_demarrage = deuxieme_unite_entree_demarrage_sauvegardee
     unite_resultat_demarrage = unite_resultat_demarrage_sauvegardee
     historique_active = historique_active_sauvegardee
     historique_max_entrees = historique_max_entrees_sauvegarde
+    memorisation_nombre_lignes_active = memorisation_nombre_lignes_sauvegardee
+    nombre_lignes_memorise = nombre_lignes_memorise_sauvegarde
 
     operation.set(
         operation_demarrage

@@ -97,6 +97,8 @@ def test_validate_preferences_accepts_valid_values():
         "language": "fr",
         "history_enabled": False,
         "history_max_entries": 25,
+        "remember_input_row_count": True,
+        "input_row_count": 5,
     }
 
     result = preferences.validate_preferences(
@@ -434,3 +436,79 @@ def test_validate_preferences_replaces_invalid_default_second_input_unit():
     )
 
     assert result["default_second_input_unit"] == "GB - GigaByte"
+
+
+def test_validate_preferences_accepts_valid_remember_input_row_count():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["remember_input_row_count"] = True
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["remember_input_row_count"] is True
+
+def test_validate_preferences_replaces_invalid_remember_input_row_count():
+    invalid_values = (
+        1,
+        0,
+        "true",
+        None,
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["remember_input_row_count"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["remember_input_row_count"] is False
+
+def test_validate_preferences_accepts_valid_input_row_count():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["input_row_count"] = 5
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["input_row_count"] == 5
+
+def test_validate_preferences_replaces_invalid_input_row_count():
+    invalid_values = (
+        1,
+        0,
+        -1,
+        2.5,
+        "5",
+        True,
+        None,
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["input_row_count"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["input_row_count"] == 2

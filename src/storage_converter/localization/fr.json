@@ -37,5 +37,6 @@
   "option.disabled": "Désactivé",
   "settings.default_input_unit_1": "Unité d’entrée par défaut 1",
   "settings.default_second_input_unit": "Unité d’entrée par défaut 2",
-  "settings.history_max_entries": "Nombre maximal d’entrées"
+  "settings.history_max_entries": "Nombre maximal d’entrées",
+  "settings.remember_input_row_count": "Mémoriser le nombre de lignes"
 }

@@ -15,6 +15,8 @@ DEFAULT_PREFERENCES = {
     "language": "en",
     "history_enabled": True,
     "history_max_entries": 10,
+    "remember_input_row_count": False,
+    "input_row_count": 2,
 }
 
 
@@ -145,5 +147,23 @@ def validate_preferences(
         and history_max_entries > 0
     ):
         validated["history_max_entries"] = history_max_entries
+
+    remember_input_row_count = loaded_preferences.get(
+        "remember_input_row_count"
+    )
+
+    if isinstance(remember_input_row_count, bool):
+        validated["remember_input_row_count"] = remember_input_row_count
+
+    input_row_count = loaded_preferences.get(
+    "input_row_count"
+)
+
+    if (
+        isinstance(input_row_count, int)
+        and not isinstance(input_row_count, bool)
+        and input_row_count >= 2
+    ):
+        validated["input_row_count"] = input_row_count
 
     return validated

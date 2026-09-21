@@ -68,6 +68,8 @@ def ouvrir_fenetre_parametres(
     obtenir_historique_active,
     changer_historique_max_entrees,
     obtenir_historique_max_entrees,
+    changer_memorisation_nombre_lignes,
+    obtenir_memorisation_nombre_lignes,
     unites_disponibles,
     fenetre_existante=None,
 ):
@@ -495,6 +497,62 @@ def ouvrir_fenetre_parametres(
         appliquer_historique_max_entrees,
     )
 
+    label_memorisation_lignes = ttk.Label(
+        frame,
+        text=tr("settings.remember_input_row_count"),
+    )
+
+    label_memorisation_lignes.grid(
+        row=10,
+        column=0,
+        columnspan=2,
+        padx=15,
+        pady=(0, 5),
+    )
+
+    options_memorisation_lignes = {
+        tr("option.enabled"): True,
+        tr("option.disabled"): False,
+    }
+
+    memorisation_lignes_affichee_actuelle = next(
+        label
+        for label, valeur in options_memorisation_lignes.items()
+        if valeur is obtenir_memorisation_nombre_lignes()
+    )
+
+    variable_memorisation_lignes = tk.StringVar(
+        value=memorisation_lignes_affichee_actuelle
+    )
+
+
+    def appliquer_selection_memorisation_lignes(valeur):
+        changer_memorisation_nombre_lignes(valeur)
+
+        variable_memorisation_lignes.set(
+            next(
+                label
+                for label, option in options_memorisation_lignes.items()
+                if option is valeur
+            )
+        )
+
+
+    selecteur_memorisation_lignes = creer_selecteur(
+        frame,
+        variable_memorisation_lignes,
+        options_memorisation_lignes,
+        appliquer_selection_memorisation_lignes,
+    )
+
+    selecteur_memorisation_lignes.grid(
+        row=11,
+        column=0,
+        columnspan=2,
+        padx=15,
+        pady=(0, 25),
+    )
+
     bouton_fermer = ttk.Button(
         frame,
         text=tr("button.close"),
@@ -502,7 +560,7 @@ def ouvrir_fenetre_parametres(
     )
 
     bouton_fermer.grid(
-        row=10,
+        row=12,
         column=0,
         columnspan=2,
         pady=(0, 10)
@@ -529,6 +587,10 @@ def ouvrir_fenetre_parametres(
             text=tr("settings.default_input_unit")
         )
 
+        label_deuxieme_unite_entree_demarrage.config(
+            text=tr("settings.default_second_input_unit")
+        )
+
         label_unite_resultat_demarrage.config(
             text=tr("settings.default_result_unit")
         )
@@ -539,6 +601,10 @@ def ouvrir_fenetre_parametres(
 
         label_historique_max_entrees.config(
             text=tr("settings.history_max_entries")
+        )
+
+        label_memorisation_lignes.config(
+            text=tr("settings.remember_input_row_count")
         )
 
         bouton_fermer.config(
@@ -631,6 +697,30 @@ def ouvrir_fenetre_parametres(
                 label
                 for label, valeur in options_historique.items()
                 if valeur is obtenir_historique_active()
+            )
+        )
+
+        nouvelles_options_memorisation_lignes = {
+            tr("option.enabled"): True,
+            tr("option.disabled"): False,
+        }
+
+        options_memorisation_lignes.clear()
+        options_memorisation_lignes.update(
+            nouvelles_options_memorisation_lignes
+        )
+
+        mettre_a_jour_selecteur(
+            selecteur_memorisation_lignes,
+            options_memorisation_lignes,
+            appliquer_selection_memorisation_lignes,
+        )
+
+        variable_memorisation_lignes.set(
+            next(
+                label
+                for label, valeur in options_memorisation_lignes.items()
+                if valeur is obtenir_memorisation_nombre_lignes()
             )
         )
 
