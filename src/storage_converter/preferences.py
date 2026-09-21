@@ -17,6 +17,8 @@ DEFAULT_PREFERENCES = {
     "history_max_entries": 10,
     "remember_input_row_count": False,
     "input_row_count": 2,
+    "remember_window_position": False,
+    "window_position": None,
 }
 
 
@@ -157,7 +159,7 @@ def validate_preferences(
 
     input_row_count = loaded_preferences.get(
     "input_row_count"
-)
+    )
 
     if (
         isinstance(input_row_count, int)
@@ -165,5 +167,30 @@ def validate_preferences(
         and input_row_count >= 2
     ):
         validated["input_row_count"] = input_row_count
+
+    remember_window_position = loaded_preferences.get(
+        "remember_window_position"
+    )
+
+    if isinstance(remember_window_position, bool):
+        validated["remember_window_position"] = remember_window_position
+
+    window_position = loaded_preferences.get(
+        "window_position"
+    )
+
+    if window_position is None:
+        validated["window_position"] = None
+
+    elif (
+        isinstance(window_position, list)
+        and len(window_position) == 2
+        and all(
+            isinstance(coordinate, int)
+            and not isinstance(coordinate, bool)
+            for coordinate in window_position
+        )
+    ):
+        validated["window_position"] = window_position
 
     return validated

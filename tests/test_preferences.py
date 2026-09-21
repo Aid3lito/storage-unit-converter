@@ -99,6 +99,8 @@ def test_validate_preferences_accepts_valid_values():
         "history_max_entries": 25,
         "remember_input_row_count": True,
         "input_row_count": 5,
+        "remember_window_position": True,
+        "window_position": [350, 120],
     }
 
     result = preferences.validate_preferences(
@@ -512,3 +514,85 @@ def test_validate_preferences_replaces_invalid_input_row_count():
         )
 
         assert result["input_row_count"] == 2
+
+
+
+def test_validate_preferences_accepts_valid_remember_window_position():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["remember_window_position"] = True
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["remember_window_position"] is True
+
+
+def test_validate_preferences_replaces_invalid_remember_window_position():
+    invalid_values = (
+        1,
+        0,
+        "true",
+        None,
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["remember_window_position"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["remember_window_position"] is False
+
+def test_validate_preferences_accepts_valid_window_position():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["window_position"] = [350, 120]
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["window_position"] == [350, 120]
+
+
+
+def test_validate_preferences_replaces_invalid_window_position():
+    invalid_values = (
+        [100],
+        [100, 200, 300],
+        ["100", 200],
+        [True, 200],
+        "100,200",
+        {},
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["window_position"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["window_position"] is None
+
+
+

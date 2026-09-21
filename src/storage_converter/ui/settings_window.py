@@ -70,6 +70,8 @@ def ouvrir_fenetre_parametres(
     obtenir_historique_max_entrees,
     changer_memorisation_nombre_lignes,
     obtenir_memorisation_nombre_lignes,
+    changer_memorisation_position_fenetre,
+    obtenir_memorisation_position_fenetre,
     unites_disponibles,
     fenetre_existante=None,
 ):
@@ -106,13 +108,15 @@ def ouvrir_fenetre_parametres(
     frame.columnconfigure(
         0,
         weight=1,
-        uniform="settings"
+        uniform="settings",
+        minsize=250,
     )
 
     frame.columnconfigure(
         1,
         weight=1,
-        uniform="settings"
+        uniform="settings",
+        minsize=250,
     )
 
     label_langue = ttk.Label(
@@ -505,7 +509,6 @@ def ouvrir_fenetre_parametres(
     label_memorisation_lignes.grid(
         row=10,
         column=0,
-        columnspan=2,
         padx=15,
         pady=(0, 5),
     )
@@ -548,10 +551,65 @@ def ouvrir_fenetre_parametres(
     selecteur_memorisation_lignes.grid(
         row=11,
         column=0,
-        columnspan=2,
         padx=15,
         pady=(0, 25),
     )
+
+
+    label_memorisation_position = ttk.Label(
+        frame,
+        text=tr("settings.remember_window_position"),
+    )
+
+    label_memorisation_position.grid(
+        row=10,
+        column=1,
+        padx=15,
+        pady=(0, 5),
+    )
+
+    options_memorisation_position = {
+        tr("option.enabled"): True,
+        tr("option.disabled"): False,
+    }
+
+    memorisation_position_affichee_actuelle = next(
+        label
+        for label, valeur in options_memorisation_position.items()
+        if valeur is obtenir_memorisation_position_fenetre()
+    )
+
+    variable_memorisation_position = tk.StringVar(
+        value=memorisation_position_affichee_actuelle
+    )
+
+
+    def appliquer_selection_memorisation_position(valeur):
+        changer_memorisation_position_fenetre(valeur)
+
+        variable_memorisation_position.set(
+            next(
+                label
+                for label, option in options_memorisation_position.items()
+                if option is valeur
+            )
+        )
+
+
+    selecteur_memorisation_position = creer_selecteur(
+        frame,
+        variable_memorisation_position,
+        options_memorisation_position,
+        appliquer_selection_memorisation_position,
+    )
+
+    selecteur_memorisation_position.grid(
+        row=11,
+        column=1,
+        padx=15,
+        pady=(0, 25),
+    )
+
 
     bouton_fermer = ttk.Button(
         frame,
@@ -605,6 +663,10 @@ def ouvrir_fenetre_parametres(
 
         label_memorisation_lignes.config(
             text=tr("settings.remember_input_row_count")
+        )
+
+        label_memorisation_position.config(
+            text=tr("settings.remember_window_position")
         )
 
         bouton_fermer.config(
@@ -721,6 +783,30 @@ def ouvrir_fenetre_parametres(
                 label
                 for label, valeur in options_memorisation_lignes.items()
                 if valeur is obtenir_memorisation_nombre_lignes()
+            )
+        )
+
+        nouvelles_options_memorisation_position = {
+            tr("option.enabled"): True,
+            tr("option.disabled"): False,
+        }
+
+        options_memorisation_position.clear()
+        options_memorisation_position.update(
+            nouvelles_options_memorisation_position
+        )
+
+        mettre_a_jour_selecteur(
+            selecteur_memorisation_position,
+            options_memorisation_position,
+            appliquer_selection_memorisation_position,
+        )
+
+        variable_memorisation_position.set(
+            next(
+                label
+                for label, valeur in options_memorisation_position.items()
+                if valeur is obtenir_memorisation_position_fenetre()
             )
         )
 

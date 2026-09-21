@@ -64,6 +64,8 @@ historique_active = True
 historique_max_entrees = MAX_HISTORIQUE_DEFAUT
 memorisation_nombre_lignes_active = False
 nombre_lignes_memorise = 2
+memorisation_position_fenetre_active = False
+position_fenetre_memorisee = None
 
 PADDING_RESULT_LABEL = (3, 3)
 PADDING_RESULT_MENU = (0, 5)
@@ -456,6 +458,32 @@ def memoriser_nombre_lignes_actuel():
     nombre_lignes_memorise = nouveau_nombre
     sauvegarder_preferences()
 
+def changer_memorisation_position_fenetre(nouvelle_valeur):
+    global memorisation_position_fenetre_active
+    global position_fenetre_memorisee
+
+    if not isinstance(nouvelle_valeur, bool):
+        return
+
+    if memorisation_position_fenetre_active == nouvelle_valeur:
+        return
+
+    memorisation_position_fenetre_active = nouvelle_valeur
+
+    if memorisation_position_fenetre_active:
+        fenetre.update_idletasks()
+
+        position_fenetre_memorisee = [
+            fenetre.winfo_x(),
+            fenetre.winfo_y(),
+        ]
+
+    sauvegarder_preferences()
+
+
+def obtenir_memorisation_position_fenetre():
+    return memorisation_position_fenetre_active
+
 def obtenir_unite_resultat_demarrage():
     return unite_resultat_demarrage
 
@@ -488,6 +516,8 @@ def ouvrir_parametres():
         obtenir_historique_max_entrees,
         changer_memorisation_nombre_lignes,
         obtenir_memorisation_nombre_lignes,
+        changer_memorisation_position_fenetre,
+        obtenir_memorisation_position_fenetre,
         obtenir_unites_affichage(),
         fenetre_parametres,
     )
@@ -1104,19 +1134,41 @@ def definir_taille_initiale():
         int(hauteur_ecran * 0.90)
     )
 
-    position_x = max(
-        (largeur_ecran - largeur) // 2,
-        0
-    )
+    if (
+        memorisation_position_fenetre_active
+        and position_fenetre_memorisee is not None
+    ):
+        position_x, position_y = position_fenetre_memorisee
 
-    position_y = max(
-        (hauteur_ecran - hauteur) // 2,
-        0
-    )
+    else:
+        position_x = max(
+            (largeur_ecran - largeur) // 2,
+            0
+        )
+
+        position_y = max(
+            (hauteur_ecran - hauteur) // 2,
+            0
+        )
 
     fenetre.geometry(
         f"{largeur}x{hauteur}+{position_x}+{position_y}"
     )
+
+def fermer_application():
+    global position_fenetre_memorisee
+
+    if memorisation_position_fenetre_active:
+        fenetre.update_idletasks()
+
+        position_fenetre_memorisee = [
+            fenetre.winfo_x(),
+            fenetre.winfo_y(),
+        ]
+
+        sauvegarder_preferences()
+
+    fenetre.destroy()
 
 
 # REDIMENSIONNEMENT AUTOMATIQUE
@@ -1434,6 +1486,8 @@ def sauvegarder_preferences():
         "history_max_entries": historique_max_entrees,
         "remember_input_row_count": memorisation_nombre_lignes_active,
         "input_row_count": nombre_lignes_memorise,
+        "remember_window_position": memorisation_position_fenetre_active,
+        "window_position": position_fenetre_memorisee,
     }
 
     preferences.save_preferences(
@@ -1452,6 +1506,8 @@ def charger_preferences():
     global historique_max_entrees
     global memorisation_nombre_lignes_active
     global nombre_lignes_memorise
+    global memorisation_position_fenetre_active
+    global position_fenetre_memorisee
 
     preferences_chargees = preferences.load_preferences(
         FICHIER_PREFERENCES
@@ -1519,6 +1575,14 @@ def charger_preferences():
         "input_row_count"
     )
 
+    memorisation_position_fenetre_sauvegardee = preferences_chargees.get(
+        "remember_window_position"
+    )
+
+    position_fenetre_memorisee_sauvegardee = preferences_chargees.get(
+        "window_position"
+    )
+
     operation_demarrage = operation_demarrage_sauvegardee
     unite_entree_demarrage = unite_entree_demarrage_sauvegardee
     deuxieme_unite_entree_demarrage = deuxieme_unite_entree_demarrage_sauvegardee
@@ -1527,6 +1591,8 @@ def charger_preferences():
     historique_max_entrees = historique_max_entrees_sauvegarde
     memorisation_nombre_lignes_active = memorisation_nombre_lignes_sauvegardee
     nombre_lignes_memorise = nombre_lignes_memorise_sauvegarde
+    memorisation_position_fenetre_active = memorisation_position_fenetre_sauvegardee
+    position_fenetre_memorisee = position_fenetre_memorisee_sauvegardee
 
     operation.set(
         operation_demarrage
@@ -1935,5 +2001,10 @@ mettre_a_jour_historique()
 appliquer_theme()
 
 fenetre.after_idle(definir_taille_initiale)
+
+fenetre.protocol(
+    "WM_DELETE_WINDOW",
+    fermer_application
+)
 
 fenetre.mainloop()
