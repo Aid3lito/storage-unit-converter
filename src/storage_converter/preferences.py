@@ -5,10 +5,20 @@ from . import data_store
 
 DEFAULT_PREFERENCES = {
     "operation": "conversion",
+    "default_operation": "conversion",
     "source_units": ["GB - GigaByte"],
+    "default_input_unit": "GB - GigaByte",
+    "default_second_input_unit": "GB - GigaByte",
     "result_unit": "GiB - GibiByte",
+    "default_result_unit": "GiB - GibiByte",
     "theme": "light",
     "language": "en",
+    "history_enabled": True,
+    "history_max_entries": 10,
+    "remember_input_row_count": False,
+    "input_row_count": 2,
+    "remember_window_position": False,
+    "window_position": None,
 }
 
 
@@ -64,7 +74,15 @@ def validate_preferences(
     )
 
     if operation in valid_operations:
-        validated["operation"] = operation
+                validated["operation"] = operation
+
+    default_operation = loaded_preferences.get(
+        "default_operation"
+    )
+
+    if default_operation in valid_operations:
+        validated["default_operation"] = default_operation
+
 
     source_units = loaded_preferences.get("source_units")
 
@@ -78,10 +96,31 @@ def validate_preferences(
         if validated_source_units:
             validated["source_units"] = validated_source_units
 
+    default_input_unit = loaded_preferences.get(
+        "default_input_unit"
+    )
+
+    if default_input_unit in valid_units:
+        validated["default_input_unit"] = default_input_unit
+
+    default_second_input_unit = loaded_preferences.get(
+        "default_second_input_unit"
+    )
+
+    if default_second_input_unit in valid_units:
+        validated["default_second_input_unit"] = default_second_input_unit
+
     result_unit = loaded_preferences.get("result_unit")
 
     if result_unit in valid_units:
         validated["result_unit"] = result_unit
+
+    default_result_unit = loaded_preferences.get(
+        "default_result_unit"
+    )
+
+    if default_result_unit in valid_units:
+        validated["default_result_unit"] = default_result_unit
 
     theme = loaded_preferences.get("theme")
 
@@ -92,5 +131,66 @@ def validate_preferences(
 
     if language in valid_languages:
         validated["language"] = language
+
+    history_enabled = loaded_preferences.get(
+        "history_enabled"
+    )
+
+    if isinstance(history_enabled, bool):
+        validated["history_enabled"] = history_enabled
+
+    history_max_entries = loaded_preferences.get(
+        "history_max_entries"
+    )
+
+    if (
+        isinstance(history_max_entries, int)
+        and not isinstance(history_max_entries, bool)
+        and history_max_entries > 0
+    ):
+        validated["history_max_entries"] = history_max_entries
+
+    remember_input_row_count = loaded_preferences.get(
+        "remember_input_row_count"
+    )
+
+    if isinstance(remember_input_row_count, bool):
+        validated["remember_input_row_count"] = remember_input_row_count
+
+    input_row_count = loaded_preferences.get(
+    "input_row_count"
+    )
+
+    if (
+        isinstance(input_row_count, int)
+        and not isinstance(input_row_count, bool)
+        and input_row_count >= 2
+    ):
+        validated["input_row_count"] = input_row_count
+
+    remember_window_position = loaded_preferences.get(
+        "remember_window_position"
+    )
+
+    if isinstance(remember_window_position, bool):
+        validated["remember_window_position"] = remember_window_position
+
+    window_position = loaded_preferences.get(
+        "window_position"
+    )
+
+    if window_position is None:
+        validated["window_position"] = None
+
+    elif (
+        isinstance(window_position, list)
+        and len(window_position) == 2
+        and all(
+            isinstance(coordinate, int)
+            and not isinstance(coordinate, bool)
+            for coordinate in window_position
+        )
+    ):
+        validated["window_position"] = window_position
 
     return validated

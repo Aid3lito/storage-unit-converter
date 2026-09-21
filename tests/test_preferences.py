@@ -84,13 +84,23 @@ def test_save_preferences_writes_json(tmp_path):
 def test_validate_preferences_accepts_valid_values():
     loaded = {
         "operation": "addition",
+        "default_operation": "subtraction",
         "source_units": [
             "MB - MegaByte",
             "GB - GigaByte",
         ],
+        "default_input_unit": "MB - MegaByte",
+        "default_second_input_unit": "MB - MegaByte",
         "result_unit": "TB - TeraByte",
+        "default_result_unit": "TB - TeraByte",
         "theme": "dark",
         "language": "fr",
+        "history_enabled": False,
+        "history_max_entries": 25,
+        "remember_input_row_count": True,
+        "input_row_count": 5,
+        "remember_window_position": True,
+        "window_position": [350, 120],
     }
 
     result = preferences.validate_preferences(
@@ -242,3 +252,347 @@ def test_validate_preferences_replaces_invalid_language():
     )
 
     assert result["language"] == "en"
+
+def test_validate_preferences_accepts_valid_default_operation():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_operation"] = "subtraction"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_operation"] == "subtraction"
+
+
+def test_validate_preferences_replaces_invalid_default_operation():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_operation"] = "invalid"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_operation"] == "conversion"
+
+
+def test_validate_preferences_accepts_valid_default_input_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_input_unit"] = "GiB - GibiByte"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_input_unit"] == "GiB - GibiByte"
+
+
+def test_validate_preferences_replaces_invalid_default_input_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_input_unit"] = "invalid"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_input_unit"] == "GB - GigaByte"
+
+def test_validate_preferences_accepts_valid_default_result_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_result_unit"] = "GB - GigaByte"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_result_unit"] == "GB - GigaByte"
+
+
+def test_validate_preferences_replaces_invalid_default_result_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_result_unit"] = "invalid"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_result_unit"] == "GiB - GibiByte"
+
+
+def test_validate_preferences_accepts_valid_history_enabled():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["history_enabled"] = False
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["history_enabled"] is False
+
+
+def test_validate_preferences_replaces_invalid_history_enabled():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["history_enabled"] = "invalid"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["history_enabled"] is True
+
+def test_validate_preferences_accepts_valid_history_max_entries():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["history_max_entries"] = 25
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["history_max_entries"] == 25
+
+
+def test_validate_preferences_replaces_invalid_history_max_entries():
+    invalid_values = (
+        0,
+        -1,
+        10.5,
+        "10",
+        True,
+        None,
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["history_max_entries"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["history_max_entries"] == 10
+
+def test_validate_preferences_accepts_valid_default_second_input_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_second_input_unit"] = "GiB - GibiByte"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_second_input_unit"] == "GiB - GibiByte"
+
+
+def test_validate_preferences_replaces_invalid_default_second_input_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_second_input_unit"] = "invalid"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_second_input_unit"] == "GB - GigaByte"
+
+
+def test_validate_preferences_accepts_valid_remember_input_row_count():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["remember_input_row_count"] = True
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["remember_input_row_count"] is True
+
+def test_validate_preferences_replaces_invalid_remember_input_row_count():
+    invalid_values = (
+        1,
+        0,
+        "true",
+        None,
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["remember_input_row_count"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["remember_input_row_count"] is False
+
+def test_validate_preferences_accepts_valid_input_row_count():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["input_row_count"] = 5
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["input_row_count"] == 5
+
+def test_validate_preferences_replaces_invalid_input_row_count():
+    invalid_values = (
+        1,
+        0,
+        -1,
+        2.5,
+        "5",
+        True,
+        None,
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["input_row_count"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["input_row_count"] == 2
+
+
+
+def test_validate_preferences_accepts_valid_remember_window_position():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["remember_window_position"] = True
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["remember_window_position"] is True
+
+
+def test_validate_preferences_replaces_invalid_remember_window_position():
+    invalid_values = (
+        1,
+        0,
+        "true",
+        None,
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["remember_window_position"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["remember_window_position"] is False
+
+def test_validate_preferences_accepts_valid_window_position():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["window_position"] = [350, 120]
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["window_position"] == [350, 120]
+
+
+
+def test_validate_preferences_replaces_invalid_window_position():
+    invalid_values = (
+        [100],
+        [100, 200, 300],
+        ["100", 200],
+        [True, 200],
+        "100,200",
+        {},
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["window_position"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["window_position"] is None
+
+
+

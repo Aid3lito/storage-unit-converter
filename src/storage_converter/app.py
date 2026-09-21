@@ -4,6 +4,7 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import ttk
 from .localization.manager import LocalizationManager
+from .ui.settings_window import ouvrir_fenetre_parametres
 
 from . import converter
 from . import history_store
@@ -27,7 +28,7 @@ HAUTEUR_MIN_FENETRE = 800
 
 PLACEHOLDER = "e.g. 100"
 
-MAX_HISTORIQUE = 10
+MAX_HISTORIQUE_DEFAUT = 10
 
 SEUIL_NOTATION_SCIENTIFIQUE = 0.0001
 
@@ -55,6 +56,16 @@ def texte_resultat_defaut():
     return tr("label.result")
 
 theme_actuel = THEME_DEFAUT
+operation_demarrage = OPERATION_DEFAUT
+unite_entree_demarrage = UNITE_ENTREE_DEFAUT
+deuxieme_unite_entree_demarrage = UNITE_ENTREE_DEFAUT
+unite_resultat_demarrage = UNITE_RESULTAT_DEFAUT
+historique_active = True
+historique_max_entrees = MAX_HISTORIQUE_DEFAUT
+memorisation_nombre_lignes_active = False
+nombre_lignes_memorise = 2
+memorisation_position_fenetre_active = False
+position_fenetre_memorisee = None
 
 PADDING_RESULT_LABEL = (3, 3)
 PADDING_RESULT_MENU = (0, 5)
@@ -67,6 +78,8 @@ LANGUES_DISPONIBLES = (
     "en",
     "fr",
 )
+
+fenetre_parametres = None
 
 DOSSIER_LOCALISATION = (
     Path(__file__).resolve().parent
@@ -89,10 +102,6 @@ def obtenir_libelle_operation(operation_id):
 def appliquer_langue():
     fenetre.title(
         tr("app.title")
-    )
-
-    titre.config(
-        text=tr("app.title")
     )
 
     label_operation.config(
@@ -179,11 +188,11 @@ def appliquer_theme():
 
     if theme_actuel == "dark":
         bouton_theme.config(
-            text=tr("button.light_mode")
+            text="☀"
         )
     else:
         bouton_theme.config(
-            text=tr("button.dark_mode")
+            text="☾"
         )
 
     fenetre.configure(
@@ -191,7 +200,6 @@ def appliquer_theme():
     )
 
     for widget in (
-        titre,
         label_operation,
         label_unite_resultat,
         label_resultat,
@@ -240,15 +248,286 @@ def appliquer_theme():
     configurer_styles_ttk(style, theme)
 
 def basculer_theme():
+    nouveau_theme = (
+        "dark"
+        if theme_actuel == "light"
+        else "light"
+    )
+
+    changer_theme(nouveau_theme)
+
+def changer_theme(nouveau_theme):
     global theme_actuel
 
-    if theme_actuel == "light":
-        theme_actuel = "dark"
-    else:
-        theme_actuel = "light"
+    if nouveau_theme not in THEMES:
+        return
+
+    if theme_actuel == nouveau_theme:
+        return
+
+    theme_actuel = nouveau_theme
 
     appliquer_theme()
     sauvegarder_preferences()
+
+
+def changer_operation_demarrage(nouvelle_operation):
+    global operation_demarrage
+
+    if nouvelle_operation not in OPERATIONS:
+        return
+
+    if operation_demarrage == nouvelle_operation:
+        return
+
+    operation_demarrage = nouvelle_operation
+
+    operation.set(nouvelle_operation)
+
+    operation_affichage.set(
+        obtenir_libelle_operation(nouvelle_operation)
+    )
+
+    mettre_a_jour_interface()
+    sauvegarder_preferences()
+
+
+def obtenir_operation_demarrage():
+    return operation_demarrage
+
+def changer_unite_entree_demarrage(nouvelle_unite):
+    global unite_entree_demarrage
+
+    if nouvelle_unite not in obtenir_unites_affichage():
+        return
+
+    if unite_entree_demarrage == nouvelle_unite:
+        return
+
+    unite_entree_demarrage = nouvelle_unite
+
+    if lignes_valeurs:
+        lignes_valeurs[0]["unite"].set(
+            nouvelle_unite
+        )
+
+    sauvegarder_preferences()
+
+
+def changer_deuxieme_unite_entree_demarrage(nouvelle_unite):
+    global deuxieme_unite_entree_demarrage
+
+    if nouvelle_unite not in obtenir_unites_affichage():
+        return
+
+    if deuxieme_unite_entree_demarrage == nouvelle_unite:
+        return
+
+    deuxieme_unite_entree_demarrage = nouvelle_unite
+
+    if len(lignes_valeurs) >= 2:
+        lignes_valeurs[1]["unite"].set(
+            nouvelle_unite
+        )
+
+    sauvegarder_preferences()
+
+
+def obtenir_deuxieme_unite_entree_demarrage():
+    return deuxieme_unite_entree_demarrage
+
+def changer_unite_resultat_demarrage(nouvelle_unite):
+    global unite_resultat_demarrage
+
+    if nouvelle_unite not in obtenir_unites_affichage():
+        return
+
+    if unite_resultat_demarrage == nouvelle_unite:
+        return
+
+    unite_resultat_demarrage = nouvelle_unite
+
+    unite_resultat.set(
+        nouvelle_unite
+    )
+
+    sauvegarder_preferences()
+
+def changer_historique_active(nouvelle_valeur):
+    global historique_active
+
+    if not isinstance(nouvelle_valeur, bool):
+        return
+
+    if historique_active == nouvelle_valeur:
+        return
+
+    historique_active = nouvelle_valeur
+
+    if historique_active:
+        charger_historique()
+        sauvegarder_historique()
+    else:
+        historique.clear()
+
+    mettre_a_jour_historique()
+    sauvegarder_preferences()
+
+
+def obtenir_historique_active():
+    return historique_active
+
+def changer_historique_max_entrees(nouvelle_valeur):
+    global historique_max_entrees
+
+    if (
+        not isinstance(nouvelle_valeur, int)
+        or isinstance(nouvelle_valeur, bool)
+        or nouvelle_valeur <= 0
+    ):
+        return
+
+    if historique_max_entrees == nouvelle_valeur:
+        return
+
+    historique_max_entrees = nouvelle_valeur
+
+    if historique_active:
+        del historique[historique_max_entrees:]
+
+        mettre_a_jour_historique()
+        sauvegarder_historique()
+
+    sauvegarder_preferences()
+
+
+def obtenir_historique_max_entrees():
+    return historique_max_entrees
+
+def changer_memorisation_nombre_lignes(nouvelle_valeur):
+    global memorisation_nombre_lignes_active
+    global nombre_lignes_memorise
+
+    if not isinstance(nouvelle_valeur, bool):
+        return
+
+    if memorisation_nombre_lignes_active == nouvelle_valeur:
+        return
+
+    memorisation_nombre_lignes_active = nouvelle_valeur
+
+    if (
+        memorisation_nombre_lignes_active
+        and operation.get() in (
+            OPERATION_ADDITION,
+            OPERATION_SOUSTRACTION,
+        )
+    ):
+        nombre_lignes_memorise = max(
+            len(lignes_valeurs),
+            2,
+        )
+
+    sauvegarder_preferences()
+
+
+def obtenir_memorisation_nombre_lignes():
+    return memorisation_nombre_lignes_active
+
+
+def memoriser_nombre_lignes_actuel():
+    global nombre_lignes_memorise
+
+    if not memorisation_nombre_lignes_active:
+        return
+
+    if operation.get() not in (
+        OPERATION_ADDITION,
+        OPERATION_SOUSTRACTION,
+    ):
+        return
+
+    nouveau_nombre = max(
+        len(lignes_valeurs),
+        2,
+    )
+
+    if nombre_lignes_memorise == nouveau_nombre:
+        return
+
+    nombre_lignes_memorise = nouveau_nombre
+    sauvegarder_preferences()
+
+def changer_memorisation_position_fenetre(nouvelle_valeur):
+    global memorisation_position_fenetre_active
+    global position_fenetre_memorisee
+
+    if not isinstance(nouvelle_valeur, bool):
+        return
+
+    if memorisation_position_fenetre_active == nouvelle_valeur:
+        return
+
+    memorisation_position_fenetre_active = nouvelle_valeur
+
+    if memorisation_position_fenetre_active:
+        fenetre.update_idletasks()
+
+        position_fenetre_memorisee = [
+            fenetre.winfo_x(),
+            fenetre.winfo_y(),
+        ]
+
+    sauvegarder_preferences()
+
+
+def obtenir_memorisation_position_fenetre():
+    return memorisation_position_fenetre_active
+
+def obtenir_unite_resultat_demarrage():
+    return unite_resultat_demarrage
+
+def obtenir_unite_entree_demarrage():
+    return unite_entree_demarrage
+
+def ouvrir_parametres():
+    global fenetre_parametres
+
+    fenetre_parametres = ouvrir_fenetre_parametres(
+        fenetre,
+        tr,
+        localization.language,
+        changer_langue,
+        theme_actuel,
+        changer_theme,
+        obtenir_langue_actuelle,
+        obtenir_theme_actuel,
+        changer_operation_demarrage,
+        obtenir_operation_demarrage,
+        changer_unite_entree_demarrage,
+        obtenir_unite_entree_demarrage,
+        changer_deuxieme_unite_entree_demarrage,
+        obtenir_deuxieme_unite_entree_demarrage,
+        changer_unite_resultat_demarrage,
+        obtenir_unite_resultat_demarrage,
+        changer_historique_active,
+        obtenir_historique_active,
+        changer_historique_max_entrees,
+        obtenir_historique_max_entrees,
+        changer_memorisation_nombre_lignes,
+        obtenir_memorisation_nombre_lignes,
+        changer_memorisation_position_fenetre,
+        obtenir_memorisation_position_fenetre,
+        obtenir_unites_affichage(),
+        fenetre_parametres,
+    )
+
+def obtenir_langue_actuelle():
+    return localization.language
+
+
+def obtenir_theme_actuel():
+    return theme_actuel
 
 # ==============================
 # MÉMOIRE
@@ -623,8 +902,18 @@ def mettre_a_jour_interface():
         )
 
     else:
-        while len(lignes_valeurs) < minimum:
+        nombre_cible = minimum
+
+        if memorisation_nombre_lignes_active:
+            nombre_cible = max(
+                nombre_lignes_memorise,
+                minimum,
+            )
+
+        while len(lignes_valeurs) < nombre_cible:
             ajouter_ligne_valeur()
+
+
         
         for ligne in lignes_valeurs:
             ligne["bouton_supprimer"].grid()
@@ -845,19 +1134,41 @@ def definir_taille_initiale():
         int(hauteur_ecran * 0.90)
     )
 
-    position_x = max(
-        (largeur_ecran - largeur) // 2,
-        0
-    )
+    if (
+        memorisation_position_fenetre_active
+        and position_fenetre_memorisee is not None
+    ):
+        position_x, position_y = position_fenetre_memorisee
 
-    position_y = max(
-        (hauteur_ecran - hauteur) // 2,
-        0
-    )
+    else:
+        position_x = max(
+            (largeur_ecran - largeur) // 2,
+            0
+        )
+
+        position_y = max(
+            (hauteur_ecran - hauteur) // 2,
+            0
+        )
 
     fenetre.geometry(
         f"{largeur}x{hauteur}+{position_x}+{position_y}"
     )
+
+def fermer_application():
+    global position_fenetre_memorisee
+
+    if memorisation_position_fenetre_active:
+        fenetre.update_idletasks()
+
+        position_fenetre_memorisee = [
+            fenetre.winfo_x(),
+            fenetre.winfo_y(),
+        ]
+
+        sauvegarder_preferences()
+
+    fenetre.destroy()
 
 
 # REDIMENSIONNEMENT AUTOMATIQUE
@@ -885,6 +1196,7 @@ def ajuster_hauteur_fenetre():
 
 def ajouter_ligne_valeur_et_focus():
     ajouter_ligne_valeur()
+    memoriser_nombre_lignes_actuel()
     lignes_valeurs[-1]["entree"].focus_set()
 
 def ajouter_valeur_raccourci(event=None):
@@ -928,6 +1240,9 @@ def reinitialiser_interface():
 
     # Retour en mode Conversion
     operation.set(OPERATION_DEFAUT)
+    operation_affichage.set(
+        obtenir_libelle_operation(OPERATION_DEFAUT)
+    )
 
     mettre_a_jour_interface()
 
@@ -975,6 +1290,7 @@ def supprimer_ligne_valeur(ligne):
             index
         )
 
+    memoriser_nombre_lignes_actuel()
     ajuster_hauteur_fenetre()
 
 
@@ -1028,7 +1344,7 @@ def creer_ligne_valeur():
     entree = creer_entree_valeur(frame_ligne)
 
     unite = tk.StringVar(
-        value=UNITE_ENTREE_DEFAUT
+        value=unite_entree_demarrage
     )
 
     menu_unite = creer_menu_unites(
@@ -1158,10 +1474,20 @@ def sauvegarder_preferences():
 
     preferences_actuelles = {
         "operation": choix_operation,
+        "default_operation": operation_demarrage,
         "source_units": source_units,
+        "default_input_unit": unite_entree_demarrage,
+        "default_second_input_unit": deuxieme_unite_entree_demarrage,
         "result_unit": unite_resultat.get(),
+        "default_result_unit": unite_resultat_demarrage,
         "theme": theme_actuel,
         "language": localization.language,
+        "history_enabled": historique_active,
+        "history_max_entries": historique_max_entrees,
+        "remember_input_row_count": memorisation_nombre_lignes_active,
+        "input_row_count": nombre_lignes_memorise,
+        "remember_window_position": memorisation_position_fenetre_active,
+        "window_position": position_fenetre_memorisee,
     }
 
     preferences.save_preferences(
@@ -1172,6 +1498,16 @@ def sauvegarder_preferences():
 
 def charger_preferences():
     global theme_actuel
+    global operation_demarrage
+    global unite_entree_demarrage
+    global deuxieme_unite_entree_demarrage
+    global unite_resultat_demarrage
+    global historique_active
+    global historique_max_entrees
+    global memorisation_nombre_lignes_active
+    global nombre_lignes_memorise
+    global memorisation_position_fenetre_active
+    global position_fenetre_memorisee
 
     preferences_chargees = preferences.load_preferences(
         FICHIER_PREFERENCES
@@ -1191,12 +1527,28 @@ def charger_preferences():
         "operation"
     )
 
+    operation_demarrage_sauvegardee = preferences_chargees.get(
+        "default_operation"
+    )
+
     source_units_sauvegardees = preferences_chargees.get(
         "source_units"
     )
 
+    unite_entree_demarrage_sauvegardee = preferences_chargees.get(
+        "default_input_unit"
+    )
+
+    deuxieme_unite_entree_demarrage_sauvegardee = preferences_chargees.get(
+        "default_second_input_unit"
+    )
+
     unite_resultat_sauvegardee = preferences_chargees.get(
         "result_unit"
+    )
+
+    unite_resultat_demarrage_sauvegardee = preferences_chargees.get(
+        "default_result_unit"
     )
 
     theme_sauvegarde = preferences_chargees.get(
@@ -1207,8 +1559,43 @@ def charger_preferences():
         "language"
     )
 
+    historique_active_sauvegardee = preferences_chargees.get(
+        "history_enabled"
+    )
+
+    historique_max_entrees_sauvegarde = preferences_chargees.get(
+        "history_max_entries"
+    )
+
+    memorisation_nombre_lignes_sauvegardee = preferences_chargees.get(
+        "remember_input_row_count"
+    )
+
+    nombre_lignes_memorise_sauvegarde = preferences_chargees.get(
+        "input_row_count"
+    )
+
+    memorisation_position_fenetre_sauvegardee = preferences_chargees.get(
+        "remember_window_position"
+    )
+
+    position_fenetre_memorisee_sauvegardee = preferences_chargees.get(
+        "window_position"
+    )
+
+    operation_demarrage = operation_demarrage_sauvegardee
+    unite_entree_demarrage = unite_entree_demarrage_sauvegardee
+    deuxieme_unite_entree_demarrage = deuxieme_unite_entree_demarrage_sauvegardee
+    unite_resultat_demarrage = unite_resultat_demarrage_sauvegardee
+    historique_active = historique_active_sauvegardee
+    historique_max_entrees = historique_max_entrees_sauvegarde
+    memorisation_nombre_lignes_active = memorisation_nombre_lignes_sauvegardee
+    nombre_lignes_memorise = nombre_lignes_memorise_sauvegarde
+    memorisation_position_fenetre_active = memorisation_position_fenetre_sauvegardee
+    position_fenetre_memorisee = position_fenetre_memorisee_sauvegardee
+
     operation.set(
-        operation_sauvegardee
+        operation_demarrage
     )
 
     localization.set_language(
@@ -1216,33 +1603,36 @@ def charger_preferences():
     )
 
     operation_affichage.set(
-        obtenir_libelle_operation(operation_sauvegardee)
+        obtenir_libelle_operation(operation_demarrage)
     )
 
     mettre_a_jour_interface()
 
-    if isinstance(source_units_sauvegardees, list):
-        if (len(source_units_sauvegardees) >= 1):
-            lignes_valeurs[0]["unite"].set(
-                source_units_sauvegardees[0]
-            )
+    if lignes_valeurs:
+        lignes_valeurs[0]["unite"].set(
+            unite_entree_demarrage
+        )
 
-        if (
-            operation.get() in (
-                OPERATION_ADDITION,
-                OPERATION_SOUSTRACTION
-            )
-            and len(lignes_valeurs) >= 2
-            and len(source_units_sauvegardees) >= 2
-        ):
-            lignes_valeurs[1]["unite"].set(
-                source_units_sauvegardees[1]
-            )
+    if lignes_valeurs:
+        lignes_valeurs[0]["unite"].set(
+            unite_entree_demarrage
+        )
+
+    if (
+        operation.get() in (
+            OPERATION_ADDITION,
+            OPERATION_SOUSTRACTION
+        )
+        and len(lignes_valeurs) >= 2
+    ):
+        lignes_valeurs[1]["unite"].set(
+            deuxieme_unite_entree_demarrage
+        )
 
     theme_actuel = theme_sauvegarde
 
     unite_resultat.set(
-        unite_resultat_sauvegardee
+        unite_resultat_demarrage
     )
 
     appliquer_langue()
@@ -1255,10 +1645,13 @@ def charger_preferences():
 def charger_historique():
     historique.clear()
 
+    if not historique_active:
+        return
+
     historique.extend(
         history_store.load_history(
             FICHIER_HISTORIQUE,
-            MAX_HISTORIQUE
+            historique_max_entrees
         )
     )
 
@@ -1271,9 +1664,12 @@ def sauvegarder_historique():
 
 # Ajouter une valeur à l'historique
 def ajouter_historique(texte):
+    if not historique_active:
+        return
+    
     historique.insert(0, texte)
 
-    if len(historique) > MAX_HISTORIQUE:
+    if len(historique) > historique_max_entrees:
         historique.pop()
 
     mettre_a_jour_historique()
@@ -1302,29 +1698,34 @@ def effacer_historique():
 # CONSTRUCTION DE L'INTERFACE
 # ==============================
 
-
-# TITRE
-
-titre = tk.Label(
-    fenetre,
-    text=tr("app.title"),
-    font=("Arial", 20, "bold"),
-    fg=obtenir_theme(theme_actuel)["text"]
-)
-titre.pack(pady=(20, 15))
-
 bouton_theme = ttk.Button(
     fenetre,
-    text=tr("button.dark_mode"),
+    text="☾",
+    width=3,
     command=basculer_theme,
-    style="Custom.TButton"
+    style="Custom.TButton",
 )
 
-bouton_theme.pack(
-    pady=(0, 15)
+bouton_theme.place(
+    x=20,
+    y=20,
+    anchor="nw",
 )
 
+bouton_parametres = ttk.Button(
+    fenetre,
+    text="⚙",
+    width=3,
+    command=ouvrir_parametres,
+    style="Custom.TButton",
+)
 
+bouton_parametres.place(
+    relx=1.0,
+    x=-20,
+    y=20,
+    anchor="ne",
+)
 
 # SÉLECTION DE L'OPÉRATION
 
@@ -1349,7 +1750,7 @@ menu_operation = creer_menu_operations(
 operation.set(OPERATION_DEFAUT)
 
 operation_affichage.set(
-    obtenir_libelle_operation(OPERATION_DEFAUT)
+    obtenir_libelle_operation(operation_demarrage)
 )
 
 menu_operation.pack()
@@ -1600,5 +2001,10 @@ mettre_a_jour_historique()
 appliquer_theme()
 
 fenetre.after_idle(definir_taille_initiale)
+
+fenetre.protocol(
+    "WM_DELETE_WINDOW",
+    fermer_application
+)
 
 fenetre.mainloop()

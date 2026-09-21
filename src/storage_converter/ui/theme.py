@@ -52,6 +52,12 @@ def configurer_styles_ttk(style, theme):
     )
 
     style.configure(
+        "Custom.TEntry",
+        fieldbackground=theme["button_background"],
+        foreground=theme["button_text"],
+    )
+
+    style.configure(
         "Custom.TButton",
         background=theme["button_background"],
         foreground=theme["button_text"]
