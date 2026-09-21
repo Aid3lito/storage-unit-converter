@@ -36,5 +36,6 @@
   "option.enabled": "Enabled",
   "option.disabled": "Disabled",
   "settings.default_input_unit_1": "Default input unit 1",
-  "settings.default_second_input_unit": "Default input unit 2"
+  "settings.default_second_input_unit": "Default input unit 2",
+  "settings.history_max_entries": "Maximum stored entries"
 }

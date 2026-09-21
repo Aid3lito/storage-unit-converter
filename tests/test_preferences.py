@@ -96,6 +96,7 @@ def test_validate_preferences_accepts_valid_values():
         "theme": "dark",
         "language": "fr",
         "history_enabled": False,
+        "history_max_entries": 25,
     }
 
     result = preferences.validate_preferences(
@@ -366,6 +367,44 @@ def test_validate_preferences_replaces_invalid_history_enabled():
 
     assert result["history_enabled"] is True
 
+def test_validate_preferences_accepts_valid_history_max_entries():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["history_max_entries"] = 25
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["history_max_entries"] == 25
+
+
+def test_validate_preferences_replaces_invalid_history_max_entries():
+    invalid_values = (
+        0,
+        -1,
+        10.5,
+        "10",
+        True,
+        None,
+    )
+
+    for invalid_value in invalid_values:
+        loaded = preferences.DEFAULT_PREFERENCES.copy()
+        loaded["history_max_entries"] = invalid_value
+
+        result = preferences.validate_preferences(
+            loaded,
+            {"conversion", "addition", "subtraction"},
+            {"GB - GigaByte", "GiB - GibiByte"},
+            {"light", "dark"},
+            {"en", "fr"},
+        )
+
+        assert result["history_max_entries"] == 10
 
 def test_validate_preferences_accepts_valid_default_second_input_unit():
     loaded = preferences.DEFAULT_PREFERENCES.copy()

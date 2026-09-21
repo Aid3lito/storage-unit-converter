@@ -28,7 +28,7 @@ HAUTEUR_MIN_FENETRE = 800
 
 PLACEHOLDER = "e.g. 100"
 
-MAX_HISTORIQUE = 10
+MAX_HISTORIQUE_DEFAUT = 10
 
 SEUIL_NOTATION_SCIENTIFIQUE = 0.0001
 
@@ -61,6 +61,7 @@ unite_entree_demarrage = UNITE_ENTREE_DEFAUT
 deuxieme_unite_entree_demarrage = UNITE_ENTREE_DEFAUT
 unite_resultat_demarrage = UNITE_RESULTAT_DEFAUT
 historique_active = True
+historique_max_entrees = MAX_HISTORIQUE_DEFAUT
 
 PADDING_RESULT_LABEL = (3, 3)
 PADDING_RESULT_MENU = (0, 5)
@@ -361,6 +362,7 @@ def changer_historique_active(nouvelle_valeur):
 
     if historique_active:
         charger_historique()
+        sauvegarder_historique()
     else:
         historique.clear()
 
@@ -370,6 +372,33 @@ def changer_historique_active(nouvelle_valeur):
 
 def obtenir_historique_active():
     return historique_active
+
+def changer_historique_max_entrees(nouvelle_valeur):
+    global historique_max_entrees
+
+    if (
+        not isinstance(nouvelle_valeur, int)
+        or isinstance(nouvelle_valeur, bool)
+        or nouvelle_valeur <= 0
+    ):
+        return
+
+    if historique_max_entrees == nouvelle_valeur:
+        return
+
+    historique_max_entrees = nouvelle_valeur
+
+    if historique_active:
+        del historique[historique_max_entrees:]
+
+        mettre_a_jour_historique()
+        sauvegarder_historique()
+
+    sauvegarder_preferences()
+
+
+def obtenir_historique_max_entrees():
+    return historique_max_entrees
 
 def obtenir_unite_resultat_demarrage():
     return unite_resultat_demarrage
@@ -399,6 +428,8 @@ def ouvrir_parametres():
         obtenir_unite_resultat_demarrage,
         changer_historique_active,
         obtenir_historique_active,
+        changer_historique_max_entrees,
+        obtenir_historique_max_entrees,
         obtenir_unites_affichage(),
         fenetre_parametres,
     )
@@ -1087,7 +1118,11 @@ def reinitialiser_interface():
     unite_resultat.set(UNITE_RESULTAT_DEFAUT)
 
     # Retour en mode Conversion
+    # Retour en mode Conversion
     operation.set(OPERATION_DEFAUT)
+    operation_affichage.set(
+        obtenir_libelle_operation(OPERATION_DEFAUT)
+    )
 
     mettre_a_jour_interface()
 
@@ -1327,6 +1362,7 @@ def sauvegarder_preferences():
         "theme": theme_actuel,
         "language": localization.language,
         "history_enabled": historique_active,
+        "history_max_entries": historique_max_entrees,
     }
 
     preferences.save_preferences(
@@ -1342,6 +1378,7 @@ def charger_preferences():
     global deuxieme_unite_entree_demarrage
     global unite_resultat_demarrage
     global historique_active
+    global historique_max_entrees
         
 
     preferences_chargees = preferences.load_preferences(
@@ -1398,11 +1435,16 @@ def charger_preferences():
         "history_enabled"
     )
 
+    historique_max_entrees_sauvegarde = preferences_chargees.get(
+        "history_max_entries"
+    )
+
     operation_demarrage = operation_demarrage_sauvegardee
     unite_entree_demarrage = unite_entree_demarrage_sauvegardee
     deuxieme_unite_entree_demarrage = deuxieme_unite_entree_demarrage_sauvegardee
     unite_resultat_demarrage = unite_resultat_demarrage_sauvegardee
     historique_active = historique_active_sauvegardee
+    historique_max_entrees = historique_max_entrees_sauvegarde
 
     operation.set(
         operation_demarrage
@@ -1461,7 +1503,7 @@ def charger_historique():
     historique.extend(
         history_store.load_history(
             FICHIER_HISTORIQUE,
-            MAX_HISTORIQUE
+            historique_max_entrees
         )
     )
 
@@ -1479,7 +1521,7 @@ def ajouter_historique(texte):
     
     historique.insert(0, texte)
 
-    if len(historique) > MAX_HISTORIQUE:
+    if len(historique) > historique_max_entrees:
         historique.pop()
 
     mettre_a_jour_historique()

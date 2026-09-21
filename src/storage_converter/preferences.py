@@ -14,6 +14,7 @@ DEFAULT_PREFERENCES = {
     "theme": "light",
     "language": "en",
     "history_enabled": True,
+    "history_max_entries": 10,
 }
 
 
@@ -133,5 +134,16 @@ def validate_preferences(
 
     if isinstance(history_enabled, bool):
         validated["history_enabled"] = history_enabled
+
+    history_max_entries = loaded_preferences.get(
+        "history_max_entries"
+    )
+
+    if (
+        isinstance(history_max_entries, int)
+        and not isinstance(history_max_entries, bool)
+        and history_max_entries > 0
+    ):
+        validated["history_max_entries"] = history_max_entries
 
     return validated

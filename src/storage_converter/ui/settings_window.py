@@ -66,6 +66,8 @@ def ouvrir_fenetre_parametres(
     obtenir_unite_resultat_demarrage,
     changer_historique_active,
     obtenir_historique_active,
+    changer_historique_max_entrees,
+    obtenir_historique_max_entrees,
     unites_disponibles,
     fenetre_existante=None,
 ):
@@ -122,6 +124,13 @@ def ouvrir_fenetre_parametres(
         padx=15,
         pady=(10, 5)
     )
+
+    def retirer_focus_entree(event):
+        if (
+            event.widget == fenetre_parametres
+            or isinstance(event.widget, (ttk.Frame, ttk.Label))
+        ):
+            fenetre_parametres.focus_set()
 
     langues_affichees = {
         tr("language.english"): "en",
@@ -378,6 +387,18 @@ def ouvrir_fenetre_parametres(
         pady=(0, 5)
     )
 
+    label_historique_max_entrees = ttk.Label(
+        frame,
+        text=tr("settings.history_max_entries"),
+    )
+
+    label_historique_max_entrees.grid(
+        row=8,
+        column=1,
+        padx=15,
+        pady=(0, 5)
+    )
+
     options_historique = {
         tr("option.enabled"): True,
         tr("option.disabled"): False,
@@ -416,6 +437,62 @@ def ouvrir_fenetre_parametres(
         column=0,
         padx=15,
         pady=(0, 25)
+    )
+
+    variable_historique_max_entrees = tk.StringVar(
+        value=str(obtenir_historique_max_entrees())
+    )
+
+
+    def appliquer_historique_max_entrees(event=None):
+        valeur = variable_historique_max_entrees.get().strip()
+
+        try:
+            nouvelle_limite = int(valeur)
+        except ValueError:
+            variable_historique_max_entrees.set(
+                str(obtenir_historique_max_entrees())
+            )
+            return
+
+        if nouvelle_limite <= 0:
+            variable_historique_max_entrees.set(
+                str(obtenir_historique_max_entrees())
+            )
+            return
+
+        changer_historique_max_entrees(
+            nouvelle_limite
+        )
+
+        variable_historique_max_entrees.set(
+            str(obtenir_historique_max_entrees())
+        )
+
+
+    entree_historique_max_entrees = ttk.Entry(
+        frame,
+        textvariable=variable_historique_max_entrees,
+        width=22,
+        justify="center",
+        style="Custom.TEntry",
+    )
+
+    entree_historique_max_entrees.grid(
+        row=9,
+        column=1,
+        padx=15,
+        pady=(0, 25)
+    )
+
+    entree_historique_max_entrees.bind(
+        "<Return>",
+        appliquer_historique_max_entrees,
+    )
+
+    entree_historique_max_entrees.bind(
+        "<FocusOut>",
+        appliquer_historique_max_entrees,
     )
 
     bouton_fermer = ttk.Button(
@@ -460,11 +537,8 @@ def ouvrir_fenetre_parametres(
             text=tr("settings.history_enabled")
         )
 
-        selecteur_historique.grid(
-            row=7,
-            column=0,
-            padx=15,
-            pady=(0, 25)
+        label_historique_max_entrees.config(
+            text=tr("settings.history_max_entries")
         )
 
         bouton_fermer.config(
@@ -625,6 +699,12 @@ def ouvrir_fenetre_parametres(
                 columnspan=1,
                 pady=(0, 25)
             )
+
+    fenetre_parametres.bind(
+        "<Button-1>",
+        retirer_focus_entree,
+        add="+",
+    )
 
     mettre_a_jour_affichage_unites()
     fenetre_parametres.grab_set()
