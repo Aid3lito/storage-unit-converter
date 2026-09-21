@@ -28,5 +28,6 @@
   "language.french": "French",
   "settings.theme": "Theme",
   "theme.light": "Light",
-  "theme.dark": "Dark"
+  "theme.dark": "Dark",
+  "settings.default_operation": "Default startup operation"
 }

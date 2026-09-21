@@ -56,6 +56,7 @@ def texte_resultat_defaut():
     return tr("label.result")
 
 theme_actuel = THEME_DEFAUT
+operation_demarrage = OPERATION_DEFAUT
 
 PADDING_RESULT_LABEL = (3, 3)
 PADDING_RESULT_MENU = (0, 5)
@@ -260,6 +261,24 @@ def changer_theme(nouveau_theme):
     appliquer_theme()
     sauvegarder_preferences()
 
+
+def changer_operation_demarrage(nouvelle_operation):
+    global operation_demarrage
+
+    if nouvelle_operation not in OPERATIONS:
+        return
+
+    if operation_demarrage == nouvelle_operation:
+        return
+
+    operation_demarrage = nouvelle_operation
+    sauvegarder_preferences()
+
+
+def obtenir_operation_demarrage():
+    return operation_demarrage
+
+
 def ouvrir_parametres():
     global fenetre_parametres
 
@@ -272,6 +291,8 @@ def ouvrir_parametres():
         changer_theme,
         obtenir_langue_actuelle,
         obtenir_theme_actuel,
+        changer_operation_demarrage,
+        obtenir_operation_demarrage,
         fenetre_parametres,
     )
 
@@ -1190,6 +1211,7 @@ def sauvegarder_preferences():
 
     preferences_actuelles = {
         "operation": choix_operation,
+        "default_operation": operation_demarrage,
         "source_units": source_units,
         "result_unit": unite_resultat.get(),
         "theme": theme_actuel,
@@ -1203,7 +1225,7 @@ def sauvegarder_preferences():
 
 
 def charger_preferences():
-    global theme_actuel
+    global theme_actuel, operation_demarrage
 
     preferences_chargees = preferences.load_preferences(
         FICHIER_PREFERENCES
@@ -1223,6 +1245,10 @@ def charger_preferences():
         "operation"
     )
 
+    operation_demarrage_sauvegardee = preferences_chargees.get(
+        "default_operation"
+    )
+
     source_units_sauvegardees = preferences_chargees.get(
         "source_units"
     )
@@ -1239,8 +1265,10 @@ def charger_preferences():
         "language"
     )
 
+    operation_demarrage = operation_demarrage_sauvegardee
+
     operation.set(
-        operation_sauvegardee
+        operation_demarrage
     )
 
     localization.set_language(
@@ -1386,7 +1414,7 @@ menu_operation = creer_menu_operations(
 operation.set(OPERATION_DEFAUT)
 
 operation_affichage.set(
-    obtenir_libelle_operation(OPERATION_DEFAUT)
+    obtenir_libelle_operation(operation_demarrage)
 )
 
 menu_operation.pack()

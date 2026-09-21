@@ -84,6 +84,7 @@ def test_save_preferences_writes_json(tmp_path):
 def test_validate_preferences_accepts_valid_values():
     loaded = {
         "operation": "addition",
+        "default_operation": "subtraction",
         "source_units": [
             "MB - MegaByte",
             "GB - GigaByte",
@@ -242,3 +243,32 @@ def test_validate_preferences_replaces_invalid_language():
     )
 
     assert result["language"] == "en"
+
+def test_validate_preferences_accepts_valid_default_operation():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_operation"] = "subtraction"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_operation"] == "subtraction"
+
+
+def test_validate_preferences_replaces_invalid_default_operation():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_operation"] = "invalid"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_operation"] == "conversion"

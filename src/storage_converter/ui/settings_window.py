@@ -56,6 +56,8 @@ def ouvrir_fenetre_parametres(
     changer_theme,
     obtenir_langue_actuelle,
     obtenir_theme_actuel,
+    changer_operation_demarrage,
+    obtenir_operation_demarrage,
     fenetre_existante=None,
 ):
     if (
@@ -67,7 +69,6 @@ def ouvrir_fenetre_parametres(
         return fenetre_existante
 
     fenetre_parametres = tk.Toplevel(parent)
-    fenetre_parametres.geometry("460x360")
 
     fenetre_parametres.title(
         tr("settings.title")
@@ -175,6 +176,53 @@ def ouvrir_fenetre_parametres(
         pady=(0, 20)
     )
 
+    label_operation_demarrage = ttk.Label(
+        frame,
+        text=tr("settings.default_operation"),
+    )
+
+    label_operation_demarrage.pack(
+        pady=(0, 5)
+    )
+
+    operations_affichees = {
+        tr("operation.conversion"): "conversion",
+        tr("operation.addition"): "addition",
+        tr("operation.subtraction"): "subtraction",
+    }
+
+    operation_affichee_actuelle = next(
+        label
+        for label, code in operations_affichees.items()
+        if code == obtenir_operation_demarrage()
+    )
+
+    variable_operation_demarrage = tk.StringVar(
+        value=operation_affichee_actuelle
+    )
+
+    def appliquer_selection_operation_demarrage(operation):
+        changer_operation_demarrage(operation)
+
+        variable_operation_demarrage.set(
+            next(
+                label
+                for label, code in operations_affichees.items()
+                if code == operation
+            )
+        )
+
+    selecteur_operation_demarrage = creer_selecteur(
+        frame,
+        variable_operation_demarrage,
+        operations_affichees,
+        appliquer_selection_operation_demarrage,
+    )
+
+    selecteur_operation_demarrage.pack(
+        pady=(0, 25)
+    )
+
     bouton_fermer = ttk.Button(
         frame,
         text=tr("button.close"),
@@ -193,6 +241,10 @@ def ouvrir_fenetre_parametres(
 
         label_theme.config(
             text=tr("settings.theme")
+        )
+
+        label_operation_demarrage.config(
+            text=tr("settings.default_operation")
         )
 
         bouton_fermer.config(
@@ -237,6 +289,31 @@ def ouvrir_fenetre_parametres(
             selecteur_theme,
             themes_affiches,
             appliquer_selection_theme,
+        )
+
+        nouvelles_operations_affichees = {
+            tr("operation.conversion"): "conversion",
+            tr("operation.addition"): "addition",
+            tr("operation.subtraction"): "subtraction",
+        }
+
+        operations_affichees.clear()
+        operations_affichees.update(
+            nouvelles_operations_affichees
+        )
+
+        mettre_a_jour_selecteur(
+            selecteur_operation_demarrage,
+            operations_affichees,
+            appliquer_selection_operation_demarrage,
+        )
+
+        variable_operation_demarrage.set(
+            next(
+                label
+                for label, code in operations_affichees.items()
+                if code == obtenir_operation_demarrage()
+            )
         )
 
         variable_theme.set(

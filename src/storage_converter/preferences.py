@@ -5,6 +5,7 @@ from . import data_store
 
 DEFAULT_PREFERENCES = {
     "operation": "conversion",
+    "default_operation": "conversion",
     "source_units": ["GB - GigaByte"],
     "result_unit": "GiB - GibiByte",
     "theme": "light",
@@ -64,7 +65,15 @@ def validate_preferences(
     )
 
     if operation in valid_operations:
-        validated["operation"] = operation
+                validated["operation"] = operation
+
+    default_operation = loaded_preferences.get(
+    "default_operation"
+)
+
+    if default_operation in valid_operations:
+        validated["default_operation"] = default_operation
+
 
     source_units = loaded_preferences.get("source_units")
 
