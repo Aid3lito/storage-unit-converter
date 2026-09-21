@@ -7,6 +7,7 @@ DEFAULT_PREFERENCES = {
     "operation": "conversion",
     "default_operation": "conversion",
     "source_units": ["GB - GigaByte"],
+    "default_input_unit": "GB - GigaByte",
     "result_unit": "GiB - GibiByte",
     "theme": "light",
     "language": "en",
@@ -68,8 +69,8 @@ def validate_preferences(
                 validated["operation"] = operation
 
     default_operation = loaded_preferences.get(
-    "default_operation"
-)
+        "default_operation"
+    )
 
     if default_operation in valid_operations:
         validated["default_operation"] = default_operation
@@ -86,6 +87,13 @@ def validate_preferences(
 
         if validated_source_units:
             validated["source_units"] = validated_source_units
+
+    default_input_unit = loaded_preferences.get(
+        "default_input_unit"
+    )
+
+    if default_input_unit in valid_units:
+        validated["default_input_unit"] = default_input_unit
 
     result_unit = loaded_preferences.get("result_unit")
 

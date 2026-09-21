@@ -89,6 +89,7 @@ def test_validate_preferences_accepts_valid_values():
             "MB - MegaByte",
             "GB - GigaByte",
         ],
+        "default_input_unit": "MB - MegaByte",
         "result_unit": "TB - TeraByte",
         "theme": "dark",
         "language": "fr",
@@ -272,3 +273,33 @@ def test_validate_preferences_replaces_invalid_default_operation():
     )
 
     assert result["default_operation"] == "conversion"
+
+
+def test_validate_preferences_accepts_valid_default_input_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_input_unit"] = "GiB - GibiByte"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_input_unit"] == "GiB - GibiByte"
+
+
+def test_validate_preferences_replaces_invalid_default_input_unit():
+    loaded = preferences.DEFAULT_PREFERENCES.copy()
+    loaded["default_input_unit"] = "invalid"
+
+    result = preferences.validate_preferences(
+        loaded,
+        {"conversion", "addition", "subtraction"},
+        {"GB - GigaByte", "GiB - GibiByte"},
+        {"light", "dark"},
+        {"en", "fr"},
+    )
+
+    assert result["default_input_unit"] == "GB - GigaByte"

@@ -29,5 +29,6 @@
   "settings.theme": "Thème",
   "theme.light": "Clair",
   "theme.dark": "Sombre",
-  "settings.default_operation": "Opération au démarrage"
+  "settings.default_operation": "Opération au démarrage",
+  "settings.default_input_unit": "Unité d’entrée par défaut"
 }

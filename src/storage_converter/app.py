@@ -57,6 +57,7 @@ def texte_resultat_defaut():
 
 theme_actuel = THEME_DEFAUT
 operation_demarrage = OPERATION_DEFAUT
+unite_entree_demarrage = UNITE_ENTREE_DEFAUT
 
 PADDING_RESULT_LABEL = (3, 3)
 PADDING_RESULT_MENU = (0, 5)
@@ -278,6 +279,21 @@ def changer_operation_demarrage(nouvelle_operation):
 def obtenir_operation_demarrage():
     return operation_demarrage
 
+def changer_unite_entree_demarrage(nouvelle_unite):
+    global unite_entree_demarrage
+
+    if nouvelle_unite not in obtenir_unites_affichage():
+        return
+
+    if unite_entree_demarrage == nouvelle_unite:
+        return
+
+    unite_entree_demarrage = nouvelle_unite
+    sauvegarder_preferences()
+
+
+def obtenir_unite_entree_demarrage():
+    return unite_entree_demarrage
 
 def ouvrir_parametres():
     global fenetre_parametres
@@ -293,6 +309,9 @@ def ouvrir_parametres():
         obtenir_theme_actuel,
         changer_operation_demarrage,
         obtenir_operation_demarrage,
+        changer_unite_entree_demarrage,
+        obtenir_unite_entree_demarrage,
+        obtenir_unites_affichage(),
         fenetre_parametres,
     )
 
@@ -1081,7 +1100,7 @@ def creer_ligne_valeur():
     entree = creer_entree_valeur(frame_ligne)
 
     unite = tk.StringVar(
-        value=UNITE_ENTREE_DEFAUT
+        value=unite_entree_demarrage
     )
 
     menu_unite = creer_menu_unites(
@@ -1213,6 +1232,7 @@ def sauvegarder_preferences():
         "operation": choix_operation,
         "default_operation": operation_demarrage,
         "source_units": source_units,
+        "default_input_unit": unite_entree_demarrage,
         "result_unit": unite_resultat.get(),
         "theme": theme_actuel,
         "language": localization.language,
@@ -1225,7 +1245,7 @@ def sauvegarder_preferences():
 
 
 def charger_preferences():
-    global theme_actuel, operation_demarrage
+    global theme_actuel, operation_demarrage, unite_entree_demarrage
 
     preferences_chargees = preferences.load_preferences(
         FICHIER_PREFERENCES
@@ -1253,6 +1273,10 @@ def charger_preferences():
         "source_units"
     )
 
+    unite_entree_demarrage_sauvegardee = preferences_chargees.get(
+        "default_input_unit"
+    )
+
     unite_resultat_sauvegardee = preferences_chargees.get(
         "result_unit"
     )
@@ -1266,6 +1290,7 @@ def charger_preferences():
     )
 
     operation_demarrage = operation_demarrage_sauvegardee
+    unite_entree_demarrage = unite_entree_demarrage_sauvegardee
 
     operation.set(
         operation_demarrage
@@ -1276,28 +1301,33 @@ def charger_preferences():
     )
 
     operation_affichage.set(
-        obtenir_libelle_operation(operation_sauvegardee)
+        obtenir_libelle_operation(operation_demarrage)
     )
 
     mettre_a_jour_interface()
 
-    if isinstance(source_units_sauvegardees, list):
-        if (len(source_units_sauvegardees) >= 1):
-            lignes_valeurs[0]["unite"].set(
-                source_units_sauvegardees[0]
-            )
+    if lignes_valeurs:
+        lignes_valeurs[0]["unite"].set(
+            unite_entree_demarrage
+        )
 
-        if (
-            operation.get() in (
-                OPERATION_ADDITION,
-                OPERATION_SOUSTRACTION
-            )
-            and len(lignes_valeurs) >= 2
-            and len(source_units_sauvegardees) >= 2
-        ):
-            lignes_valeurs[1]["unite"].set(
-                source_units_sauvegardees[1]
-            )
+    if lignes_valeurs:
+        lignes_valeurs[0]["unite"].set(
+            unite_entree_demarrage
+        )
+
+    if (
+        isinstance(source_units_sauvegardees, list)
+        and operation.get() in (
+            OPERATION_ADDITION,
+            OPERATION_SOUSTRACTION
+        )
+        and len(lignes_valeurs) >= 2
+        and len(source_units_sauvegardees) >= 2
+    ):
+        lignes_valeurs[1]["unite"].set(
+            source_units_sauvegardees[1]
+        )
 
     theme_actuel = theme_sauvegarde
 

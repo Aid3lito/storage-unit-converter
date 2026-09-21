@@ -29,5 +29,6 @@
   "settings.theme": "Theme",
   "theme.light": "Light",
   "theme.dark": "Dark",
-  "settings.default_operation": "Default startup operation"
+  "settings.default_operation": "Default startup operation",
+  "settings.default_input_unit": "Default input unit"
 }
