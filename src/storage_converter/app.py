@@ -1118,7 +1118,6 @@ def reinitialiser_interface():
     unite_resultat.set(UNITE_RESULTAT_DEFAUT)
 
     # Retour en mode Conversion
-    # Retour en mode Conversion
     operation.set(OPERATION_DEFAUT)
     operation_affichage.set(
         obtenir_libelle_operation(OPERATION_DEFAUT)
